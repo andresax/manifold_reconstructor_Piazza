@@ -21,11 +21,11 @@ public:
   ReconstructFromSLAMData(const CameraPointsCollection& cp_data, ManifoldReconstructionConfig& manifConf);
   virtual ~ReconstructFromSLAMData();
   void increment(CameraType* newCamera);
-  void ReconstructFromSLAMData::saveManifold();
+  void saveManifold();
   void overwriteFocalY(float f);
-private:
 
-//  void outlierFiltering(std::vector<bool>& inliers);
+private:
+  //void outlierFiltering(std::vector<bool>& inliers);
   int GaussNewton(const std::vector<cv::Mat> &cameras,
       const std::vector<cv::Point2f> &points,cv::Point3f init3Dpoint, cv::Point3f &optimizedPoint);
 

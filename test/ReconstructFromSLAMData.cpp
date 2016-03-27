@@ -79,7 +79,7 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
   for(auto & p : newCamera->visiblePointsT){
 
     //TODO inliers and min visibility check?
-    manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction); //TODO does it work?
+    manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
 
     std::cout << "ADD Visibility Pair: cam " << newCamera->idCam << ", point " << p->idPoint << std::endl;
   }
@@ -116,7 +116,7 @@ void ReconstructFromSLAMData::saveManifold(){
   manifRec_->saveFreespace("FreeFinal.off");
 
   std::vector<int> age;
-  for (int cur = 0; cur < cp_data_.numCameras(); cur++) { //TODO check this is correct
+  for (int cur = 0; cur < cp_data_.numCameras(); cur++) { //TODO check this is always correct
     age.push_back(cur);
   }
   manifRec_->saveOldManifold("ManifoldWithoutSteinerPointsFinal.off", age);
