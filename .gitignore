@@ -1,0 +1,12 @@
+*~
+/CMakeFiles/
+/CMakeCache.txt
+/Debug/
+/output/
+/manifoldReconstructor
+/cmake_install.cmake
+/Makefile
+/.cproject
+/.project
+/.settings/
+
