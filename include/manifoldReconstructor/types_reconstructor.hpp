@@ -60,7 +60,7 @@ struct PointType;
 
 struct CameraType {
   long unsigned int idCam;
-  long unsigned int idReconstruction;
+  long int idReconstruction = -1;
 
   glm::mat3 intrinsics;
   glm::mat3 rotation;
@@ -84,7 +84,7 @@ struct CameraType {
 
 struct PointType {
   long unsigned int idPoint;
-  long unsigned int idReconstruction;
+  long int idReconstruction = -1;
 
   glm::vec3 position;
   std::vector<CameraType*> viewingCams;

@@ -19,6 +19,8 @@
 #include <ReconstructFromSLAMData.h>
 #include <types_config.hpp>
 #include <iostream>
+#include <map>
+#include <utility>
 
 
 //*************************************************************************************************/
@@ -50,12 +52,17 @@ int main(int argc, char **argv) {
 
   CameraPointsCollection orb_data_ = op.getData();
 
-  std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
+  //std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
   std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
 
   ReconstructFromSLAMData m(orb_data_, confManif);
-//m.overwriteFocalY(1525.900000);
-  m.increment();
+
+  // main loop
+  for (auto const &kvCamera : orb_data_.getCameras()) {
+    m.increment(kvCamera.second);
+  }
+
+  m.saveManifold();
 
   return 0;
 }

@@ -16,147 +16,111 @@ ReconstructFromSLAMData::ReconstructFromSLAMData(const CameraPointsCollection& c
 
   cameraNextId = 0; pointNextId = 0;
 
+  iterationCount = 0;
+
 }
 
 ReconstructFromSLAMData::~ReconstructFromSLAMData() {
 }
 
-void ReconstructFromSLAMData::increment() {
+void ReconstructFromSLAMData::increment(CameraType* newCamera) {
 
-//  std::cout << "inc data stats: "
-//          << cp_data_.numPoints() << " points, "
-//          << cp_data_.numCameras() << " cameras"
-//          << std::endl;
+  std::cout << "ReconstructFromSLAMData::increment iteration " << iterationCount << std::endl;
 
   //std::cout << "start outlier filtering" << std::endl;
   //std::vector<bool> inliers;
   //outlierFiltering(inliers); // comment this; EP
-/*
-  std::vector<glm::vec3> camCenters;
-  std::vector<glm::vec3> points;
-  std::vector<std::vector<int> > camViewingPointN;
 
-  std::cout << "start add camera centres" << std::endl;
-  for (auto c : sfm_data_.camerasList_) {
-    //std::cout << "ADD camera centre" << std::endl;
-    camCenters.push_back(c.center);
-  }
-  std::cout << "end   add camera centres" << std::endl;
+  // Add the new camera to ManifoldMeshReconstructor
+  std::cout << "add newCamera to manifRec_" << std::endl;
+  glm::vec3 center = newCamera->center;
+  manifRec_->addCameraCenter(center.x, center.y, center.z);
 
-  int count = 0;
-  for (int curpt = 0; curpt < sfm_data_.points_.size(); curpt++) {
-    if (inliers[curpt]) {
-      count++;
-      points.push_back(sfm_data_.points_[curpt]);
-      camViewingPointN.push_back(sfm_data_.camViewingPointN_[curpt]);
-    }
-  }
+  // generate the ManifoldMeshReconstructor's index if the camera hasn't got one already
+  if(newCamera->idReconstruction<0) newCamera->idReconstruction = cameraNextId++;
 
-  std::cout << "inlier ratio " << count << " on " << sfm_data_.points_.size() << " = "
-      << static_cast<float>(count) / static_cast<float>(sfm_data_.points_.size()) << std::endl;
-*/
-  // utilities::saveVisibilityPly(camCenters,points,camViewingPointN,"inliersOK",false);
-  // utilities::saveVisibilityPly(sfm_data_, "sfm_data_");
+  std::cout << "ADD cam " << newCamera->idCam << " (" <<  newCamera->idReconstruction << ")"
+          << ": " << center.x << ", " << center.y << ", " << center.z
+          << std::endl;
 
-  std::cout << "add cameras to manifRec_" << std::endl;
-  for (auto const &kvCamera : cp_data_.getCameras()) {
-    glm::vec3 center = kvCamera.second->center;
-    manifRec_->addCameraCenter(center.x, center.y, center.z);
 
-    //TODO check if it was a new camera?
-    kvCamera.second->idReconstruction = cameraNextId++;
-
-    std::cout << "ADD cam " << kvCamera.second->idCam << " (" <<  kvCamera.second->idReconstruction << ")"
-            << ": " << center.x << ", " << center.y << ", " << center.z
-            << std::endl;
-  }
-
+  // Add the points associated to the new camera to ManifoldMeshReconstructor
   std::cout << "add points to manifRec_" << std::endl;
-  for (auto const &kvPoint : cp_data_.getPoints()) {
-    glm::vec3 position = kvPoint.second->position;
-    manifRec_->addPoint(position.x, position.y, position.z);
+  for (auto const &p : newCamera->visiblePointsT) {
+    glm::vec3 position = p->position;
 
-    //TODO check if it was a new point
-    kvPoint.second->idReconstruction = pointNextId++;
+    if(p->idReconstruction<0){
 
-    std::cout << "ADD point " << kvPoint.second->idPoint << " (" <<  kvPoint.second->idReconstruction << ")"
-        << ": " << position.x << ", " << position.y << ", " << position.z
-        << std::endl;
-  }
+      // generate the ManifoldMeshReconstructor's index if the point hasn't got one already
+      p->idReconstruction = pointNextId++;
 
+      // If the point didn't have this index then it is a new point for sure
+      manifRec_->addPoint(position.x, position.y, position.z);
 
-  std::cout << "start add visibility pairs to manifRec_" << std::endl;
-  for (auto const &kvCamera : cp_data_.getCameras()) {
-    std::vector<PointType*> visiblePointsT = kvCamera.second->visiblePointsT;
+      std::cout << "ADD    point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")"
+          << ": " << position.x << ", " << position.y << ", " << position.z
+          << std::endl;
 
-    for(auto & point : visiblePointsT){
-      //TODO inliers and min visibility check?
-      manifRec_->addVisibilityPair(kvCamera.second->idReconstruction, point->idReconstruction); //TODO does it work?
+    }else{
 
-      std::cout << "ADD Visibility Pair: cam " << kvCamera.second->idCam << ", point " << point->idPoint << std::endl;
+      // The point was already added to ManifoldMeshReconstructor, so it is only updated
+      manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z);
+
+      std::cout << "UPDATE point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")"
+          << ": " << position.x << ", " << position.y << ", " << position.z
+          << std::endl;
     }
-    std::cout << "ADD V"<< std::endl;
+
   }
 
-//  for (int curCamIdx = 0; curCamIdx < sfm_data_.camerasList_.size(); curCamIdx += 1) {
-//    //std::cout << "spaceCarver_->addVisibilityPair cam:" << curCamIdx << " ";
-//
-//    for (auto curPtIdx : sfm_data_.pointsVisibleFromCamN_[curCamIdx]) {
-//      if (sfm_data_.camViewingPointN_[curPtIdx].size() >= 2 && inliers[curPtIdx]){
-//        //std::cout << "ADD visibility pair: cam " << curCamIdx <<", point "<< curPtIdx << std::endl;
-//        manifRec_->addVisibilityPair(curCamIdx, curPtIdx);
-//      }
-//    }
-//  }
 
+  // Add visibility pairs to manifRec_
+  std::cout << "add visibility pairs to manifRec_" << std::endl;
+  for(auto & p : newCamera->visiblePointsT){
 
-  for (auto const &kvCamera : cp_data_.getCameras()) {
+    //TODO inliers and min visibility check?
+    manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction); //TODO does it work?
 
-    std::cout << "insertNewPointsFromCam( " << kvCamera.second->idReconstruction << ", true )" << std::endl;
-    manifRec_->insertNewPointsFromCam(kvCamera.second->idReconstruction, true);
-    //manifRec_->saveManifold("prova.off");
-
-    std::cout << "rayTracingFromCam( " << kvCamera.second->idReconstruction << " )" << std::endl;
-    manifRec_->rayTracingFromCam(kvCamera.second->idReconstruction);
-
-    /*if (curCamIdx % 11 == 10) {
-      //spaceCarver_->BatchTetrahedronMethod(0);
-      utilities::Logger log;
-      log.startEvent();
-      int curIt = 0;
-      std::stringstream s;
-      s << "Manifold" << curCamIdx << ".off";
-      manifRec_->growManifold();
-      manifRec_->growManifoldSev();
-      manifRec_->growManifold();
-      manifRec_->saveManifold(s.str());
-      log.endEventAndPrint("Grow ", true);
-    }
-  */
+    std::cout << "ADD Visibility Pair: cam " << newCamera->idCam << ", point " << p->idPoint << std::endl;
   }
 
-  std::cout << "start growManifold" << std::endl;
+
+  // Tell ManifoldMeshReconstructor to shrink the manifold
+  std::cout << "insertNewPointsFromCam( " << newCamera->idReconstruction << ", true )" << std::endl;
+  manifRec_->insertNewPointsFromCam(newCamera->idReconstruction, true);
+
+  // Tell ManifoldMeshReconstructor to do its stuff // TODO find out what exactly
+  std::cout << "rayTracingFromCam( " << newCamera->idReconstruction << " )" << std::endl;
+  manifRec_->rayTracingFromCam(newCamera->idReconstruction);
+
+
+  // Tell ManifoldMeshReconstructor to grow back the manifold
+  std::cout << "growManifold" << std::endl;
   utilities::Logger log;
   log.startEvent();
+
   manifRec_->growManifold();
   manifRec_->growManifoldSev();
   manifRec_->growManifold();
+
+  log.endEventAndPrint("Grow "+iterationCount, true);
+
+  iterationCount++;
+}
+
+
+void ReconstructFromSLAMData::saveManifold(){
+
   manifRec_->saveManifold("ManifoldFinal.off");
-
-  std::cout << "end   growManifold" << std::endl;
-
-
-  std::vector<int> age;
-
-  for (int cur = 0; cur < cp_data_.numCameras(); cur++) { //TODO check this is correct
-    age.push_back(cur);
-  }
 
   manifRec_->saveFreespace("FreeFinal.off");
 
+  std::vector<int> age;
+  for (int cur = 0; cur < cp_data_.numCameras(); cur++) { //TODO check this is correct
+    age.push_back(cur);
+  }
   manifRec_->saveOldManifold("ManifoldWithoutSteinerPointsFinal.off", age);
-  std::cout << "DONE" << std::endl;
-  log.endEventAndPrint("Grow ", true);
+
 }
 
 

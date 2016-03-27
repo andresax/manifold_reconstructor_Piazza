@@ -20,7 +20,8 @@ class ReconstructFromSLAMData {
 public:
   ReconstructFromSLAMData(const CameraPointsCollection& cp_data, ManifoldReconstructionConfig& manifConf);
   virtual ~ReconstructFromSLAMData();
-  void increment();
+  void increment(CameraType* newCamera);
+  void ReconstructFromSLAMData::saveManifold();
   void overwriteFocalY(float f);
 private:
 
@@ -36,6 +37,7 @@ private:
   ManifoldReconstructionConfig manifConf_;
   ManifoldMeshReconstructor* manifRec_;
   int cameraNextId, pointNextId;
+  int iterationCount;
 };
 
 #endif /* RECONSTRUCTFROMSLAMDATA_H_ */
