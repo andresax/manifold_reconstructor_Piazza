@@ -13,31 +13,34 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 
-#include <string>
-
-#include <PathCreator.h>
-//#include <KittiRectifiedCamParser.h>
-#include <ManifoldReconstructorConfigurator.h>
-//#include <EdgePointConfigurator.h>
-//#include <EdgePointSpaceCarver.h>
-#include <ReconstructorFromOut.h>
-#include <types_reconstructor.hpp>
+#include <CameraPointsCollection.h>
 #include <OpenMvgParser.h>
-#include <ReconstructFromSfMData.h>
+#include <ORBParser.h>
+#include <ReconstructFromSLAMData.h>
+#include <types_config.hpp>
+#include <iostream>
+
 
 //*************************************************************************************************/
 //********************************RECONSTRUCTION FROM VISIBILITY***********************************/
 //*************************************************************************************************/
 int main(int argc, char **argv) {
 //  OpenMvgParser op("/home/andrea/Scrivania/Datasets/Middelbury/templeRing/openmvgMatch/out.json");
-  OpenMvgParser op("data/0095/0095.json");
+  std::cout << "start parsing OpenMvgParser" << std::endl;
+  OpenMvgParser op_openmvg("data/dinoRing/dinoRing.json");
+  op_openmvg.parse();
+  std::cout << "end parsing OpenMvgParser" << std::endl;
 
+  std::cout << "start parsing ORBParser" << std::endl;
+  ORBParser op("data/dinoRing/dinoRing.json");
   op.parse();
+  std::cout << "end parsing ORBParser" << std::endl;
+
   //utilities::saveVisibilityPly(op.getSfmData());
 
   ManifoldReconstructionConfig confManif;
   confManif.inverseConicEnabled = true;
-  confManif.maxDistanceCamFeature = 100.0;
+  confManif.maxDistanceCamFeature = 10.0;
   confManif.probOrVoteThreshold = 2.1;
   confManif.enableSuboptimalPolicy = false;
   confManif.suboptimalMethod = 0;
@@ -45,10 +48,15 @@ int main(int argc, char **argv) {
   confManif.w_2 = 0.0;
   confManif.w_3 = 0.00;
 
+  CameraPointsCollection orb_data_ = op.getData();
 
-  ReconstructFromSfMData m(op.getSfmData(),confManif);
+  std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
+  std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
+
+  ReconstructFromSLAMData m(orb_data_, confManif);
 //m.overwriteFocalY(1525.900000);
-  m.run();
+  m.increment();
+
   return 0;
 }
 

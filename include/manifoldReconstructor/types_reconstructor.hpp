@@ -56,7 +56,12 @@ typedef std::pair<PointD3, float> DistanceWeight;
 
 typedef std::set<Delaunay3DCellInfo::FSConstraint, Delaunay3DCellInfo::LtFSConstraint> SetConstraints;
 
+struct PointType;
+
 struct CameraType {
+  long unsigned int idCam;
+  long unsigned int idReconstruction;
+
   glm::mat3 intrinsics;
   glm::mat3 rotation;
   glm::vec3 translation;
@@ -70,6 +75,23 @@ struct CameraType {
   int imageHeight;
 
   std::vector<int> visiblePoints;
+  std::vector<PointType*> visiblePointsT;
+
+  void addPoint(PointType* point){
+    visiblePointsT.push_back(point);
+  }
+};
+
+struct PointType {
+  long unsigned int idPoint;
+  long unsigned int idReconstruction;
+
+  glm::vec3 position;
+  std::vector<CameraType*> viewingCams;
+
+  void addCamera(CameraType *cam){
+    viewingCams.push_back(cam);
+  }
 };
 
 struct PointParser {
