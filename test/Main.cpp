@@ -28,14 +28,23 @@
 //*************************************************************************************************/
 int main(int argc, char **argv) {
 //  OpenMvgParser op("/home/andrea/Scrivania/Datasets/Middelbury/templeRing/openmvgMatch/out.json");
-  std::cout << "start parsing OpenMvgParser" << std::endl;
-  OpenMvgParser op_openmvg("data/dinoRing/dinoRing.json");
-  op_openmvg.parse();
-  std::cout << "end parsing OpenMvgParser" << std::endl;
+//  std::cout << "start parsing OpenMvgParser" << std::endl;
+//  OpenMvgParser op_openmvg("data/dinoRing/dinoRing.json");
+//  op_openmvg.parse();
+//  std::cout << "end parsing OpenMvgParser" << std::endl;
 
   std::cout << "start parsing ORBParser" << std::endl;
-  ORBParser op("data/dinoRing/dinoRing.json");
+
+  if(argc < 2){
+//    ORBParser op("data/KITTI/KITTI00_50frames.json");
+//    op.parse();
+    std::cerr << std::endl << "Usage: ./... path_to_input_json" << std::endl;
+    return 1;
+  }
+
+  ORBParser op(argv[1]);
   op.parse();
+
   std::cout << "end parsing ORBParser" << std::endl;
 
   //utilities::saveVisibilityPly(op.getSfmData());
@@ -54,6 +63,38 @@ int main(int argc, char **argv) {
 
   //std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
   std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
+
+  for(auto mCamera : orb_data_.getCameras()){
+    CameraType* c = mCamera.second;
+
+    std::cout << "cam " << c->idCam << std::endl;
+    std::map<int, int> count;
+
+    for(auto p : c->visiblePointsT){
+      int nOcc = p->numObservations;
+
+      std::map<int,int>::iterator it = count.find(nOcc);
+      //Bar b3;
+      if(it != count.end()){
+        count[nOcc] += 1;
+      }else{
+        count.insert(std::pair<int, int>(p->numObservations, 1));
+      }
+
+
+    }
+
+    for(auto vkOcc : count){
+      int sum = 0;
+      for(auto vkOcc_ : count){
+        if(vkOcc_.first >= vkOcc.first) sum += vkOcc_.second;
+      }
+
+      std::cout << " =" << vkOcc.first << ":\t" << vkOcc.second << ";\t\t >=" << vkOcc.first << ":\t" << sum << std::endl;
+    }
+  }
+
+  //return 0;
 
   ReconstructFromSLAMData m(orb_data_, confManif);
 

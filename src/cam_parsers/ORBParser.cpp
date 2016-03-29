@@ -45,8 +45,8 @@ void ORBParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const st
     if (!document_.HasMember("views"))
       throw JsonAccessException("JsonAccessException--> error while querying HasMember(views)");
     const rapidjson::Value& camerasJson = document_["views"];
-    int numCameras = camerasJson.Size();
-    ORB_data_.initCameras(numCameras);
+    //int numCameras = camerasJson.Size();
+    //ORB_data_.initCameras(numCameras);
     //ORB_data_.cameras_.assign(numCameras, NULL);
     //ORB_data_.camerasPaths_.assign(ORB_data_.numCameras_, std::string());
 
@@ -55,7 +55,6 @@ void ORBParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const st
 
       cam->idCam = camerasJson[curCam]["key"].GetInt();
       ORB_data_.addCamera(cam);
-      //ORB_data_.cameras_[curCam]->idCam = camerasJson[curCam]["key"].GetInt();
 
       std::string local(camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["local_path"].GetString());
       std::string filename(camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["filename"].GetString());
@@ -104,6 +103,8 @@ void ORBParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const st
         cam->rotation = glm::mat3(camCurrent.rotation);
         cam->translation = glm::vec3(camCurrent.translation);
         cam->center = glm::vec3(camCurrent.center);
+
+
 
        /* std::cout<<"curCam: "<<curCam<<std::endl;
         std::cout<<"Intrinsics A"<<std::endl;
@@ -182,6 +183,11 @@ void ORBParser::parsePoints() {
       point->idPoint = structure[curPoint]["key"].GetInt();
       ORB_data_.addPoint(point);
 
+      if (structure[curPoint].HasMember("num_obs")){
+        point->numObservations = structure[curPoint]["num_obs"].GetInt();
+      }
+
+
       float x0 = X[0].GetFloat();
       float x1 = X[1].GetFloat();
       float x2 = X[2].GetFloat();
@@ -203,10 +209,6 @@ void ORBParser::parsePoints() {
 
         int camId = observations[curId]["key"].GetInt();
         ORB_data_.addVisibility(camId, point->idPoint);
-        //CameraType* cam = ORB_data_.getCamera(camId);
-
-        //cam->addPoint(ORB_data_.points_[curPoint]);
-        //ORB_data_.points_[curPoint]->addCamera(cam);
 
         //ORB_data_.camViewingPointN_[curPoint].push_back(curCam);
         //ORB_data_.pointsVisibleFromCamN_[curCam].push_back(curPoint);
@@ -221,6 +223,9 @@ void ORBParser::parsePoints() {
         //const rapidjson::Value& pt2D = observations[curId]["value"]["x"];
         //ORB_data_.point2DoncamViewingPoint_[curPoint].push_back(glm::vec2(pt2D[0].GetDouble(), pt2D[1].GetDouble()));
       }
+
+
+
     }
   } catch (JsonAccessException& e) {
     std::cerr << e.what() << std::endl;

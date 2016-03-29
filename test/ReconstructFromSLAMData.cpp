@@ -44,9 +44,17 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
           << std::endl;
 
 
+  int countIgnoredPoints = 0;
   // Add the points associated to the new camera to ManifoldMeshReconstructor
   std::cout << "add points to manifRec_" << std::endl;
   for (auto const &p : newCamera->visiblePointsT) {
+    // Only consider points that were observed in many frames //TODO magic doesn't exist
+    if(p->numObservations < 10){
+      //std::cout << "IGNORE point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
+      countIgnoredPoints++;
+      continue;
+    }
+
     glm::vec3 position = p->position;
 
     if(p->idReconstruction<0){
@@ -72,20 +80,23 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
     }
 
   }
+  std::cout << "Ignored points:" << countIgnoredPoints << std::endl;
 
 
   // Add visibility pairs to manifRec_
   std::cout << "add visibility pairs to manifRec_" << std::endl;
   for(auto & p : newCamera->visiblePointsT){
 
-    //TODO inliers and min visibility check?
-    manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
+    //TODO inliers
+    if(newCamera->idReconstruction>=0 && p->idReconstruction>=0){
+      manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
+      std::cout << "ADD Visibility Pair: cam " << newCamera->idCam << ", point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
+    }
 
-    std::cout << "ADD Visibility Pair: cam " << newCamera->idCam << ", point " << p->idPoint << std::endl;
   }
 
 
-  // Tell ManifoldMeshReconstructor to shrink the manifold
+  // Tell ManifoldMeshReconstructor to shrink the manifold //TODO what if newCcamera has too few or no points associated?
   std::cout << "insertNewPointsFromCam( " << newCamera->idReconstruction << ", true )" << std::endl;
   manifRec_->insertNewPointsFromCam(newCamera->idReconstruction, true);
 
