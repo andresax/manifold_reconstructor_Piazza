@@ -88,7 +88,11 @@ struct PointType {
 
   glm::vec3 position;
   std::vector<CameraType*> viewingCams;
-  int numObservations;
+  //int numObservations;
+
+  int getNunmberObservation(){
+    return viewingCams.size();
+  }
 
   void addCamera(CameraType *cam){
     viewingCams.push_back(cam);

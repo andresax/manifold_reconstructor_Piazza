@@ -10,6 +10,7 @@
 #include <utilities.hpp>
 #include <Eigen/Core>
 #include <Eigen/Eigen>
+#include <Logger.h>
 
 ManifoldMeshReconstructor::ManifoldMeshReconstructor(ManifoldReconstructionConfig conf) {
   conf_ = conf;
@@ -78,15 +79,20 @@ void ManifoldMeshReconstructor::addVisibilityPair(int camIdx, int pointIdx) {
 
 void ManifoldMeshReconstructor::insertNewPointsFromCam(int camIdx, bool incremental) {
   if (dt_.number_of_vertices() == 0) {
+    logger_.startEvent();
     createSteinerPointGridAndBound();
+    logger_.endEventAndPrint("createSteinerPointGridAndBound\t\t\t", true);
   }
   if (incremental) {
+    logger_.startEvent();
     shrinkManifold(cams_[camIdx].position);
+    logger_.endEventAndPrint("shrinkManifold\t\t\t\t\t", true);
   }
 
   curConstraints_.clear();
   pointsMovedIdx_.clear();
 
+  //logger_.startEvent();
   int count = 0;
   for (auto id : pointsMovedIdx_) {
     if (moveVertex(id, camIdx)) {
@@ -95,7 +101,6 @@ void ManifoldMeshReconstructor::insertNewPointsFromCam(int camIdx, bool incremen
   }
 
   logger_.startEvent();
-
   int oldNumVertices = (int) vecVertexHandles_.size();
   idxPointsForRayTracing_.clear();
   std::vector<int> newPointsIdx;
@@ -171,7 +176,7 @@ void ManifoldMeshReconstructor::insertNewPointsFromCam(int camIdx, bool incremen
       (*itCell)->info().markOld();
     }
   }
-  logger_.endEventAndPrint("AddFeatures", true);
+  logger_.endEventAndPrint("AddFeatures\t\t\t\t\t", true);
 
 }
 
@@ -435,9 +440,9 @@ void ManifoldMeshReconstructor::createSteinerPointGridAndBound() {
 
 
 ///castle - kitti
-  stepX_ = 10.000;
-  stepY_ = 10.000;
-  stepZ_ = 10.000;
+  stepX_ = 40.000;
+  stepY_ = 40.000;
+  stepZ_ = 40.000;
 
   float inX = -400;
   float finX = 400;

@@ -24,6 +24,8 @@ public:
   void saveManifold();
   void overwriteFocalY(float f);
 
+  int iterationCount;
+
 private:
   //void outlierFiltering(std::vector<bool>& inliers);
   int GaussNewton(const std::vector<cv::Mat> &cameras,
@@ -36,8 +38,9 @@ private:
   CameraPointsCollection cp_data_;
   ManifoldReconstructionConfig manifConf_;
   ManifoldMeshReconstructor* manifRec_;
+  utilities::Logger logger_;
+
   int cameraNextId, pointNextId;
-  int iterationCount;
 };
 
 #endif /* RECONSTRUCTFROMSLAMDATA_H_ */

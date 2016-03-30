@@ -22,6 +22,9 @@ public:
   ORBParser(std::string path);
   virtual ~ORBParser();
   virtual void parse();
+  std::string getStats();
+  std::string getDataCSV();
+  std::string getDataSPlot();
 
   const CameraPointsCollection& getData() const {
     return ORB_data_;

@@ -14,40 +14,25 @@
 //  GNU General Public License for more details.
 
 #include <CameraPointsCollection.h>
-#include <OpenMvgParser.h>
+#include <Logger.h>
 #include <ORBParser.h>
 #include <ReconstructFromSLAMData.h>
 #include <types_config.hpp>
+#include <fstream>
 #include <iostream>
 #include <map>
+#include <string>
 #include <utility>
 
+//#define USE_SFM
+//#define PRODUCE_STATS
 
 //*************************************************************************************************/
 //********************************RECONSTRUCTION FROM VISIBILITY***********************************/
 //*************************************************************************************************/
 int main(int argc, char **argv) {
-//  OpenMvgParser op("/home/andrea/Scrivania/Datasets/Middelbury/templeRing/openmvgMatch/out.json");
-//  std::cout << "start parsing OpenMvgParser" << std::endl;
-//  OpenMvgParser op_openmvg("data/dinoRing/dinoRing.json");
-//  op_openmvg.parse();
-//  std::cout << "end parsing OpenMvgParser" << std::endl;
-
-  std::cout << "start parsing ORBParser" << std::endl;
-
-  if(argc < 2){
-//    ORBParser op("data/KITTI/KITTI00_50frames.json");
-//    op.parse();
-    std::cerr << std::endl << "Usage: ./... path_to_input_json" << std::endl;
-    return 1;
-  }
-
-  ORBParser op(argv[1]);
-  op.parse();
-
-  std::cout << "end parsing ORBParser" << std::endl;
-
-  //utilities::saveVisibilityPly(op.getSfmData());
+  utilities::Logger log;  log.startEvent();
+  int maxIterations_ = 0;
 
   ManifoldReconstructionConfig confManif;
   confManif.inverseConicEnabled = true;
@@ -59,53 +44,71 @@ int main(int argc, char **argv) {
   confManif.w_2 = 0.0;
   confManif.w_3 = 0.00;
 
-  CameraPointsCollection orb_data_ = op.getData();
 
-  //std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
-  std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
-
-  for(auto mCamera : orb_data_.getCameras()){
-    CameraType* c = mCamera.second;
-
-    std::cout << "cam " << c->idCam << std::endl;
-    std::map<int, int> count;
-
-    for(auto p : c->visiblePointsT){
-      int nOcc = p->numObservations;
-
-      std::map<int,int>::iterator it = count.find(nOcc);
-      //Bar b3;
-      if(it != count.end()){
-        count[nOcc] += 1;
-      }else{
-        count.insert(std::pair<int, int>(p->numObservations, 1));
-      }
-
-
-    }
-
-    for(auto vkOcc : count){
-      int sum = 0;
-      for(auto vkOcc_ : count){
-        if(vkOcc_.first >= vkOcc.first) sum += vkOcc_.second;
-      }
-
-      std::cout << " =" << vkOcc.first << ":\t" << vkOcc.second << ";\t\t >=" << vkOcc.first << ":\t" << sum << std::endl;
-    }
+  if(argc < 2){
+    std::cerr << std::endl << "Usage: ./manifoldReconstructor path_to_input.json [max_iterations]" << std::endl;
+    return 1;
+  }else{
+    std::cout << "input set to: " << argv[1] << std::endl << std::endl;
   }
 
-  //return 0;
+
+  if(argc > 2){
+    maxIterations_ = atoi(argv[2]);
+    std::cout << "max_iterations set to: " << maxIterations_ << std::endl << std::endl;
+  }else{
+    std::cout << "max_iterations not set" << std::endl << std::endl;
+  }
+
+#ifdef USE_SFM
+
+  OpenMvgParser op_openmvg(argv[1]);
+  op_openmvg.parse();
+  std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
+
+  ReconstructFromSfMData mSfM(op_openmvg.getSfmData(), confManif);
+
+  mSfM.run();
+
+  log.endEventAndPrint("\t\t\t\t\t\t", true);
+  return 0;
+
+#else
+
+  std::cout << "start parsing " << argv[1] << std::endl;
+  log.startEvent();
+  ORBParser op(argv[1]);
+  op.parse();
+  log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
+
+  CameraPointsCollection orb_data_ = op.getData();
+
+#ifdef PRODUCE_STATS
+  std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
+  std::ofstream fCSV;
+  fCSV.open("camerapoints.csv");
+  fCSV << std::fixed;
+  fCSV << op.getDataCSV();
+  fCSV.close();
+#endif
 
   ReconstructFromSLAMData m(orb_data_, confManif);
 
   // main loop
-  for (auto const &kvCamera : orb_data_.getCameras()) {
+  for (auto const &kvCamera : orb_data_.getCameras()){
+    if(kvCamera.second->idCam == 0) continue; // ignore first camera. it breaks the ray tracing. somehow.
+    if(maxIterations_ && m.iterationCount >= maxIterations_) break;
+    log.startEvent();
     m.increment(kvCamera.second);
+    log.endEventAndPrint("main loop\t\t\t\t\t", true); std::cout << std::endl;
   }
 
   m.saveManifold();
 
+  log.endEventAndPrint("main\t\t\t\t\t\t", true);
   return 0;
+
+#endif
 }
 
 //*************************************************************************************************/

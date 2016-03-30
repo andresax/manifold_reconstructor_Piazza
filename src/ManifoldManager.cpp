@@ -353,6 +353,11 @@ void ManifoldManager::regionGrowingProcedure() {
     }
   }
 
+  if(tetsQueue.size() == 0){
+    std::cerr << "ManifoldManager::regionGrowingProcedure(): tetsQueue.size() == 0" << std::endl << std::endl;
+    return;
+  }
+
   Delaunay3::Cell_handle currentTet = tetsQueue.back();
 
   int curIter = 0;

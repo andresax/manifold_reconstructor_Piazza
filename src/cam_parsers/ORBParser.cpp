@@ -183,9 +183,9 @@ void ORBParser::parsePoints() {
       point->idPoint = structure[curPoint]["key"].GetInt();
       ORB_data_.addPoint(point);
 
-      if (structure[curPoint].HasMember("num_obs")){
-        point->numObservations = structure[curPoint]["num_obs"].GetInt();
-      }
+//      if (structure[curPoint].HasMember("num_obs")){
+//        point->numObservations = structure[curPoint]["num_obs"].GetInt();
+//      }
 
 
       float x0 = X[0].GetFloat();
@@ -295,4 +295,76 @@ void ORBParser::parseExtrinsics(std::map<int, CameraType> & extrinsics) {
     std::cout << e.what() << std::endl;
 
   }
+}
+
+std::string ORBParser::getDataCSV() {
+  std::stringstream out;
+
+  for(auto mCamera : ORB_data_.getCameras()){
+    CameraType* c = mCamera.second;
+    glm::vec3 center = c->center;
+
+    out << "c" << c->idCam << ", " << center.x << ", " << center.y << ", " << center.z << std::endl;
+
+    for(auto p : c->visiblePointsT){
+      out << "p" << p->idPoint << ", " << p->position.x << ", " << p->position.y << ", " << p->position.z << std::endl;
+    }
+
+  }
+
+  return out.str();
+}
+
+std::string ORBParser::getDataSPlot() {
+  std::stringstream out;
+
+  for(auto mCamera : ORB_data_.getCameras()){
+    CameraType* c = mCamera.second;
+    glm::vec3 center = c->center;
+
+    out << std::endl << std::endl << center.x << " " << center.y << " " << center.z << std::endl;
+
+    for(auto p : c->visiblePointsT){
+      out << p->position.x << " " << p->position.y << " " << p->position.z << std::endl;
+    }
+
+  }
+
+  return out.str();
+}
+
+std::string ORBParser::getStats() {
+  std::stringstream out;
+
+  for(auto mCamera : ORB_data_.getCameras()){
+    CameraType* c = mCamera.second;
+
+    out << "cam " << c->idCam << std::endl;
+    std::map<int, int> count;
+
+    for(auto p : c->visiblePointsT){
+      int nOcc = p->getNunmberObservation();
+
+      std::map<int,int>::iterator it = count.find(nOcc);
+      if(it != count.end()){
+        count[nOcc] += 1;
+      }else{
+        count.insert(std::pair<int, int>(p->getNunmberObservation(), 1));
+      }
+
+
+    }
+
+    for(auto vkOcc : count){
+      int sum = 0;
+      for(auto vkOcc_ : count){
+        if(vkOcc_.first >= vkOcc.first) sum += vkOcc_.second;
+      }
+
+      out << " =" << vkOcc.first << ":\t" << vkOcc.second << ";\t\t >=" << vkOcc.first << ":\t" << sum << std::endl;
+    }
+  }
+
+  return out.str();
+
 }
