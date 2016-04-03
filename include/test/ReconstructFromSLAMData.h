@@ -21,7 +21,7 @@ public:
   ReconstructFromSLAMData(const CameraPointsCollection& cp_data, ManifoldReconstructionConfig& manifConf);
   virtual ~ReconstructFromSLAMData();
   void increment(CameraType* newCamera);
-  void saveManifold();
+  void saveManifold(std::string namePrefix, std::string nameSuffix);
   void overwriteFocalY(float f);
 
   int iterationCount;

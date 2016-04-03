@@ -49,7 +49,7 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
   int countIgnoredPoints = 0, countUpdatedPoints = 0, countAddedPoints = 0;
   for (auto const &p : newCamera->visiblePointsT) {
     // Only consider points that were observed in many frames //TODO magic doesn't exist
-    if(p->getNunmberObservation() < 6){ //TODO use ordering and top selection
+    if(p->getNunmberObservation() < 2){ //TODO use selection heuristic
       //std::cout << "IGNORE point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
       countIgnoredPoints++;
       continue;
@@ -93,8 +93,10 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
   for(auto & p : newCamera->visiblePointsT){
 
     //TODO inliers
+    //TODO also add visibility with old cameras?
     if(newCamera->idReconstruction>=0 && p->idReconstruction>=0){
       manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
+
       //std::cout << "ADD Visibility Pair: cam " << newCamera->idCam << ", point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
     }//else{
       //std::cout << "ADD Visibility Pair FAILED" << std::endl;
@@ -134,26 +136,28 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
 }
 
 
-void ReconstructFromSLAMData::saveManifold(){
+void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string nameSuffix){
   logger_.startEvent();
-  std::cout << "save ManifoldFinal.off" << std::endl;
-  manifRec_->saveManifold("ManifoldFinal.off");
-  logger_.endEventAndPrint("save ManifoldFinal.off\t\t\t\t", true);
+  std::ostringstream nameManifold; nameManifold << namePrefix << "manifold_" << nameSuffix << ".off";
+  std::cout << "saving " << nameManifold.str() << std::endl;
+  manifRec_->saveManifold(nameManifold.str());
+  logger_.endEventAndPrint("save manifold\t\t\t\t\t", true);
 
-
+//
 //  logger_.startEvent();
-//  std::cout << "save FreeFinal.off" << std::endl;
+//  std::ostringstream nameFreespace; nameFreespace << namePrefix << "free_space_manifold_" << nameSuffix << ".off";
+//  std::cout << "saving " << nameFreespace.str() << std::endl;
 //  manifRec_->saveFreespace("FreeFinal.off");
-//  logger_.endEventAndPrint("save FreeFinal.off\t\t\t", true);
-
-  logger_.startEvent();
-  std::cout << "save ManifoldWithoutSteinerPointsFinal.off" << std::endl;
-  std::vector<int> age;
-  for (int cur = 0; cur < cp_data_.numCameras(); cur++) { //TODO check this is always correct
-    age.push_back(cur);
-  }
-  manifRec_->saveOldManifold("ManifoldWithoutSteinerPointsFinal.off", age);
-  logger_.endEventAndPrint("save ManifoldWithoutSteinerPointsFinal.off\t", true);
+//  logger_.endEventAndPrint("save free_space_manifold\t\t\t", true);
+//
+//  std::vector<int> age;
+//  for (int cur = 0; cur < cp_data_.numCameras(); cur++) age.push_back(cur);
+//
+//  logger_.startEvent();
+//  std::ostringstream nameManifoldWithoutSteinerPoints; nameManifoldWithoutSteinerPoints << namePrefix << "manifold_without_steiner_points_" << nameSuffix << ".off";
+//  std::cout << "saving " << nameManifoldWithoutSteinerPoints.str().str() << std::endl;
+//  manifRec_->saveOldManifold(nameManifoldWithoutSteinerPoints.str(), age);
+//  logger_.endEventAndPrint("save manifold_without_steiner_points\t", true);
 
 }
 

@@ -4,6 +4,8 @@
 #include <rapidjson/reader.h>
 #include <utilities.hpp>
 
+#define COMMA <<", "<<
+
 ORBParser::ORBParser(std::string path) {
   fileStream_.open(path.c_str());
 }
@@ -297,6 +299,22 @@ void ORBParser::parseExtrinsics(std::map<int, CameraType> & extrinsics) {
   }
 }
 
+std::string ORBParser::getDataSPlot() {
+  std::stringstream out;
+
+  for(auto mCamera : ORB_data_.getCameras()){
+    CameraType* c = mCamera.second;
+    long unsigned int idCam =c->idCam;
+    for(auto p : c->visiblePointsT){
+      out << c->idCam COMMA p->position.x COMMA p->position.y COMMA p->position.z COMMA p->getNunmberObservation() << std::endl;
+    }
+
+  }
+
+  return out.str();
+}
+
+
 std::string ORBParser::getDataCSV() {
   std::stringstream out;
 
@@ -304,10 +322,10 @@ std::string ORBParser::getDataCSV() {
     CameraType* c = mCamera.second;
     glm::vec3 center = c->center;
 
-    out << "c" << c->idCam << ", " << center.x << ", " << center.y << ", " << center.z << std::endl;
+    out << "c" COMMA c->idCam COMMA center.x COMMA center.y COMMA center.z << std::endl;
 
     for(auto p : c->visiblePointsT){
-      out << "p" << p->idPoint << ", " << p->position.x << ", " << p->position.y << ", " << p->position.z << std::endl;
+      out << "p" COMMA p->idPoint COMMA c->idCam COMMA p->position.x COMMA p->position.y COMMA p->position.z << std::endl;
     }
 
   }
@@ -315,23 +333,6 @@ std::string ORBParser::getDataCSV() {
   return out.str();
 }
 
-std::string ORBParser::getDataSPlot() {
-  std::stringstream out;
-
-  for(auto mCamera : ORB_data_.getCameras()){
-    CameraType* c = mCamera.second;
-    glm::vec3 center = c->center;
-
-    out << std::endl << std::endl << center.x << " " << center.y << " " << center.z << std::endl;
-
-    for(auto p : c->visiblePointsT){
-      out << p->position.x << " " << p->position.y << " " << p->position.z << std::endl;
-    }
-
-  }
-
-  return out.str();
-}
 
 std::string ORBParser::getStats() {
   std::stringstream out;

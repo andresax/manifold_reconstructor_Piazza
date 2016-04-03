@@ -18,10 +18,10 @@
 #include <ORBParser.h>
 #include <ReconstructFromSLAMData.h>
 #include <types_config.hpp>
-#include <fstream>
+#include <types_reconstructor.hpp>
+#include <cstdlib>
 #include <iostream>
 #include <map>
-#include <string>
 #include <utility>
 
 //#define USE_SFM
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 
   ManifoldReconstructionConfig confManif;
   confManif.inverseConicEnabled = true;
-  confManif.maxDistanceCamFeature = 10.0;
+  confManif.maxDistanceCamFeature = 100.0;
   confManif.probOrVoteThreshold = 2.1;
   confManif.enableSuboptimalPolicy = false;
   confManif.suboptimalMethod = 0;
@@ -82,13 +82,13 @@ int main(int argc, char **argv) {
   log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
 
   CameraPointsCollection orb_data_ = op.getData();
+  std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
 
 #ifdef PRODUCE_STATS
-  std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
   std::ofstream fCSV;
-  fCSV.open("camerapoints.csv");
+  fCSV.open("points.csv");
   fCSV << std::fixed;
-  fCSV << op.getDataCSV();
+  fCSV << op.getDataSPlot();
   fCSV.close();
 #endif
 
@@ -98,12 +98,17 @@ int main(int argc, char **argv) {
   for (auto const &kvCamera : orb_data_.getCameras()){
     if(kvCamera.second->idCam == 0) continue; // ignore first camera. it breaks the ray tracing. somehow.
     if(maxIterations_ && m.iterationCount >= maxIterations_) break;
+
     log.startEvent();
+
     m.increment(kvCamera.second);
+
+    if(m.iterationCount && !(m.iterationCount%2)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
+
     log.endEventAndPrint("main loop\t\t\t\t\t", true); std::cout << std::endl;
   }
 
-  m.saveManifold();
+  m.saveManifold("output/", "final");
 
   log.endEventAndPrint("main\t\t\t\t\t\t", true);
   return 0;
