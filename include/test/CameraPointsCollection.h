@@ -16,17 +16,18 @@ public:
   CameraPointsCollection();
   virtual ~CameraPointsCollection();
 
-  void initCameras(int);
   void addCamera(CameraType*);
   CameraType* getCamera(long unsigned int);
   int numCameras();
 
-  void initPoints(int);
+  int hasPoint(long unsigned int pointId);
   void addPoint(PointType*);
   PointType* getPoint(long unsigned int);
   int numPoints();
 
   void addVisibility(long unsigned int, long unsigned int);
+  void addVisibility(CameraType* camera, PointType* point);
+
 
   void clear();
 

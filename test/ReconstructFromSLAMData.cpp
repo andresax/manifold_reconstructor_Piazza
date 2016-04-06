@@ -40,9 +40,9 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
   // generate the ManifoldMeshReconstructor's index if the camera hasn't got one already
   if(newCamera->idReconstruction<0) newCamera->idReconstruction = cameraNextId++;
 
-//  std::cout << "ADD cam " << newCamera->idCam << " (" <<  newCamera->idReconstruction << ")"
-//          << ": " << center.x << ", " << center.y << ", " << center.z
-//          << std::endl;
+  std::cout << "ADD cam " << newCamera->idCam << " (" <<  newCamera->idReconstruction << ")"
+   //       << ": " << center.x << ", " << center.y << ", " << center.z
+          << std::endl;
 
 
   // Add the points associated to the new camera to ManifoldMeshReconstructor
@@ -50,7 +50,7 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
   for (auto const &p : newCamera->visiblePointsT) {
     // Only consider points that were observed in many frames //TODO magic doesn't exist
     if(p->getNunmberObservation() < 2){ //TODO use selection heuristic
-      //std::cout << "IGNORE point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
+      //std::cout << "IGNORE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation() << std::endl;
       countIgnoredPoints++;
       continue;
     }
@@ -66,8 +66,8 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
       manifRec_->addPoint(position.x, position.y, position.z);
       countAddedPoints ++;
 
-//      std::cout << "ADD    point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")"
-//          << ": " << position.x << ", " << position.y << ", " << position.z
+//      std::cout << "ADD    point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation()
+//         // << ": " << position.x << ", " << position.y << ", " << position.z
 //          << std::endl;
 
     }else{
@@ -75,8 +75,8 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
       // The point was already added to ManifoldMeshReconstructor, so it is only updated
       manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z);
       countUpdatedPoints++;
-//      std::cout << "UPDATE point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")"
-//          << ": " << position.x << ", " << position.y << ", " << position.z
+//      std::cout << "UPDATE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation()
+//         // << ": " << position.x << ", " << position.y << ", " << position.z
 //          << std::endl;
     }
 
@@ -97,41 +97,46 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
     if(newCamera->idReconstruction>=0 && p->idReconstruction>=0){
       manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
 
-      //std::cout << "ADD Visibility Pair: cam " << newCamera->idCam << ", point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
-    }//else{
-      //std::cout << "ADD Visibility Pair FAILED" << std::endl;
-    //}
+      //std::cout << "ADD Visibility Pair       : cam " << newCamera->idCam << "(recId:" <<  newCamera->idReconstruction << "), point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
+    }else{
+      std::cout << "ADD Visibility Pair FAILED: cam " << newCamera->idCam << "(recId:" <<  newCamera->idReconstruction << "), point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
+    }
 
   }
 
-  // Tell ManifoldMeshReconstructor to shrink the manifold //TODO what if newCcamera has too few or no points associated?
-  //std::cout << "insertNewPointsFromCam( " << newCamera->idReconstruction << ", true )" << std::endl;
-  logger_.startEvent();
-  manifRec_->insertNewPointsFromCam(newCamera->idReconstruction, true);
-  logger_.endEventAndPrint("insertNewPointsFromCam\t\t\t\t", true);
 
-  // Tell ManifoldMeshReconstructor to do its stuff
-  //std::cout << "rayTracingFromCam( " << newCamera->idReconstruction << " )" << std::endl;
-  logger_.startEvent();
-  manifRec_->rayTracingFromCam(newCamera->idReconstruction);
-  logger_.endEventAndPrint("rayTracingFromCam\t\t\t\t", true);
+  if(iterationCount > 4){
 
-  // Tell ManifoldMeshReconstructor to grow back the manifold
-  logger_.startEvent();
-  std::cout << "growManifold" << std::endl;
-  manifRec_->growManifold();
-  logger_.endEventAndPrint("growManifold\t\t\t\t\t", true);
+    //TODO actually manage the case of newCamera has too few or no points associated
 
-  logger_.startEvent();
-  std::cout << "growManifoldSev" << std::endl;
-  manifRec_->growManifoldSev();
-  logger_.endEventAndPrint("growManifoldSev\t\t\t\t\t", true);
+    // Tell ManifoldMeshReconstructor to shrink the manifold
+    //std::cout << "insertNewPointsFromCam( " << newCamera->idReconstruction << ", true )" << std::endl;
+    logger_.startEvent();
+    manifRec_->insertNewPointsFromCam(newCamera->idReconstruction, true);
+    logger_.endEventAndPrint("insertNewPointsFromCam\t\t\t\t", true);
 
-  logger_.startEvent();
-  std::cout << "growManifold" << std::endl;
-  manifRec_->growManifold();
-  logger_.endEventAndPrint("growManifold\t\t\t\t\t", true);
+    // Tell ManifoldMeshReconstructor to do its stuff
+    //std::cout << "rayTracingFromCam( " << newCamera->idReconstruction << " )" << std::endl;
+    logger_.startEvent();
+    manifRec_->rayTracingFromCam(newCamera->idReconstruction);
+    logger_.endEventAndPrint("rayTracingFromCam\t\t\t\t", true);
 
+    // Tell ManifoldMeshReconstructor to grow back the manifold
+    logger_.startEvent();
+    std::cout << "growManifold" << std::endl;
+    manifRec_->growManifold();
+    logger_.endEventAndPrint("growManifold\t\t\t\t\t", true);
+
+    logger_.startEvent();
+    std::cout << "growManifoldSev" << std::endl;
+    manifRec_->growManifoldSev();
+    logger_.endEventAndPrint("growManifoldSev\t\t\t\t\t", true);
+
+    logger_.startEvent();
+    std::cout << "growManifold" << std::endl;
+    manifRec_->growManifold();
+    logger_.endEventAndPrint("growManifold\t\t\t\t\t", true);
+  }
   iterationCount++;
 }
 

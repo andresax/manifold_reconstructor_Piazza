@@ -15,7 +15,7 @@
 
 #include <CameraPointsCollection.h>
 #include <Logger.h>
-#include <ORBParser.h>
+#include <ORBIncrementalParser.h>
 #include <ReconstructFromSLAMData.h>
 #include <types_config.hpp>
 #include <types_reconstructor.hpp>
@@ -77,12 +77,11 @@ int main(int argc, char **argv) {
 
   std::cout << "start parsing " << argv[1] << std::endl;
   log.startEvent();
-  ORBParser op(argv[1]);
-  op.parse();
+  ORBIncrementalParser op(argv[1]);
   log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
 
   CameraPointsCollection orb_data_ = op.getData();
-  std::cout << "orb: " <<  orb_data_.numCameras() << " cams; " << orb_data_.numPoints() << " points" << std::endl << std::endl;
+  std::cout << "orb: " <<  op.numCameras() << " cams" << std::endl << std::endl;
 
 #ifdef PRODUCE_STATS
   std::ofstream fCSV;
@@ -95,15 +94,23 @@ int main(int argc, char **argv) {
   ReconstructFromSLAMData m(orb_data_, confManif);
 
   // main loop
-  for (auto const &kvCamera : orb_data_.getCameras()){
-    if(kvCamera.second->idCam == 0) continue; // ignore first camera. it breaks the ray tracing. somehow.
+  //for (auto const &kvCamera : orb_data_.getCameras()){
+  for(int i=0; i < op.numCameras(); i++){
+    CameraType* camera = op.nextCamera();
+
+    std::cout << "camera " << camera->idCam << " (" <<  camera->idReconstruction << ")"
+       //       << ": " << center.x << ", " << center.y << ", " << center.z
+              << std::endl;
+
+    if(camera->idCam == 0) continue; // ignore first camera. it breaks the ray tracing. somehow.
     if(maxIterations_ && m.iterationCount >= maxIterations_) break;
 
     log.startEvent();
 
-    m.increment(kvCamera.second);
 
-    if(m.iterationCount && !(m.iterationCount%2)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
+    m.increment(camera);
+
+    //if(m.iterationCount && !(m.iterationCount%2)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
     log.endEventAndPrint("main loop\t\t\t\t\t", true); std::cout << std::endl;
   }

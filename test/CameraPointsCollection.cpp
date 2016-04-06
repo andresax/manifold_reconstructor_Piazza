@@ -23,10 +23,6 @@ void CameraPointsCollection::clear(){
   cameras_.clear();
 }
 
-void CameraPointsCollection::initCameras(int numCameras){
-  //cameras_.assign(numCameras, NULL);
-}
-
 void CameraPointsCollection::addCamera(CameraType* cam){
   cameras_.insert(std::pair<long unsigned int,CameraType*>(cam->idCam, cam));
 }
@@ -40,8 +36,8 @@ int CameraPointsCollection::numCameras(){
 }
 
 
-void CameraPointsCollection::initPoints(int numPoints){
-  //points_.assign(numPoints, NULL);
+int CameraPointsCollection::hasPoint(long unsigned int pointId){
+  return points_.count(pointId);
 }
 
 void CameraPointsCollection::addPoint(PointType* point){
@@ -58,11 +54,16 @@ int CameraPointsCollection::numPoints(){
 
 
 void CameraPointsCollection::addVisibility(long unsigned int camId, long unsigned int pointId){
-  CameraType* cam = getCamera(camId);
+  //TODO check if camera and point are in cameras_ and points_
+  CameraType* camera = getCamera(camId);
   PointType* point = getPoint(pointId);
+  addVisibility(camera, point);
+}
+void CameraPointsCollection::addVisibility(CameraType* camera, PointType* point){
+  //TODO check if camera and point are in cameras_ and points_
+  camera->addPoint(point);
+  point->addCamera(camera);
 
-  cam->addPoint(point);
-  point->addCamera(cam);
 }
 
 
