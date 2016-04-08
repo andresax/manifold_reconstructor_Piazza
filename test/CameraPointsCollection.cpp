@@ -23,6 +23,10 @@ void CameraPointsCollection::clear(){
   cameras_.clear();
 }
 
+int CameraPointsCollection::hasCamera(long unsigned int cameraId){
+  return cameras_.count(cameraId);
+}
+
 void CameraPointsCollection::addCamera(CameraType* cam){
   cameras_.insert(std::pair<long unsigned int,CameraType*>(cam->idCam, cam));
 }

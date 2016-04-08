@@ -22,6 +22,7 @@ public:
 
   std::string getStats();
   std::string getDataCSV();
+  std::string getDataOFF();
   std::string getDataSPlot();
 
   const CameraPointsCollection& getData() const {

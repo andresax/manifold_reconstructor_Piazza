@@ -33,7 +33,6 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
   //outlierFiltering(inliers); // comment this; EP
 
   // Add the new camera to ManifoldMeshReconstructor
-  //std::cout << "add newCamera to manifRec_" << std::endl;
   glm::vec3 center = newCamera->center;
   manifRec_->addCameraCenter(center.x, center.y, center.z);
 
@@ -48,8 +47,9 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
   // Add the points associated to the new camera to ManifoldMeshReconstructor
   int countIgnoredPoints = 0, countUpdatedPoints = 0, countAddedPoints = 0;
   for (auto const &p : newCamera->visiblePointsT) {
-    // Only consider points that were observed in many frames //TODO magic doesn't exist
-    if(p->getNunmberObservation() < 2){ //TODO use selection heuristic
+
+    // Only consider points that were observed in many frames
+    if(p->getNunmberObservation() < 3){ //TODO use selection heuristic
       //std::cout << "IGNORE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation() << std::endl;
       countIgnoredPoints++;
       continue;
@@ -66,6 +66,19 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
       manifRec_->addPoint(position.x, position.y, position.z);
       countAddedPoints ++;
 
+      // since the point has just been added, the visibility with the previous cameras wasn't added before. Add it now
+      for(auto coCamera : p->viewingCams){
+        if(coCamera->idReconstruction>=0){
+          manifRec_->addVisibilityPair(coCamera->idReconstruction, p->idReconstruction);
+          // TODO add camera to rayTracing set
+          //std::cout << "add visibility with co-camera " << coCamera->idCam << ", point " << p->idPoint << std::endl;
+          // TODO check that there are actually no points in visibility pairs with this camera (redundant)
+        }else{
+          // all the previous cameras should have been added already. This shouldn't happen
+          std::cout << "camera " << coCamera->idCam << " ignored" << std::endl;
+        }
+      }
+
 //      std::cout << "ADD    point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation()
 //         // << ": " << position.x << ", " << position.y << ", " << position.z
 //          << std::endl;
@@ -73,11 +86,24 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
     }else{
 
       // The point was already added to ManifoldMeshReconstructor, so it is only updated
-      manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z);
-      countUpdatedPoints++;
-//      std::cout << "UPDATE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation()
-//         // << ": " << position.x << ", " << position.y << ", " << position.z
-//          << std::endl;
+      if(iterationCount > 7){
+        manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z);
+        countUpdatedPoints++;
+      }
+
+      /**
+       *  Do move point only after running insertNewPointsFromCam
+       *
+       *
+       */
+
+      // add visibility if there are least two cameras
+      manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
+
+
+      std::cout << "UPDATE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation()
+         // << ": " << position.x << ", " << position.y << ", " << position.z
+          << std::endl;
     }
 
   }
@@ -88,35 +114,17 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
       << "\tI: " << countIgnoredPoints
       << std::endl;
 
-  // Add visibility pairs to manifRec_
-  //std::cout << "add visibility pairs to manifRec_" << std::endl;
-  for(auto & p : newCamera->visiblePointsT){
 
-    //TODO inliers
-    //TODO also add visibility with old cameras?
-    if(newCamera->idReconstruction>=0 && p->idReconstruction>=0){
-      manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
-
-      //std::cout << "ADD Visibility Pair       : cam " << newCamera->idCam << "(recId:" <<  newCamera->idReconstruction << "), point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
-    }else{
-      std::cout << "ADD Visibility Pair FAILED: cam " << newCamera->idCam << "(recId:" <<  newCamera->idReconstruction << "), point " << p->idPoint << " (recId:" <<  p->idReconstruction << ")" << std::endl;
-    }
-
-  }
-
-
-  if(iterationCount > 4){
+  if(iterationCount > 5){
 
     //TODO actually manage the case of newCamera has too few or no points associated
 
     // Tell ManifoldMeshReconstructor to shrink the manifold
-    //std::cout << "insertNewPointsFromCam( " << newCamera->idReconstruction << ", true )" << std::endl;
     logger_.startEvent();
     manifRec_->insertNewPointsFromCam(newCamera->idReconstruction, true);
     logger_.endEventAndPrint("insertNewPointsFromCam\t\t\t\t", true);
 
     // Tell ManifoldMeshReconstructor to do its stuff
-    //std::cout << "rayTracingFromCam( " << newCamera->idReconstruction << " )" << std::endl;
     logger_.startEvent();
     manifRec_->rayTracingFromCam(newCamera->idReconstruction);
     logger_.endEventAndPrint("rayTracingFromCam\t\t\t\t", true);
@@ -137,6 +145,7 @@ void ReconstructFromSLAMData::increment(CameraType* newCamera) {
     manifRec_->growManifold();
     logger_.endEventAndPrint("growManifold\t\t\t\t\t", true);
   }
+
   iterationCount++;
 }
 

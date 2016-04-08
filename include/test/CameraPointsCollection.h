@@ -16,11 +16,12 @@ public:
   CameraPointsCollection();
   virtual ~CameraPointsCollection();
 
+  int hasCamera(long unsigned int);
   void addCamera(CameraType*);
   CameraType* getCamera(long unsigned int);
   int numCameras();
 
-  int hasPoint(long unsigned int pointId);
+  int hasPoint(long unsigned int);
   void addPoint(PointType*);
   PointType* getPoint(long unsigned int);
   int numPoints();

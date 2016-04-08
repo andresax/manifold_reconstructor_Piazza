@@ -5,6 +5,7 @@
 #include <utilities.hpp>
 
 #define COMMA <<", "<<
+#define SPACE <<" "<<
 
 ORBIncrementalParser::ORBIncrementalParser(std::string path) {
   fileStream_.open(path.c_str());
@@ -46,7 +47,13 @@ CameraType* ORBIncrementalParser::nextCamera(){
 
     CameraType* camera = new CameraType();
 
-    camera->idCam = jsonView["viewId"].GetInt();
+    long unsigned int cameraId = jsonView["viewId"].GetInt();
+
+    if(ORB_data_.hasCamera(cameraId)){
+      return NULL; // TODO manage camera update
+    }
+
+    camera->idCam = cameraId;
     ORB_data_.addCamera(camera);
 
     std::string local(jsonView["local_path"].GetString());
@@ -277,6 +284,30 @@ std::string ORBIncrementalParser::getDataCSV() {
 }
 
 
+std::string ORBIncrementalParser::getDataOFF() {
+  std::stringstream out;
+
+  std::set<PointType*> visiblePoints;
+
+  for(auto mCamera : ORB_data_.getCameras()){
+    CameraType* c = mCamera.second;
+
+    for(auto p : c->visiblePointsT ){
+      if(p->idReconstruction>=0 && p->getNunmberObservation()>=2) visiblePoints.insert(p); // TODO if visibility is higher than 2
+    }
+
+  }
+
+  out << "OFF" << std::endl << visiblePoints.size() <<" 0 0" << std::endl;
+
+  for(auto p : visiblePoints){
+    out << p->position.x SPACE p->position.y SPACE p->position.z << std::endl;
+  }
+
+  return out.str();
+}
+
+
 std::string ORBIncrementalParser::getStats() {
   std::stringstream out;
 
@@ -308,6 +339,37 @@ std::string ORBIncrementalParser::getStats() {
       out << " =" << vkOcc.first << ":\t" << vkOcc.second << ";\t\t >=" << vkOcc.first << ":\t" << sum << std::endl;
     }
   }
+
+  out << std::endl << std::endl;
+
+  for(auto iCameraPair : ORB_data_.getCameras()){
+    CameraType* i = iCameraPair.second;
+    std::set<long unsigned int> indexesSet;
+
+    for(auto p : i->visiblePointsT) if(p->idReconstruction>=0) for(auto j : p->viewingCams) indexesSet.insert(j->idCam);
+
+    out << "co-cameras( " << i->idCam << "):\t";
+    for(auto coCamIndex : indexesSet) out << " " << coCamIndex;
+    out << std::endl;
+  }
+
+  float maxDistanceOverall = 0.0f, maxDistanceFromOOverall = 0.0f;
+  for(auto cameraPair : ORB_data_.getCameras()){
+    float maxDistance = 0.0f, maxDistanceFromO = 0.0f;
+    CameraType* c = cameraPair.second;
+    for(auto p : c->visiblePointsT){
+      float d = utilities::distanceEucl(c->center.x, c->center.y, c->center.z, p->position.x, p->position.y, p->position.z);
+      float d_o = utilities::distanceEucl(0.0f, 0.0f, 0.0f, p->position.x, p->position.y, p->position.z);
+      if( d > maxDistance) maxDistance = d;
+      if( d > maxDistanceOverall) maxDistanceOverall = d;
+      if( d_o > maxDistanceFromO) maxDistanceFromO = d_o;
+      if( d_o > maxDistanceFromOOverall) maxDistanceFromOOverall = d_o;
+    }
+
+    out << "camera " << c->idCam << "\tmax distance:\t" << maxDistance << "\tmax distance from O:\t" << maxDistanceFromO << std::endl;
+  }
+
+  out << "overall camera-points max distance:\t" << maxDistanceOverall << "\toverall max distance from O:\t" << maxDistanceFromOOverall << std::endl << std::endl;
 
   return out.str();
 

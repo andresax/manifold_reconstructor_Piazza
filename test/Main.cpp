@@ -25,7 +25,7 @@
 #include <utility>
 
 //#define USE_SFM
-//#define PRODUCE_STATS
+#define PRODUCE_STATS
 
 //*************************************************************************************************/
 //********************************RECONSTRUCTION FROM VISIBILITY***********************************/
@@ -35,9 +35,9 @@ int main(int argc, char **argv) {
   int maxIterations_ = 0;
 
   ManifoldReconstructionConfig confManif;
-  confManif.inverseConicEnabled = true;
+  confManif.inverseConicEnabled = false;
   confManif.maxDistanceCamFeature = 100.0;
-  confManif.probOrVoteThreshold = 2.1;
+  confManif.probOrVoteThreshold = 1.1;
   confManif.enableSuboptimalPolicy = false;
   confManif.suboptimalMethod = 0;
   confManif.w_1 = 1.0;
@@ -84,11 +84,11 @@ int main(int argc, char **argv) {
   std::cout << "orb: " <<  op.numCameras() << " cams" << std::endl << std::endl;
 
 #ifdef PRODUCE_STATS
-  std::ofstream fCSV;
-  fCSV.open("points.csv");
-  fCSV << std::fixed;
-  fCSV << op.getDataSPlot();
-  fCSV.close();
+  std::ofstream statsFile;
+  statsFile.open("stats.txt");
+  statsFile << std::fixed;
+  statsFile << op.getStats();
+  statsFile.close();
 #endif
 
   ReconstructFromSLAMData m(orb_data_, confManif);
@@ -98,11 +98,32 @@ int main(int argc, char **argv) {
   for(int i=0; i < op.numCameras(); i++){
     CameraType* camera = op.nextCamera();
 
-    std::cout << "camera " << camera->idCam << " (" <<  camera->idReconstruction << ")"
-       //       << ": " << center.x << ", " << center.y << ", " << center.z
-              << std::endl;
+    if(camera == NULL){
+      std::cout << "camera update skipped" << std::endl << std::endl;
+      continue;
+    }
 
-    if(camera->idCam == 0) continue; // ignore first camera. it breaks the ray tracing. somehow.
+    #ifdef PRODUCE_STATS
+    statsFile.open("stats.txt");
+    statsFile << op.getStats();
+    statsFile.close();
+
+
+    std::ostringstream nameVisiblePoints; nameVisiblePoints << "output/vp/visible_points_" << camera->idCam << ".off";
+    std::cout << "saving " << nameVisiblePoints.str() << std::endl;
+
+    statsFile.open(nameVisiblePoints.str().c_str());
+    statsFile << op.getDataOFF();
+    statsFile.close();
+
+    #endif
+
+
+//    if(camera->idCam < 5){
+//      // ignore first camera. it breaks the ray tracing. somehow.
+//      std::cout << "camera " << camera->idCam << " skipped" << std::endl;
+//      continue;
+//    }
     if(maxIterations_ && m.iterationCount >= maxIterations_) break;
 
     log.startEvent();
@@ -110,7 +131,7 @@ int main(int argc, char **argv) {
 
     m.increment(camera);
 
-    //if(m.iterationCount && !(m.iterationCount%2)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
+    if(m.iterationCount && !(m.iterationCount%1)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
     log.endEventAndPrint("main loop\t\t\t\t\t", true); std::cout << std::endl;
   }

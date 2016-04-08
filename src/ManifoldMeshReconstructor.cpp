@@ -72,6 +72,15 @@ void ManifoldMeshReconstructor::addCameraCenter(float x, float y, float z) {
 }
 
 void ManifoldMeshReconstructor::addVisibilityPair(int camIdx, int pointIdx) {
+
+  // DEBUG TODO
+  for(auto camViewed : points_[pointIdx].viewingCams){
+    if(camViewed == camIdx) std::cerr << "camViewed == camIdx camIdx: " << camIdx <<", pointIdx: " << pointIdx << std::endl;
+  }
+  for(auto pointViewed : cams_[camIdx].visiblePoints){
+    if(pointViewed == pointIdx) std::cerr << "pointViewed == pointIdx camIdx: " << camIdx <<", pointIdx: " << pointIdx << std::endl;
+  }
+
   cams_[camIdx].visiblePoints.push_back(pointIdx);
   cams_[camIdx].newVisiblePoints.push_back(pointIdx);
   points_[pointIdx].viewingCams.push_back(camIdx);
@@ -95,7 +104,6 @@ void ManifoldMeshReconstructor::insertNewPointsFromCam(int camIdx, bool incremen
   }
 
   curConstraints_.clear();
-  pointsMovedIdx_.clear();
 
   //logger_.startEvent();
   int count = 0;
@@ -104,6 +112,7 @@ void ManifoldMeshReconstructor::insertNewPointsFromCam(int camIdx, bool incremen
       count++;
     }
   }
+  pointsMovedIdx_.clear();
 
   logger_.startEvent();
   int oldNumVertices = (int) vecVertexHandles_.size();
@@ -594,6 +603,19 @@ bool ManifoldMeshReconstructor::cellTraversalExitTest(int & f, int & fold, const
 
   // Let f be the entry face's index.
   for (int curNeig = 0; curNeig < 4; ++curNeig) {
+
+//    for (int i=0; i <4; i++) {
+//      std::cout << "V" << i << ": ";
+//      std::cout << "(" << tetCur->vertex(i)->point().x() << ", ";
+//      std::cout << tetCur->vertex(i)->point().y() << ", ";
+//      std::cout << tetCur->vertex(i)->point().z() << ") ";
+//    }
+//    std::cout << std::endl;
+//
+//    std::cout << "\tx: " << constraint.source().x()<< "\ty: " << constraint.source().y()<< "\tz: " << constraint.source().z() << std::endl;
+//    std::cout << "\tx: " << constraint.target().x()<< "\ty: " << constraint.target().y()<< "\tz: " << constraint.target().z() << std::endl;
+
+
     if (tetCur->neighbor(curNeig) == tetPrev)
       fold = curNeig;
   }
@@ -694,6 +716,8 @@ int ManifoldMeshReconstructor::moveVertex(int idxPoint, int idxCam) {
   Delaunay3::Vertex_handle hndlQ = points_[idxPoint].vertexHandle;
 
   SetConstraints setUnionedConstraints;
+
+  if(hndlQ == NULL) return 0; ///// TEST
 
   PointD3 initialPosition = hndlQ->point();
   PointD3 pd3NewPoint = points_[idxPoint].position;
