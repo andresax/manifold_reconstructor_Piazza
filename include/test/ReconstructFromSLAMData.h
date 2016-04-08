@@ -35,10 +35,12 @@ private:
       cv::Mat &jacobian, cv::Mat &hessian);
 
 
-  CameraPointsCollection cp_data_;
   ManifoldReconstructionConfig manifConf_;
   ManifoldMeshReconstructor* manifRec_;
   utilities::Logger logger_;
+
+  CameraPointsCollection cp_data_;
+  std::set<CameraType*> rayTracingSet_;
 
   int cameraNextId, pointNextId;
 };
