@@ -87,20 +87,20 @@ void ManifoldMeshReconstructor::addVisibilityPair(int camIdx, int pointIdx) {
 }
 
 void ManifoldMeshReconstructor::insertNewPointsFromCam(int camIdx, bool incremental) {
-  std::cout << "camIdx: " << camIdx
-      << " \t visiblePoints.size(): " << cams_[camIdx].visiblePoints.size()
-      << " \t newVisiblePoints.size(): " << cams_[camIdx].newVisiblePoints.size()
-      << std::endl;
+//  std::cout << "camIdx: " << camIdx
+//      << " \t visiblePoints.size(): " << cams_[camIdx].visiblePoints.size()
+//      << " \t newVisiblePoints.size(): " << cams_[camIdx].newVisiblePoints.size()
+//      << std::endl;
 
   if (dt_.number_of_vertices() == 0) {
     logger_.startEvent();
     createSteinerPointGridAndBound();
-    logger_.endEventAndPrint("createSteinerPointGridAndBound\t\t\t", true);
+    logger_.endEventAndPrint("│ ├ createSteinerPointGridAndBound\t\t\t", true);
   }
   if (incremental) {
     logger_.startEvent();
     shrinkManifold(cams_[camIdx].position);
-    logger_.endEventAndPrint("shrinkManifold\t\t\t\t\t", true);
+    logger_.endEventAndPrint("│ ├ shrinkManifold\t\t\t\t", true);
   }
 
   curConstraints_.clear();
@@ -190,7 +190,7 @@ void ManifoldMeshReconstructor::insertNewPointsFromCam(int camIdx, bool incremen
       (*itCell)->info().markOld();
     }
   }
-  logger_.endEventAndPrint("AddFeatures\t\t\t\t\t", true);
+  logger_.endEventAndPrint("│ ├ AddFeatures\t\t\t\t\t", true);
 
 }
 

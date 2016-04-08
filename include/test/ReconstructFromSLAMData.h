@@ -20,8 +20,11 @@ class ReconstructFromSLAMData {
 public:
   ReconstructFromSLAMData(const CameraPointsCollection& cp_data, ManifoldReconstructionConfig& manifConf);
   virtual ~ReconstructFromSLAMData();
-  void increment(CameraType* newCamera);
+
+  void addCamera(CameraType* newCamera);
+  void updateManifold();
   void saveManifold(std::string namePrefix, std::string nameSuffix);
+
   void overwriteFocalY(float f);
 
   int iterationCount;
@@ -41,6 +44,7 @@ private:
 
   CameraPointsCollection cp_data_;
   std::set<CameraType*> rayTracingSet_;
+  std::set<CameraType*> insertNewPointsFromCamSet_;
 
   int cameraNextId, pointNextId;
 };

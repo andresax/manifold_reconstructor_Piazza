@@ -27,11 +27,16 @@
 //#define USE_SFM
 #define PRODUCE_STATS
 
+#define MANIFOLD_UPDATE_EVERY 5
+#define INITIAL_MANIFOLD_UPDATE_SKIP 5
+#define SAVE_MANIFOLD_EVERY 5
+
 //*************************************************************************************************/
 //********************************RECONSTRUCTION FROM VISIBILITY***********************************/
 //*************************************************************************************************/
 int main(int argc, char **argv) {
   utilities::Logger log;  log.startEvent();
+  std::ofstream statsFile, visiblePointsFile;
   int maxIterations_ = 0;
 
   ManifoldReconstructionConfig confManif;
@@ -51,7 +56,6 @@ int main(int argc, char **argv) {
   }else{
     std::cout << "input set to: " << argv[1] << std::endl << std::endl;
   }
-
 
   if(argc > 2){
     maxIterations_ = atoi(argv[2]);
@@ -83,62 +87,47 @@ int main(int argc, char **argv) {
   CameraPointsCollection orb_data_ = op.getData();
   std::cout << "orb: " <<  op.numCameras() << " cams" << std::endl << std::endl;
 
-#ifdef PRODUCE_STATS
-  std::ofstream statsFile;
-  statsFile.open("stats.txt");
-  statsFile << std::fixed;
-  statsFile << op.getStats();
-  statsFile.close();
-#endif
-
   ReconstructFromSLAMData m(orb_data_, confManif);
 
   // main loop
-  //for (auto const &kvCamera : orb_data_.getCameras()){
   for(int i=0; i < op.numCameras(); i++){
     CameraType* camera = op.nextCamera();
 
     if(camera == NULL){
-      std::cout << "camera update skipped" << std::endl << std::endl;
       continue;
     }
 
-    #ifdef PRODUCE_STATS
-    statsFile.open("stats.txt");
-    statsFile << op.getStats();
-    statsFile.close();
-
-
-    std::ostringstream nameVisiblePoints; nameVisiblePoints << "output/vp/visible_points_" << camera->idCam << ".off";
-    std::cout << "saving " << nameVisiblePoints.str() << std::endl;
-
-    statsFile.open(nameVisiblePoints.str().c_str());
-    statsFile << op.getDataOFF();
-    statsFile.close();
-
-    #endif
-
-
-//    if(camera->idCam < 5){
-//      // ignore first camera. it breaks the ray tracing. somehow.
-//      std::cout << "camera " << camera->idCam << " skipped" << std::endl;
-//      continue;
-//    }
+    // If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
     if(maxIterations_ && m.iterationCount >= maxIterations_) break;
 
     log.startEvent();
 
+    m.addCamera(camera);
 
-    m.increment(camera);
+    // Skip the manifold update for the first INITIAL_MANIFOLD_UPDATE_SKIP cameras
+    if(m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP  && !(m.iterationCount%MANIFOLD_UPDATE_EVERY)) m.updateManifold();
 
-    if(m.iterationCount && !(m.iterationCount%1)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
+    if(m.iterationCount && !(m.iterationCount%SAVE_MANIFOLD_EVERY)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
     log.endEventAndPrint("main loop\t\t\t\t\t", true); std::cout << std::endl;
+
+    #ifdef PRODUCE_STATS
+    statsFile.open("output/stats/stats.txt", std::ios_base::app);
+    statsFile << std::endl << std::endl << "Iteration " << m.iterationCount << std::endl;
+    statsFile << op.getStats();
+    statsFile.close();
+
+    std::ostringstream nameVisiblePoints; nameVisiblePoints << "output/vp/visible_points_" << camera->idCam << ".off";
+    visiblePointsFile.open(nameVisiblePoints.str().c_str());
+    visiblePointsFile << op.getDataOFF();
+    visiblePointsFile.close();
+    #endif
   }
 
   m.saveManifold("output/", "final");
 
   log.endEventAndPrint("main\t\t\t\t\t\t", true);
+
   return 0;
 
 #endif
