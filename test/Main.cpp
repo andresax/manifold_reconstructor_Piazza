@@ -25,7 +25,8 @@
 #include <utility>
 
 //#define USE_SFM
-#define PRODUCE_STATS
+//#define PRODUCE_STATS
+//#define SAVE_POINTS_TO_OFF_AND_EXIT
 
 #define MANIFOLD_UPDATE_EVERY 5
 #define INITIAL_MANIFOLD_UPDATE_SKIP 5
@@ -79,6 +80,15 @@ int main(int argc, char **argv) {
 
 #else
 
+
+#ifdef SAVE_POINTS_TO_OFF_AND_EXIT
+  std::cout << "start parsing " << argv[1] << std::endl;
+  log.startEvent();
+  ORBIncrementalParser op(argv[1]);
+  op.ParseToOFF("output/all_points_", 10);
+  log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
+  return 0;
+#else
   std::cout << "start parsing " << argv[1] << std::endl;
   log.startEvent();
   ORBIncrementalParser op(argv[1]);
@@ -111,7 +121,7 @@ int main(int argc, char **argv) {
 
     log.endEventAndPrint("main loop\t\t\t\t\t", true); std::cout << std::endl;
 
-    #ifdef PRODUCE_STATS
+#ifdef PRODUCE_STATS
     statsFile.open("output/stats/stats.txt", std::ios_base::app);
     statsFile << std::endl << std::endl << "Iteration " << m.iterationCount << std::endl;
     statsFile << op.getStats();
@@ -121,7 +131,7 @@ int main(int argc, char **argv) {
     visiblePointsFile.open(nameVisiblePoints.str().c_str());
     visiblePointsFile << op.getDataOFF();
     visiblePointsFile.close();
-    #endif
+#endif
   }
 
   m.saveManifold("output/", "final");
@@ -130,6 +140,7 @@ int main(int argc, char **argv) {
 
   return 0;
 
+#endif
 #endif
 }
 

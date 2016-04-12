@@ -9,7 +9,7 @@
 #include <ReconstructFromSLAMData.h>
 #include <utilities.hpp>
 
-//#define VERBOSE_CAMERA_ADD
+#define VERBOSE_CAMERA_ADD
 //#define VERBOSE_POINT_ADD
 //#define VERBOSE_POINT_UPDATE
 //#define VERBOSE_POINT_IGNORE
@@ -21,13 +21,17 @@
 #define SECONDARY_POINTS_VISIBILITY_THRESHOLD   1
 
 ReconstructFromSLAMData::ReconstructFromSLAMData(const CameraPointsCollection& cp_data, ManifoldReconstructionConfig& manifConf){
+  iterationCount = 0;
+
   cp_data_ = cp_data;
   manifConf_ = manifConf;
   manifRec_ = new ManifoldMeshReconstructor(manifConf_);
   utilities::Logger logger_;
 
   cameraNextId = 0; pointNextId = 0;
-  iterationCount = 0;
+
+  // initially the manifold is empty, so it is considered not to be saved until the first update
+  manifoldUpdatedSinceSave_ = false;
 
   if(PRIMARY_POINTS_VISIBILITY_THRESHOLD < SECONDARY_POINTS_VISIBILITY_THRESHOLD) std::cerr << "PRIMARY_POINTS_VISIBILITY_THRESHOLD should be greater than SECONDARY_POINTS_VISIBILITY_THRESHOLD" << std::endl;
 }
@@ -145,7 +149,7 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera){
 
 void ReconstructFromSLAMData::updateManifold(){
   std::cout << std::endl << "ReconstructFromSLAMData::updateManifold" << std::endl;
-
+  manifoldUpdatedSinceSave_ = true;
   //TODO actually manage the case of newCameras have too few or no points associated (in ManifoldMeshReconstructior) : count( newCamera.points st idRec>=0 )
 
   // Tell ManifoldMeshReconstructor to shrink the manifold for all cameras added since last shrinking
@@ -190,6 +194,9 @@ void ReconstructFromSLAMData::updateManifold(){
 
 void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string nameSuffix){
   std::cout << std::endl << "ReconstructFromSLAMData::saveManifold" << std::endl;
+
+  if(manifoldUpdatedSinceSave_ == false) return;
+  manifoldUpdatedSinceSave_ = false;
 
   logger_.startEvent();
   std::ostringstream nameManifold; nameManifold << namePrefix << "manifold_" << nameSuffix << ".off";

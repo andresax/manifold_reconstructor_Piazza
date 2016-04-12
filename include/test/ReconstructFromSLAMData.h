@@ -27,7 +27,9 @@ public:
 
   void overwriteFocalY(float f);
 
+  // Iteration counter. Incremented every time a camera is added
   int iterationCount;
+
 
 private:
   //void outlierFiltering(std::vector<bool>& inliers);
@@ -46,7 +48,11 @@ private:
   std::set<CameraType*> rayTracingSet_;
   std::set<CameraType*> insertNewPointsFromCamSet_;
 
+  // Camera's and point's index used in ManifoldMeshReconstructor must be set incrementally every time the camera or point is effectivly added to ManifoldMeshReconstructor
   int cameraNextId, pointNextId;
+
+  // Flag representing whether the manifold was updated since the last time it was saved. Set to true by updateManifold, to false by saveManifold
+  bool manifoldUpdatedSinceSave_;
 };
 
 #endif /* RECONSTRUCTFROMSLAMDATA_H_ */

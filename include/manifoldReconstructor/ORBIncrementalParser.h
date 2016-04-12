@@ -22,8 +22,11 @@ public:
 
   std::string getStats();
   std::string getDataCSV();
-  std::string getDataOFF();
   std::string getDataSPlot();
+  std::string getDataOFF();
+
+  std::string getPointsAsOFF(bool all, int minObservations);
+  void ParseToOFF(std::string pathPrefix, int minObservationsRange);
 
   const CameraPointsCollection& getData() const {
     return ORB_data_;

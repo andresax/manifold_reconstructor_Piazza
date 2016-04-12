@@ -22,7 +22,7 @@ ORBIncrementalParser::ORBIncrementalParser(std::string path) {
 
   basePath_ = std::string(document_["root_path"].GetString());
   if(!document_.HasMember("slam_data_version")
-      || document_["slam_data_version"].GetString() != "0.2"){
+      || document_["slam_data_version"] != "0.2"){
     std::cerr << "incorrect data version" << std::endl << document_["slam_data_version"].GetString()  << std::endl ;
   }
 
@@ -284,29 +284,6 @@ std::string ORBIncrementalParser::getDataCSV() {
 }
 
 
-std::string ORBIncrementalParser::getDataOFF() {
-  std::stringstream out;
-
-  std::set<PointType*> visiblePoints;
-
-  for(auto mCamera : ORB_data_.getCameras()){
-    CameraType* c = mCamera.second;
-
-    for(auto p : c->visiblePointsT ){
-      if(p->idReconstruction>=0 && p->getNunmberObservation()>=2) visiblePoints.insert(p); // TODO if visibility is higher than 2
-    }
-
-  }
-
-  out << "OFF" << std::endl << visiblePoints.size() <<" 0 0" << std::endl;
-
-  for(auto p : visiblePoints){
-    out << p->position.x SPACE p->position.y SPACE p->position.z << std::endl;
-  }
-
-  return out.str();
-}
-
 
 std::string ORBIncrementalParser::getStats() {
   std::stringstream out;
@@ -372,5 +349,56 @@ std::string ORBIncrementalParser::getStats() {
   out << "overall camera-points max distance:\t" << maxDistanceOverall << "\toverall max distance from O:\t" << maxDistanceFromOOverall << std::endl << std::endl;
 
   return out.str();
+
+}
+
+std::string ORBIncrementalParser::getDataOFF() {
+  std::stringstream out;
+
+  std::set<PointType*> visiblePoints;
+
+  for(auto mCamera : ORB_data_.getCameras()){
+    CameraType* c = mCamera.second;
+
+    for(auto p : c->visiblePointsT ){
+      if(p->idReconstruction>=0 && p->getNunmberObservation()>=2) visiblePoints.insert(p); // TODO if visibility is higher than 2
+    }
+
+  }
+
+  out << "OFF" << std::endl << visiblePoints.size() <<" 0 0" << std::endl;
+
+  for(auto p : visiblePoints){
+    out << p->position.x SPACE p->position.y SPACE p->position.z << std::endl;
+  }
+
+  return out.str();
+}
+
+std::string ORBIncrementalParser::getPointsAsOFF(bool all, int minObservations){
+  std::stringstream out;
+  int nPoints = 0;
+
+  for(auto p : ORB_data_.getPoints() ) if((all || p.second->idReconstruction>=0) && p.second->getNunmberObservation() >= minObservations) nPoints++;
+
+  out << "OFF" << std::endl << nPoints <<" 0 0" << std::endl;
+
+  for(auto p : ORB_data_.getPoints() ) if((all || p.second->idReconstruction>=0) && p.second->getNunmberObservation() >= minObservations) out << p.second->position.x SPACE p.second->position.y SPACE p.second->position.z << std::endl;
+
+  return out.str();
+}
+
+
+void ORBIncrementalParser::ParseToOFF(std::string pathPrefix, int minObservationsRange){
+
+  for(int i=0; i < numCameras(); i++) nextCamera();
+
+  for(int minObservations = 1; minObservations <= minObservationsRange; minObservations++){
+    std::ofstream allPointsFile;
+    std::ostringstream nameVisiblePoints; nameVisiblePoints << pathPrefix << minObservations << ".off";
+    allPointsFile.open(nameVisiblePoints.str().c_str());
+    allPointsFile << getPointsAsOFF(true, minObservations);
+    allPointsFile.close();
+  }
 
 }
