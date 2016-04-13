@@ -134,6 +134,9 @@ int main(int argc, char **argv) {
 #endif
   }
 
+  // Do a last manifold update in case op.numCameras() isn't a multiple of MANIFOLD_UPDATE_EVERY
+  if(m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP) m.updateManifold();
+
   m.saveManifold("output/", "final");
 
   log.endEventAndPrint("main\t\t\t\t\t\t", true);
