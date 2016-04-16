@@ -118,7 +118,7 @@ private:
 
 
   /**test if the segment traverse two tetrahedra in facet f*/
-  bool cellTraversalExitTest(int & f, int & fOld, const Delaunay3::Cell_handle& tetCur, const Delaunay3::Cell_handle &tetPrev, const Segment & constraint);
+  bool cellTraversalExitTest(int & f, int & fOld, const Delaunay3::Cell_handle& tetCur, const Delaunay3::Cell_handle &tetPrev, std::set<Delaunay3::Cell_handle>& visitedTetrahedra, const Segment & constraint);
 
   ManifoldReconstructionConfig conf_;
 

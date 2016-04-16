@@ -41,14 +41,14 @@ int main(int argc, char **argv) {
   int maxIterations_ = 0;
 
   ManifoldReconstructionConfig confManif;
-  confManif.inverseConicEnabled = false;
+  confManif.inverseConicEnabled = true;
   confManif.maxDistanceCamFeature = 100.0;
   confManif.probOrVoteThreshold = 1.1;
   confManif.enableSuboptimalPolicy = false;
   confManif.suboptimalMethod = 0;
   confManif.w_1 = 1.0;
-  confManif.w_2 = 0.0;
-  confManif.w_3 = 0.00;
+  confManif.w_2 = 0.2;
+  confManif.w_3 = 0.0;
 
 
   if(argc < 2){
