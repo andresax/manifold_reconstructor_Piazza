@@ -17,96 +17,15 @@
 #include <set>
 #include <vector>
 #include <glm.hpp>
+//#include <types_reconstructor.hpp>
+#include "FSConstraint.h"
+
+
 
 
 
 class Delaunay3DCellInfo {
 public:
-  // Sorted-Set related struct
-  struct FSConstraint;
-  /*struct LtConstraint {
-    bool operator()(const std::pair<int, int> x, const std::pair<int, int> y) const {
-      if (x.first < y.first)
-        return true;
-      else
-        return (x.first == y.first) && (x.second < y.second);
-    }
-  };*/
-  struct LtFSConstraint {
-    bool operator()(const FSConstraint x, const FSConstraint y) const {
-      if (x.first < y.first)
-        return true;
-      else
-        return (x.first == y.first) && (x.vertexIdx < y.vertexIdx);
-    }
-  };
-  struct FSConstraint {
-    FSConstraint() {
-      first = -1;
-      second = -1;
-      vote = -1;
-      vertexIdx= second;
-      fNearestNeighborDist = std::numeric_limits<float>::infinity();
-    }
-    FSConstraint(int camIndex, int featureIndex) {
-      first = camIndex;
-      second = featureIndex;
-      vote = 1.0;
-      vertexIdx= second;
-      fNearestNeighborDist = std::numeric_limits<float>::infinity();
-    }
-    FSConstraint(int camIndex, int featureIndex, float voteVal) {
-      first = camIndex;
-      second = featureIndex;
-      vertexIdx= second;
-      vote = voteVal;
-      fNearestNeighborDist = std::numeric_limits<float>::infinity();
-    }
-    FSConstraint(int camIndex, int featureIndex, int vertidx,float voteVal) {
-      first = camIndex;
-      second = featureIndex;
-      vertexIdx = vertidx;
-      vote = voteVal;
-      fNearestNeighborDist = std::numeric_limits<float>::infinity();
-    }
-    FSConstraint(const FSConstraint & ref) {
-      first = ref.first;
-      second = ref.second;
-      vote = ref.vote;
-      vertexIdx = ref.vertexIdx;
-      pNearestNeighbor = ref.pNearestNeighbor;
-      fNearestNeighborDist = ref.fNearestNeighborDist;
-    }
-    FSConstraint & operator=(const FSConstraint & ref) {
-      if (&ref != this) {
-        first = ref.first;
-        second = ref.second;
-        vote = ref.vote;
-        pNearestNeighbor = ref.pNearestNeighbor;
-        fNearestNeighborDist = ref.fNearestNeighborDist;
-      }
-      return *this;
-    }
-    operator std::pair<int, int>() const {
-      return std::make_pair(first, second);
-    }
-
-    int first;
-    int second;
-    int vertexIdx;
-    float vote;
-    mutable std::set<FSConstraint, LtFSConstraint>::iterator pNearestNeighbor;
-    mutable float fNearestNeighborDist;
-
-    // Trick c++ "const"-ness so that we can change the nearest neighbor information in the set from an iterator:
-    void setNearestNeighbor(const std::set<FSConstraint, LtFSConstraint>::iterator itNearest, const float dist) const {
-      pNearestNeighbor = itNearest;
-      fNearestNeighborDist = dist;
-    }
-    void resetNearestNeighborDist() const {
-      fNearestNeighborDist = std::numeric_limits<float>::infinity();
-    }
-  };
 
   // Constructors (it must be default-constructable)
   Delaunay3DCellInfo();
@@ -116,12 +35,8 @@ public:
   virtual ~Delaunay3DCellInfo();
 
   // Getters
-  int getVoteCount() const {
-    return m_voteCount;
-  }
-  float getVoteCountProb() const {
-    return m_voteCountProb;
-  }
+  int getVoteCount() const;
+  float getVoteCountProb() const;
 
   bool isBoundary() const {
     return boundary;
@@ -142,7 +57,7 @@ public:
   bool isGalpha() const {
     return Galpha_;
   }
-  const std::set<FSConstraint, LtFSConstraint> & getIntersections() const {
+  const std::set<FSConstraint, FSConstraint::LtFSConstraint> & getIntersections() const {
     return m_setIntersections;
   }
   bool isNew() const {
@@ -150,9 +65,8 @@ public:
   }
 
   // Setters
-  void setVoteCount(const int voteCount) {
-    m_voteCount = voteCount;
-  }
+  void setVoteCount(const int voteCount);
+  void setVoteCountProb(const float voteCountProb);
 
   void setBoundary(bool value) {
     boundary = value;
@@ -172,10 +86,7 @@ public:
   void setToBeTested(bool value) {
     toBeTested_ = value;
   }
-  void setVoteCountProb(const float voteCountProb) {
-    m_voteCountProb = voteCountProb;
-  }
-  void setIntersections(const std::set<FSConstraint, LtFSConstraint> & ref) {
+  void setIntersections(const std::set<FSConstraint, FSConstraint::LtFSConstraint> & ref) {
     m_setIntersections = ref;
   }
 
@@ -188,41 +99,16 @@ public:
   }
 
   // Public Methods
-  void incrementVoteCount() {
-    m_voteCount++;
-  }
+  void incrementVoteCount();
+  void incrementVoteCount(int num);
+void incrementVoteCountProb(float incr);
 
-  void incrementVoteCount(int num) {
-    m_voteCount += num;
-  }
+  void decrementVoteCount();
+  void decrementVoteCount(int num);
+  void decrementVoteCountProb(float incr);
 
-  void incrementVoteCountProb(float incr) {
-    m_voteCountProb += incr;
-  }
-  void decrementVoteCount() {
-    if (m_voteCount > 0)
-      m_voteCount--;
-  }
-  void decrementVoteCount(int num) {
-    if (m_voteCount - num > 0)
-      m_voteCount -= num;
-    else
-      m_voteCount = 0;
-  }
-  void decrementVoteCountProb(float incr) {
-    if (m_voteCountProb > incr)
-      m_voteCountProb -= incr;
-  }
-  bool isKeptByVoteCount(const int nVoteThresh = 1) const {
-    if (getVoteCount() < nVoteThresh)
-      return true;
-    return false;
-  }
-  bool isKeptByVoteCountProb(const float nVoteThresh = 1.0) const {
-    if (getVoteCountProb() < nVoteThresh)
-      return true;
-    return false;
-  }
+  bool isKeptByVoteCount(const int nVoteThresh) const;
+  bool isKeptByVoteCountProb(const float nVoteThresh) const;
 
   /* template<class T>
    void addIntersection(int camIndex, int featureIndex, const vector<T> & vecVertexHandles, const vector<Matrix> & vecCamCenters) {
@@ -254,7 +140,7 @@ public:
     FSConstraint incoming(camIndex, featureIndex);
     if ((int) m_setIntersections.size() < HEURISTIC_K) {
       // The constraint set is not full, so insert the incoming free-space constraint and update nearest neighbor info.
-      std::set<FSConstraint, LtFSConstraint>::iterator it, itIncoming;
+      std::set<FSConstraint, FSConstraint::LtFSConstraint>::iterator it, itIncoming;
       itIncoming = m_setIntersections.insert(m_setIntersections.end(), incoming);
       for (it = m_setIntersections.begin(); it != m_setIntersections.end(); it++) {
         if (it == itIncoming)
@@ -277,7 +163,7 @@ public:
         return;
 
       float minDist = std::numeric_limits<float>::infinity();
-      std::set<FSConstraint, LtFSConstraint>::iterator it, it2, itEject;
+      std::set<FSConstraint, FSConstraint::LtFSConstraint>::iterator it, it2, itEject;
       for (it = m_setIntersections.begin(); it != m_setIntersections.end(); it++) {
         float curDist = distFSConstraint(incoming, *it, vecVertexHandles, vecCamCenters);
         if (curDist < it->fNearestNeighborDist)
@@ -337,7 +223,7 @@ public:
     FSConstraint incoming(camIndex, featureIndex, vote);
     if ((int) m_setIntersections.size() < HEURISTIC_K) {
       // The constraint set is not full, so insert the incoming free-space constraint and update nearest neighbor info.
-      std::set<FSConstraint, LtFSConstraint>::iterator it, itIncoming;
+      std::set<FSConstraint, FSConstraint::LtFSConstraint>::iterator it, itIncoming;
       itIncoming = m_setIntersections.insert(m_setIntersections.end(), incoming);
       for (it = m_setIntersections.begin(); it != m_setIntersections.end(); it++) {
         if (it == itIncoming)
@@ -360,7 +246,7 @@ public:
         return;
 
       float minDist = std::numeric_limits<float>::infinity();
-      std::set<FSConstraint, LtFSConstraint>::iterator it, it2, itEject;
+      std::set<FSConstraint, FSConstraint::LtFSConstraint>::iterator it, it2, itEject;
       for (it = m_setIntersections.begin(); it != m_setIntersections.end(); it++) {
         float curDist = distFSConstraint(incoming, *it, vecVertexHandles, vecCamCenters);
         if (curDist < it->fNearestNeighborDist)
@@ -434,7 +320,7 @@ public:
       m_setIntersections.erase(FSConstraint(camIndex, featureIndex));
     } else {
       // The nearest neighbor info needs to be updated
-      std::set<FSConstraint, LtFSConstraint>::iterator it, it2, itEject;
+      std::set<FSConstraint, FSConstraint::LtFSConstraint>::iterator it, it2, itEject;
 
       itEject = m_setIntersections.find(FSConstraint(camIndex, featureIndex));
       if (itEject == m_setIntersections.end())
@@ -467,7 +353,7 @@ public:
       m_setIntersections.erase(FSConstraint(camIndex, featureIndex, vote));
     } else {
       // The nearest neighbor info needs to be updated
-      std::set<FSConstraint, LtFSConstraint>::iterator it, it2, itEject;
+      std::set<FSConstraint, FSConstraint::LtFSConstraint>::iterator it, it2, itEject;
 
       itEject = m_setIntersections.find(FSConstraint(camIndex, featureIndex, vote));
       if (itEject == m_setIntersections.end())
@@ -525,15 +411,7 @@ public:
   }
 
   // Operators (It must be assignable)
-  Delaunay3DCellInfo & operator=(const Delaunay3DCellInfo & rhs) {
-    if (this != &rhs) {
-      setVoteCount(rhs.getVoteCount());
-      setIntersections(rhs.getIntersections());
-      if (!rhs.isNew())
-        markOld();
-    }
-    return *this;
-  }
+  Delaunay3DCellInfo & operator=(const Delaunay3DCellInfo & rhs);
 
 private:
   // Private Methods
@@ -568,12 +446,16 @@ private:
   }
 
   // Private Members
+
+  // set of rays accounting for w_1, w_2, w_3
+  std::set<RayReconstruction> Lw1_, Lw2_, Lw3_;
+
   int m_voteCount;
+  float m_voteCountProb;
   bool boundary;
   bool keepManifold;
   bool toBeTested_;
-  float m_voteCountProb;
-  std::set<FSConstraint, LtFSConstraint> m_setIntersections;
+  std::set<FSConstraint, FSConstraint::LtFSConstraint> m_setIntersections;
 
   bool m_bNew;
   bool idxFacetNotManifold[4];

@@ -37,6 +37,8 @@
 #include <Delaunay3DCellInfo.h>
 #include <Delaunay3DVertexInfo.h>
 
+#include "FSConstraint.h"
+
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 //typedef K::Point_3 Point;
 typedef K::Triangle_3 Triangle;
@@ -54,7 +56,7 @@ typedef Delaunay3::Vertex_handle Vertex3D_handle;
 
 typedef std::pair<PointD3, float> DistanceWeight;
 
-typedef std::set<Delaunay3DCellInfo::FSConstraint, Delaunay3DCellInfo::LtFSConstraint> SetConstraints;
+typedef std::set<FSConstraint, FSConstraint::LtFSConstraint> SetConstraints;
 
 struct PointType;
 
@@ -123,6 +125,7 @@ struct sortTetByIntersection {
 };
 
 
+
 struct PointReconstruction {
   PointD3 position;
   Vertex3D_handle vertexHandle;
@@ -147,7 +150,5 @@ struct CamReconstruction {
     position = PointD3(0.0, 0.0, 0.0);
   }
 };
-
-
 
 #endif /* TYPES_HPP_ */

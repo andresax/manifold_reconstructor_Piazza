@@ -244,6 +244,8 @@ void ManifoldMeshReconstructor::rayTracing(int idxCam, int idxPoint, bool bOnlyM
 		}
 	}
 
+	qCells.clear();
+
 	/**********************************************
 	 Follow the ray through the triangulation
 	 *********************************************/
@@ -303,7 +305,6 @@ void ManifoldMeshReconstructor::rayTracing(int idxCam, int idxPoint, bool bOnlyM
 
 	}
 
-	qCells.clear(); //TODO move up
 
 }
 
@@ -754,7 +755,7 @@ int ManifoldMeshReconstructor::moveVertex(int idxPoint, int idxCam) {
 			for (auto itDelete = itCell->info().getIntersections().begin(); itDelete != itCell->info().getIntersections().end();) {
 				if (itDelete->second == idxPoint) {
 					// invalidates iterator, so careful about incrementing it:
-					std::set<Delaunay3DCellInfo::FSConstraint, Delaunay3DCellInfo::LtFSConstraint>::const_iterator itNext = itDelete;
+					std::set<FSConstraint, FSConstraint::LtFSConstraint>::const_iterator itNext = itDelete;
 					itNext++;
 					itCell->info().removeIntersection(itDelete->first, itDelete->second, itDelete->vote, points_, camsPositions_);
 					itCell->info().decrementVoteCount(1.0);

@@ -16,6 +16,8 @@
 #include <OutputCreator.h>
 #include <fstream>
 #include <iostream>
+
+#include "FSConstraint.h"
 /**
 * This class provides the API to manage the 2-manifold creation as explained in the 
 * paper:
@@ -132,7 +134,7 @@ private:
   std::vector<Delaunay3::Cell_handle> freeSpaceTets_;
   std::vector<int> idxPointsForRayTracing_;
 
-  std::set<Delaunay3DCellInfo::FSConstraint, Delaunay3DCellInfo::LtFSConstraint> curConstraints_;
+  std::set<FSConstraint, FSConstraint::LtFSConstraint> curConstraints_;
   std::vector<DistanceWeight> vecDistanceWeight_;
 
 
