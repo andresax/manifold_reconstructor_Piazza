@@ -14,8 +14,8 @@
 //  GNU General Public License for more details.
 
 /**
-* Header-only file with various types, especially those related to the CGAL library
-*/
+ * Header-only file with various types, especially those related to the CGAL library
+ */
 #ifndef TYPES_RECONSTR_HPP_
 #define TYPES_RECONSTR_HPP_
 
@@ -79,7 +79,7 @@ struct CameraType {
   std::vector<int> visiblePoints;
   std::vector<PointType*> visiblePointsT;
 
-  void addPoint(PointType* point){
+  void addPoint(PointType* point) {
     visiblePointsT.push_back(point);
   }
 };
@@ -92,11 +92,11 @@ struct PointType {
   std::vector<CameraType*> viewingCams;
   //int numObservations;
 
-  int getNunmberObservation(){
+  int getNunmberObservation() {
     return viewingCams.size();
   }
 
-  void addCamera(CameraType *cam){
+  void addCamera(CameraType *cam) {
     viewingCams.push_back(cam);
   }
 };
@@ -120,21 +120,29 @@ struct PointParser {
 
 struct sortTetByIntersection {
   inline bool operator()(const Delaunay3::Cell_handle& i, const Delaunay3::Cell_handle& j) {
-   return i->info().getVoteCountProb() < j->info().getVoteCountProb();
+    if (!i->is_valid()) std::cout << "i->is_valid() " << i->is_valid() << std::endl;  // ->info().printIntersections();
+    return i->info().getVoteCountProb() < j->info().getVoteCountProb();
   }
 };
 
-
-
-struct PointReconstruction {
+struct PointReconstruction { //TODO export in an actual class
   PointD3 position;
+  PointD3 newPosition;
+
+  // true when the point has been moved and newPosition is set
+  bool toBeMoved = false;
+
+  // true when not yet in the triangulation
+  bool new_;
+
   Vertex3D_handle vertexHandle;
   int idVertex;
-  bool new_;
+
   std::vector<int> viewingCams;
 
   PointReconstruction() {
     position = PointD3(0.0, 0.0, 0.0);
+    newPosition = PointD3(0.0, 0.0, 0.0);
     new_ = true;
     idVertex = -1;
   }

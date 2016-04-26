@@ -23,9 +23,14 @@
  }
  };*/
 
+
 struct RayReconstruction {
 	bool valid = true;
+	int cameraId = -1;
+	int pointId = -1;
 };
+
+
 
 struct FSConstraint {
 

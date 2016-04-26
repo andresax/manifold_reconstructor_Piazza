@@ -29,7 +29,7 @@
 //#define SAVE_POINTS_TO_OFF_AND_EXIT
 
 #define MANIFOLD_UPDATE_EVERY 5
-#define INITIAL_MANIFOLD_UPDATE_SKIP 5
+#define INITIAL_MANIFOLD_UPDATE_SKIP 2
 #define SAVE_MANIFOLD_EVERY 5
 
 //*************************************************************************************************/
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
 
     if(m.iterationCount && !(m.iterationCount%SAVE_MANIFOLD_EVERY)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
-    log.endEventAndPrint("main loop\t\t\t\t\t", true); std::cout << std::endl;
+    log.endEventAndPrint("main loop\t\t\t\t\t\t\t", true); std::cout << std::endl;
 
 #ifdef PRODUCE_STATS
     statsFile.open("output/stats/stats.txt", std::ios_base::app);

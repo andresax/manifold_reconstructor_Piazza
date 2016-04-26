@@ -18,65 +18,69 @@
 #include <iostream>
 
 #include "FSConstraint.h"
+
 /**
-* This class provides the API to manage the 2-manifold creation as explained in the 
-* paper:
-* 
-* Andrea Romanoni, Matteo Matteucci. Incremental Urban Manifold Reconstruction from a Sparse Edge-Points Cloud. 
-* IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2015.
-*
-* The class builds a 3D Delaunay Triangulation, and keeps the information of the visibility updated incrementally.
-* In the same time it provides the functions to incrementally estimate a manifold mesh out of the triangulation.
-*
-* The moving point related functions (as explained in the paper: A. Romanoni, M. Matteucci. 
-* Efficient moving point handling for incremental 3D manifold reconstruction. 
-* International Conference on Image Analysis and Processing (ICIAP) 2015.) have not been tested in this library yet
-* 
-*
-*
-*/
+ * This class provides the API to manage the 2-manifold creation as explained in the
+ * paper:
+ *
+ * Andrea Romanoni, Matteo Matteucci. Incremental Urban Manifold Reconstruction from a Sparse Edge-Points Cloud.
+ * IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2015.
+ *
+ * The class builds a 3D Delaunay Triangulation, and keeps the information of the visibility updated incrementally.
+ * In the same time it provides the functions to incrementally estimate a manifold mesh out of the triangulation.
+ *
+ * The moving point related functions (as explained in the paper: A. Romanoni, M. Matteucci.
+ * Efficient moving point handling for incremental 3D manifold reconstruction.
+ * International Conference on Image Analysis and Processing (ICIAP) 2015.) have not been tested in this library yet
+ *
+ *
+ *
+ */
 class ManifoldMeshReconstructor {
 public:
   ManifoldMeshReconstructor(ManifoldReconstructionConfig conf);
   virtual ~ManifoldMeshReconstructor();
 
+  void printIdxPointsForRayTracing();
+
   /*Functions to add informations about the points, the cameras and visibility
-  * Important Note: whenever you add here the points, they are not added automatically
-  * to the Delaunay Triangulation. to actually add these points you need to call the 
-  * insertNewPointsFromCam function which manages conveniently the manifold update 
-  *
-  **/
+   * Important Note: whenever you add here the points, they are not added automatically
+   * to the Delaunay Triangulation. to actually add these points you need to call the
+   * insertNewPointsFromCam function which manages conveniently the manifold update
+   *
+   **/
   void addPoint(float x, float y, float z);
   int addPointWhere(float x, float y, float z);
   void addCameraCenter(float x, float y, float z);
   void addVisibilityPair(int camIdx, int pointIdx);
+  bool hasVisibilityPair(int camIdx, int pointIdx);
   void movePoint(int idxPoint, float x, float y, float z);
   PointD3 movePointGetOld(int idxPoint, float x, float y, float z);
 
   //incremental reconstruction
 
   /**
-  * Insert all the points visible from camera idxCam. Before calling this 
-  * function you have to add the camera, the points and the proper visibility information.
-  * If needed this function shrinks the manifold before point addition
-  */
+   * Insert all the points visible from camera idxCam. Before calling this
+   * function you have to add the camera, the points and the proper visibility information.
+   * If needed this function shrinks the manifold before point addition
+   */
   void insertNewPointsFromCam(int idxCam, bool incremental = true);
   /**
-  * Perform ray tracing to update the visibility information, of the tetrahedra,inducted by visibility 
-  * rays starting from camera idxCam*/
+   * Perform ray tracing to update the visibility information, of the tetrahedra,inducted by visibility
+   * rays starting from camera idxCam*/
   void rayTracingFromCam(int idxCam);
   /**
-  * Estimate the manifold mesh bootstrapping from the most visible tetrahedron of the boundary if the manifold is initialized, otherwise
-  * it boostraps from the most visible tetrahedron among all*/
+   * Estimate the manifold mesh bootstrapping from the most visible tetrahedron of the boundary if the manifold is initialized, otherwise
+   * it boostraps from the most visible tetrahedron among all*/
   void growManifold();
   /**
-  * Same as growManifold() but if the manifold is not initialized
-  * it boostraps from the tetrahedron containing camera idxCam*/
+   * Same as growManifold() but if the manifold is not initialized
+   * it boostraps from the tetrahedron containing camera idxCam*/
   void growManifold(int idxCam);
   /**
-  * Same as growManifold() but grows the mesh with the general manifold test, i.e., less efficient than growManifold() but 
-  * manages the genus change. It is usually called after a call to growManifold(). 
-  */
+   * Same as growManifold() but grows the mesh with the general manifold test, i.e., less efficient than growManifold() but
+   * manages the genus change. It is usually called after a call to growManifold().
+   */
   void growManifoldSev();
 
   void clearLog();
@@ -92,35 +96,42 @@ public:
   /*Saves in OFF file format the boundary mesh between tetrahedra labelled as free space and those labelled as matter */
   void saveFreespace(const std::string filename);
 
-
   void setWeights(float w_1, float w_2, float w_3);
 
 private:
   void shrinkManifold(const PointD3 &camCenter);
   /*create the initial grid of steiner points to avoid the infinite tetrahedra issue, while growing the mesh.
-  * The parameters inside these function are also useful to avoid the creation of too big tetrahedra wich may cause
-  * visual artifacts in the final mesh*/
+   * The parameters inside these function are also useful to avoid the creation of too big tetrahedra wich may cause
+   * visual artifacts in the final mesh*/
   void createSteinerPointGridAndBound();
   /*add new point to the Delaunay Triangulation*/
   bool insertNewPoint(PointReconstruction &points);
   /*mark a tetrahedron with a visibility rays, it updates the information stored in the tetrahedron*/
-  void markTetraedron(Delaunay3::Cell_handle & cell, const int camIndex, const int featureIndex, bool incrementCount = true);
+  void markTetraedron(
+      Delaunay3::Cell_handle & cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& markedTetrahedra, RayReconstruction* ray,
+      bool incrementCount = true);
   /*Traces the ray from a camera to a point and update the weights, i.e., the visibility infromation, soterd in the traversed tetrahedra
-  * and in their neighbor. Here is implemented the Inverse Cone Heuristic (ICH)*/
+   * and in their neighbor. Here is implemented the Inverse Cone Heuristic (ICH)*/
   void rayTracing(int idxCam, int idxPoint, bool bOnlyMarkNew = false, bool incrementCount = true);
 
   /*Update the weights of the cellsToBeUpdates according to the values in the vecDistanceWeights. This implements the suboptimal policy*/
   void updateDistanceAndWeights(std::vector<Delaunay3::Cell_handle> &cellsToBeUpdated, const std::vector<DistanceWeight> &vecDistanceWeight);
-
 
   /*not tested yet*/
   int moveVertex(int idxPoint, int idxCam);
   /*not tested yet*/
   int moveVertex_WHeuristic(int idxPoint, int idxCam);
 
-
   /**test if the segment traverse two tetrahedra in facet f*/
-  bool cellTraversalExitTest(int & f, int & fOld, const Delaunay3::Cell_handle& tetCur, const Delaunay3::Cell_handle &tetPrev, std::set<Delaunay3::Cell_handle>& visitedTetrahedra, const Segment & constraint);
+  bool cellTraversalExitTest(
+      int & f, int & fOld, const Delaunay3::Cell_handle& tetCur, const Delaunay3::Cell_handle &tetPrev, std::set<Delaunay3::Cell_handle>& visitedTetrahedra,
+      const Segment & constraint);
+
+  void addRay(int cameraId, int pointId);
+
+  RayReconstruction* getRay(int cameraId, int pointId);
+  std::vector<RayReconstruction*> getRaysFromCamera(int cameraId);
+  std::vector<RayReconstruction*> getRaysFromPoint(int pointId);
 
   ManifoldReconstructionConfig conf_;
 
@@ -134,9 +145,11 @@ private:
   std::vector<Delaunay3::Cell_handle> freeSpaceTets_;
   std::vector<int> idxPointsForRayTracing_;
 
+  std::map<std::pair<int, int>, RayReconstruction*> rays_;
+  std::map<int, RayReconstruction*> camerasRays_;
+  std::map<int, RayReconstruction*> pointsRays_;
   std::set<FSConstraint, FSConstraint::LtFSConstraint> curConstraints_;
   std::vector<DistanceWeight> vecDistanceWeight_;
-
 
   ManifoldManager * manifoldManager_;
   OutputCreator *outputM_;
