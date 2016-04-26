@@ -115,15 +115,16 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera){
        *
        */
       // The point was already added to ManifoldMeshReconstructor, so it is only updated
-//      if(iterationCount > 7){ // 7: workaround. movePoint only after insertNewPointsFomrCam
-//        manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z);
-//        countUpdatedPoints++;
+      if(iterationCount > 7){ // 7: workaround. movePoint only after insertNewPointsFomrCam
+    	glm::vec3 position = p->position;
+    	manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z);
+        countUpdatedPoints++;
 #ifdef VERBOSE_POINT_UPDATE
-//          std::cout << "UPDATE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation()
-//                << ": " << position.x << ", " << position.y << ", " << position.z
-//                << std::endl;
+          std::cout << "UPDATE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation()
+                << ": " << position.x << ", " << position.y << ", " << position.z
+                << std::endl;
 #endif
-//      }
+      }
 
       // Add visibility with the (already added) point
       manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
@@ -153,24 +154,25 @@ void ReconstructFromSLAMData::updateManifold(){
   //TODO actually manage the case of newCameras have too few or no points associated (in ManifoldMeshReconstructior) : count( newCamera.points st idRec>=0 )
 
   // Tell ManifoldMeshReconstructor to shrink the manifold for all cameras added since last shrinking
-  logger_.startEvent();
-  std::cout << std::endl << "┍ insertNewPoints" << std::endl;
-  for(auto camera : insertNewPointsFromCamSet_){
-    std::cout << "├ insertNewPointsFromCam " << camera->idCam << std::endl;
-    manifRec_->insertNewPointsFromCam(camera->idReconstruction, true);
-  }
-  insertNewPointsFromCamSet_.clear();
-  logger_.endEventAndPrint("insertNewPoints\t\t\t\t\t", true);
+//  logger_.startEvent();
+//  std::cout << std::endl << "┍ insertNewPoints" << std::endl;
+//  for(auto camera : insertNewPointsFromCamSet_){
+//    std::cout << "├ insertNewPointsFromCam " << camera->idCam << std::endl;
+//    manifRec_->insertNewPointsFromCam(camera->idReconstruction, true);
+//  }
+//  insertNewPointsFromCamSet_.clear();
+//  logger_.endEventAndPrint("insertNewPoints\t\t\t\t\t", true);
 
   // Tell ManifoldMeshReconstructor to do ray tracing for all cameras for which visibility pairs has been added
-  std::cout << std::endl << "┍ rayTracing" << std::endl;
+  std::cout << std::endl << "┍ insertNewPoints and rayTracing" << std::endl;
   logger_.startEvent();
   for(auto camera : rayTracingSet_){
-    std::cout << "├ rayTracingFromCam " << camera->idCam << std::endl;
+    std::cout << "├ insertNewPointsFromCam and rayTracingFromCam " << camera->idCam << std::endl;
+    manifRec_->insertNewPointsFromCam(camera->idReconstruction, true);
     manifRec_->rayTracingFromCam(camera->idReconstruction);
   }
   rayTracingSet_.clear();
-  logger_.endEventAndPrint("rayTracing\t\t\t\t\t", true);
+  logger_.endEventAndPrint("insertNewPoints and rayTracing\t\t\t", true);
 
   // Tell ManifoldMeshReconstructor to grow back the manifold
   logger_.startEvent();
