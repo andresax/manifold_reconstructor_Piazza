@@ -61,102 +61,102 @@ typedef std::set<FSConstraint, FSConstraint::LtFSConstraint> SetConstraints;
 struct PointType;
 
 struct CameraType {
-  long unsigned int idCam;
-  long int idReconstruction = -1;
+	long unsigned int idCam;
+	long int idReconstruction = -1;
 
-  glm::mat3 intrinsics;
-  glm::mat3 rotation;
-  glm::vec3 translation;
-  glm::mat4 cameraMatrix;
-  glm::vec3 center;
-  glm::mat4 mvp;
+	glm::mat3 intrinsics;
+	glm::mat3 rotation;
+	glm::vec3 translation;
+	glm::mat4 cameraMatrix;
+	glm::vec3 center;
+	glm::mat4 mvp;
 
-  std::string pathImage;
+	std::string pathImage;
 
-  int imageWidth;
-  int imageHeight;
+	int imageWidth;
+	int imageHeight;
 
-  std::vector<int> visiblePoints;
-  std::vector<PointType*> visiblePointsT;
+	std::vector<int> visiblePoints;
+	std::vector<PointType*> visiblePointsT;
 
-  void addPoint(PointType* point) {
-    visiblePointsT.push_back(point);
-  }
+	void addPoint(PointType* point) {
+		visiblePointsT.push_back(point);
+	}
 };
 
 struct PointType {
-  long unsigned int idPoint;
-  long int idReconstruction = -1;
+	long unsigned int idPoint;
+	long int idReconstruction = -1;
 
-  glm::vec3 position;
-  std::vector<CameraType*> viewingCams;
-  //int numObservations;
+	glm::vec3 position;
+	std::vector<CameraType*> viewingCams;
+	//int numObservations;
 
-  int getNunmberObservation() {
-    return viewingCams.size();
-  }
+	int getNunmberObservation() {
+		return viewingCams.size();
+	}
 
-  void addCamera(CameraType *cam) {
-    viewingCams.push_back(cam);
-  }
+	void addCamera(CameraType *cam) {
+		viewingCams.push_back(cam);
+	}
 };
 
 struct PointParser {
-  float x;
-  float y;
-  float z;
+	float x;
+	float y;
+	float z;
 
-  int R;
-  int G;
-  int B;
+	int R;
+	int G;
+	int B;
 
-  //position of the feature in the corresponding image;
-  //the center of the image plane is the origin
-  std::vector<float> viewingCamerasX;
-  std::vector<float> viewingCamerasY;
+	//position of the feature in the corresponding image;
+	//the center of the image plane is the origin
+	std::vector<float> viewingCamerasX;
+	std::vector<float> viewingCamerasY;
 
-  std::vector<int> viewingCamerasIndices;
+	std::vector<int> viewingCamerasIndices;
 };
 
 struct sortTetByIntersection {
-  inline bool operator()(const Delaunay3::Cell_handle& i, const Delaunay3::Cell_handle& j) {
-    if (!i->is_valid()) std::cout << "i->is_valid() " << i->is_valid() << std::endl;  // ->info().printIntersections();
-    return i->info().getVoteCountProb() < j->info().getVoteCountProb();
-  }
+	inline bool operator()(const Delaunay3::Cell_handle& i, const Delaunay3::Cell_handle& j) {
+		if (!i->is_valid()) std::cout << "i->is_valid() " << i->is_valid() << std::endl;  // ->info().printIntersections();
+		return i->info().getVoteCountProb() < j->info().getVoteCountProb();
+	}
 };
 
 struct PointReconstruction { //TODO export in an actual class
-  PointD3 position;
-  PointD3 newPosition;
+	PointD3 position;
+	PointD3 newPosition;
 
-  // true when the point has been moved and newPosition is set
-  bool toBeMoved = false;
+	// true when the point has been moved and newPosition is set
+	bool toBeMoved = false;
 
-  // true when not yet in the triangulation
-  bool new_;
+	// true when not yet in the triangulation
+	bool new_;
 
-  Vertex3D_handle vertexHandle;
-  int idVertex;
+	Vertex3D_handle vertexHandle;
+	int idVertex;
 
-  std::vector<int> viewingCams;
+	std::vector<int> viewingCams;
 
-  PointReconstruction() {
-    position = PointD3(0.0, 0.0, 0.0);
-    newPosition = PointD3(0.0, 0.0, 0.0);
-    new_ = true;
-    idVertex = -1;
-  }
+	PointReconstruction() {
+		position = PointD3(0.0, 0.0, 0.0);
+		newPosition = PointD3(0.0, 0.0, 0.0);
+		new_ = true;
+		idVertex = -1;
+	}
 };
 
 struct CamReconstruction {
-  PointD3 position;
-  Vertex3D_handle vertexHandle;
-  std::vector<int> visiblePoints;
-  std::vector<int> newVisiblePoints;
+	PointD3 position;
+	Vertex3D_handle vertexHandle;
+	std::vector<int> visiblePoints;
+	std::vector<int> newVisiblePoints;
 
-  CamReconstruction() {
-    position = PointD3(0.0, 0.0, 0.0);
-  }
+	CamReconstruction() {
+		position = PointD3(0.0, 0.0, 0.0);
+	}
 };
 
 #endif /* TYPES_HPP_ */

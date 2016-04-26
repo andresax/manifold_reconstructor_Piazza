@@ -36,112 +36,112 @@
 //********************************RECONSTRUCTION FROM VISIBILITY***********************************/
 //*************************************************************************************************/
 int main(int argc, char **argv) {
-  utilities::Logger log;  log.startEvent();
-  std::ofstream statsFile, visiblePointsFile;
-  int maxIterations_ = 0;
+	utilities::Logger log;
+	log.startEvent();
+	std::ofstream statsFile, visiblePointsFile;
+	int maxIterations_ = 0;
 
-  ManifoldReconstructionConfig confManif;
-  confManif.inverseConicEnabled = true;
-  confManif.maxDistanceCamFeature = 100.0;
-  confManif.probOrVoteThreshold = 1.1;
-  confManif.enableSuboptimalPolicy = false;
-  confManif.suboptimalMethod = 0;
-  confManif.w_1 = 1.0;
-  confManif.w_2 = 0.2;
-  confManif.w_3 = 0.0;
+	ManifoldReconstructionConfig confManif;
+	confManif.inverseConicEnabled = true;
+	confManif.maxDistanceCamFeature = 100.0;
+	confManif.probOrVoteThreshold = 1.1;
+	confManif.enableSuboptimalPolicy = false;
+	confManif.suboptimalMethod = 0;
+	confManif.w_1 = 1.0;
+	confManif.w_2 = 0.2;
+	confManif.w_3 = 0.0;
 
+	if (argc < 2) {
+		std::cerr << std::endl << "Usage: ./manifoldReconstructor path_to_input.json [max_iterations]" << std::endl;
+		return 1;
+	} else {
+		std::cout << "input set to: " << argv[1] << std::endl << std::endl;
+	}
 
-  if(argc < 2){
-    std::cerr << std::endl << "Usage: ./manifoldReconstructor path_to_input.json [max_iterations]" << std::endl;
-    return 1;
-  }else{
-    std::cout << "input set to: " << argv[1] << std::endl << std::endl;
-  }
-
-  if(argc > 2){
-    maxIterations_ = atoi(argv[2]);
-    std::cout << "max_iterations set to: " << maxIterations_ << std::endl << std::endl;
-  }else{
-    std::cout << "max_iterations not set" << std::endl << std::endl;
-  }
+	if (argc > 2) {
+		maxIterations_ = atoi(argv[2]);
+		std::cout << "max_iterations set to: " << maxIterations_ << std::endl << std::endl;
+	} else {
+		std::cout << "max_iterations not set" << std::endl << std::endl;
+	}
 
 #ifdef USE_SFM
 
-  OpenMvgParser op_openmvg(argv[1]);
-  op_openmvg.parse();
-  std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
+	OpenMvgParser op_openmvg(argv[1]);
+	op_openmvg.parse();
+	std::cout << "sfm: " << op_openmvg.getSfmData().numCameras_ << " cams; " << op_openmvg.getSfmData().numPoints_ << " points" << std::endl << std::endl;
 
-  ReconstructFromSfMData mSfM(op_openmvg.getSfmData(), confManif);
+	ReconstructFromSfMData mSfM(op_openmvg.getSfmData(), confManif);
 
-  mSfM.run();
+	mSfM.run();
 
-  log.endEventAndPrint("\t\t\t\t\t\t", true);
-  return 0;
+	log.endEventAndPrint("\t\t\t\t\t\t", true);
+	return 0;
 
 #else
-
 
 #ifdef SAVE_POINTS_TO_OFF_AND_EXIT
-  std::cout << "start parsing " << argv[1] << std::endl;
-  log.startEvent();
-  ORBIncrementalParser op(argv[1]);
-  op.ParseToOFF("output/all_points_", 10);
-  log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
-  return 0;
+	std::cout << "start parsing " << argv[1] << std::endl;
+	log.startEvent();
+	ORBIncrementalParser op(argv[1]);
+	op.ParseToOFF("output/all_points_", 10);
+	log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
+	return 0;
 #else
-  std::cout << "start parsing " << argv[1] << std::endl;
-  log.startEvent();
-  ORBIncrementalParser op(argv[1]);
-  log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
+	std::cout << "start parsing " << argv[1] << std::endl;
+	log.startEvent();
+	ORBIncrementalParser op(argv[1]);
+	log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
 
-  CameraPointsCollection orb_data_ = op.getData();
-  std::cout << "orb: " <<  op.numCameras() << " cams" << std::endl << std::endl;
+	CameraPointsCollection orb_data_ = op.getData();
+	std::cout << "orb: " << op.numCameras() << " cams" << std::endl << std::endl;
 
-  ReconstructFromSLAMData m(orb_data_, confManif);
+	ReconstructFromSLAMData m(orb_data_, confManif);
 
-  // main loop
-  for(int i=0; i < op.numCameras(); i++){
-    CameraType* camera = op.nextCamera();
+	// main loop
+	for (int i = 0; i < op.numCameras(); i++) {
+		CameraType* camera = op.nextCamera();
 
-    if(camera == NULL){
-      continue;
-    }
+		if (camera == NULL) {
+			continue;
+		}
 
-    // If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
-    if(maxIterations_ && m.iterationCount >= maxIterations_) break;
+		// If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
+		if (maxIterations_ && m.iterationCount >= maxIterations_) break;
 
-    log.startEvent();
+		log.startEvent();
 
-    m.addCamera(camera);
+		m.addCamera(camera);
 
-    // Skip the manifold update for the first INITIAL_MANIFOLD_UPDATE_SKIP cameras
-    if(m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP  && !(m.iterationCount%MANIFOLD_UPDATE_EVERY)) m.updateManifold();
+		// Skip the manifold update for the first INITIAL_MANIFOLD_UPDATE_SKIP cameras
+		if (m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP && !(m.iterationCount % MANIFOLD_UPDATE_EVERY)) m.updateManifold();
 
-    if(m.iterationCount && !(m.iterationCount%SAVE_MANIFOLD_EVERY)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
+		if (m.iterationCount && !(m.iterationCount % SAVE_MANIFOLD_EVERY)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
-    log.endEventAndPrint("main loop\t\t\t\t\t\t\t", true); std::cout << std::endl;
+		log.endEventAndPrint("main loop\t\t\t\t\t\t\t", true);
+		std::cout << std::endl;
 
 #ifdef PRODUCE_STATS
-    statsFile.open("output/stats/stats.txt", std::ios_base::app);
-    statsFile << std::endl << std::endl << "Iteration " << m.iterationCount << std::endl;
-    statsFile << op.getStats();
-    statsFile.close();
+		statsFile.open("output/stats/stats.txt", std::ios_base::app);
+		statsFile << std::endl << std::endl << "Iteration " << m.iterationCount << std::endl;
+		statsFile << op.getStats();
+		statsFile.close();
 
-    std::ostringstream nameVisiblePoints; nameVisiblePoints << "output/vp/visible_points_" << camera->idCam << ".off";
-    visiblePointsFile.open(nameVisiblePoints.str().c_str());
-    visiblePointsFile << op.getDataOFF();
-    visiblePointsFile.close();
+		std::ostringstream nameVisiblePoints; nameVisiblePoints << "output/vp/visible_points_" << camera->idCam << ".off";
+		visiblePointsFile.open(nameVisiblePoints.str().c_str());
+		visiblePointsFile << op.getDataOFF();
+		visiblePointsFile.close();
 #endif
-  }
+	}
 
-  // Do a last manifold update in case op.numCameras() isn't a multiple of MANIFOLD_UPDATE_EVERY
-  if(m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP) m.updateManifold();
+	// Do a last manifold update in case op.numCameras() isn't a multiple of MANIFOLD_UPDATE_EVERY
+	if (m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP) m.updateManifold();
 
-  m.saveManifold("output/", "final");
+	m.saveManifold("output/", "final");
 
-  log.endEventAndPrint("main\t\t\t\t\t\t", true);
+	log.endEventAndPrint("main\t\t\t\t\t\t", true);
 
-  return 0;
+	return 0;
 
 #endif
 #endif
