@@ -30,6 +30,7 @@ Delaunay3DCellInfo::Delaunay3DCellInfo() {
 	Lw1_ = new std::vector<RayReconstruction*>();
 	Lw2_ = new std::vector<RayReconstruction*>();
 	Lw3_ = new std::vector<RayReconstruction*>();
+	paths_ = new std::set<RayPath*>();
 
 }
 Delaunay3DCellInfo::Delaunay3DCellInfo(const Delaunay3DCellInfo & ref) {
@@ -43,6 +44,7 @@ Delaunay3DCellInfo::Delaunay3DCellInfo(const Delaunay3DCellInfo & ref) {
 }
 
 Delaunay3DCellInfo::~Delaunay3DCellInfo() {
+	delete paths_;
 	delete Lw1_;
 	delete Lw2_;
 	delete Lw3_;
@@ -135,6 +137,16 @@ void Delaunay3DCellInfo::setWeights(float w_1, float w_2, float w_3) {
 	w_1_ = w_1;
 	w_2_ = w_2;
 	w_3_ = w_3;
+}
+
+void Delaunay3DCellInfo::addPath(RayPath* p) {
+	paths_->insert(p);
+}
+void Delaunay3DCellInfo::removePath(RayPath* p) {
+	paths_->erase(p);
+}
+std::set<RayPath*> Delaunay3DCellInfo::getPaths(){
+	return *paths_;
 }
 
 void Delaunay3DCellInfo::printIntersections() {

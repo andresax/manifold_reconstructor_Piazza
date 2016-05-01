@@ -56,7 +56,7 @@ typedef Delaunay3::Vertex_handle Vertex3D_handle;
 
 typedef std::pair<PointD3, float> DistanceWeight;
 
-typedef std::set<FSConstraint, FSConstraint::LtFSConstraint> SetConstraints;
+
 
 struct PointType;
 
@@ -120,21 +120,20 @@ struct PointParser {
 
 struct sortTetByIntersection {
 	inline bool operator()(const Delaunay3::Cell_handle& i, const Delaunay3::Cell_handle& j) {
-		if (!i->is_valid()) std::cout << "i->is_valid() " << i->is_valid() << std::endl;  // ->info().printIntersections();
 		return i->info().getVoteCountProb() < j->info().getVoteCountProb();
 	}
 };
 
 struct PointReconstruction { //TODO export in an actual class
+	int idReconstruction;
 	PointD3 position;
-	PointD3 newPosition;
 
 	// true when the point has been moved and newPosition is set
 	bool toBeMoved = false;
+	PointD3 newPosition;
 
-	// true when not yet in the triangulation
+	// true when not yet in the triangulation (and vertexHandle isn't set)
 	bool new_;
-
 	Vertex3D_handle vertexHandle;
 	int idVertex;
 
@@ -145,17 +144,26 @@ struct PointReconstruction { //TODO export in an actual class
 		newPosition = PointD3(0.0, 0.0, 0.0);
 		new_ = true;
 		idVertex = -1;
+		idReconstruction = -1;
 	}
 };
 
 struct CamReconstruction {
+	int idReconstruction;
 	PointD3 position;
-	Vertex3D_handle vertexHandle;
+
+	// true when the camera has been moved and newPosition is set
+	bool toBeMoved = false;
+	PointD3 newPosition;
+
+	Vertex3D_handle vertexHandle; // TODO correct?
+
 	std::vector<int> visiblePoints;
 	std::vector<int> newVisiblePoints;
 
 	CamReconstruction() {
 		position = PointD3(0.0, 0.0, 0.0);
+		idReconstruction = -1;
 	}
 };
 

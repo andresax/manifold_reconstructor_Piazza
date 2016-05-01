@@ -12,12 +12,18 @@
 #include <types_config.hpp>
 #include <Logger.h>
 #include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <map>
+#include <set>
 #include <ManifoldManager.h>
 #include <OutputCreator.h>
 #include <fstream>
 #include <iostream>
-
+#include <Ray.hpp>
 #include "FSConstraint.h"
+
+typedef std::set<FSConstraint, FSConstraint::LtFSConstraint> SetConstraints;
 
 /**
  * This class provides the API to manage the 2-manifold creation as explained in the
@@ -56,8 +62,11 @@ public:
 	bool hasVisibilityPair(int camIdx, int pointIdx);
 	void movePoint(int idxPoint, float x, float y, float z);
 	PointD3 movePointGetOld(int idxPoint, float x, float y, float z);
+	void moveCamera(int idxCamera, float x, float y, float z);
 
 	//incremental reconstruction
+
+	void updateTriangulation();
 
 	/**
 	 * Insert all the points visible from camera idxCam. Before calling this
@@ -105,58 +114,100 @@ private:
 	 * visual artifacts in the final mesh*/
 	void createSteinerPointGridAndBound();
 	/*add new point to the Delaunay Triangulation*/
-	bool insertNewPoint(PointReconstruction &points);
+	bool insertVertex(PointReconstruction &points);
 	/*mark a tetrahedron with a visibility rays, it updates the information stored in the tetrahedron*/
 	void markTetraedron(
-			Delaunay3::Cell_handle & cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& markedTetrahedra, RayReconstruction* ray,
-			bool incrementCount = true);
+			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::set<Delaunay3::Cell_handle>& path, RayReconstruction* ray, bool incrementCount = true);
+
+	void rayTracingFromAllCam();
+
 	/*Traces the ray from a camera to a point and update the weights, i.e., the visibility infromation, soterd in the traversed tetrahedra
 	 * and in their neighbor. Here is implemented the Inverse Cone Heuristic (ICH)*/
 	void rayTracing(int idxCam, int idxPoint, bool bOnlyMarkNew = false, bool incrementCount = true);
+
+	void rayTracing2(int idxCam, int idxPoint, bool bOnlyMarkNew = false);
+
+	/* Inverse operation of rayTracing
+	 * Unlike rayTracing that need to explore the terahedra from neighbour to neighbour, the ray path is known
+	 */
+	void rayUntracing(RayPath* path);
+
+	/* Complementary operation of rayTracing(idxCam, idxPoint, bOnlyMarkNew = true)
+	 * Unlike rayTracing that need to explore the terahedra from neighbour to neighbour and performs its operations only on new cells,
+	 * the set of new cells is known and rayRetracing start to trace the ray only in these cells
+	 */
+	void rayRetracing(int idxCam, int idxPoint, std::set<Delaunay3::Cell_handle>& newCells);
 
 	/*Update the weights of the cellsToBeUpdates according to the values in the vecDistanceWeights. This implements the suboptimal policy*/
 	void updateDistanceAndWeights(std::vector<Delaunay3::Cell_handle> &cellsToBeUpdated, const std::vector<DistanceWeight> &vecDistanceWeight);
 
 	/*not tested yet*/
-	int moveVertex(int idxPoint, int idxCam);
-	/*not tested yet*/
 	int moveVertex_WHeuristic(int idxPoint, int idxCam);
-
+	/*not tested yet*/
+	int moveVertex(int idxPoint);
+//	int moveVertex(int idxPoint, int idxCam);
+	void moveCameraConstraints(int idxCam);
 	/**test if the segment traverse two tetrahedra in facet f*/
 	bool cellTraversalExitTest(
 			int & f, int & fOld, const Delaunay3::Cell_handle& tetCur, const Delaunay3::Cell_handle &tetPrev, std::set<Delaunay3::Cell_handle>& visitedTetrahedra,
 			const Segment & constraint);
 
 	void addRay(int cameraId, int pointId);
-
 	RayReconstruction* getRay(int cameraId, int pointId);
-	std::vector<RayReconstruction*> getRaysFromCamera(int cameraId);
-	std::vector<RayReconstruction*> getRaysFromPoint(int pointId);
+	std::set<RayReconstruction*> getRaysFromCamera(int cameraId);
+	std::set<RayReconstruction*> getRaysFromPoint(int pointId);
 
-	ManifoldReconstructionConfig conf_;
+	RayPath* addRayPath(int cameraId, int pointId);
+	RayPath* getRayPath(int cameraId, int pointId);
+	std::set<RayPath*> getRayPathsFromCamera(int cameraId);
+	std::set<RayPath*> getRayPathsFromPoint(int pointId);
+
+	void getDegree1Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours);
+	void getDegree2Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours, std::set<Delaunay3::Cell_handle>& d2Neighbours);
 
 	Delaunay3 dt_;
-	utilities::Logger logger_;
-	std::vector<PointReconstruction> points_;
+	std::vector<Delaunay3::Cell_handle> freeSpaceTets_;
+	std::set<Delaunay3::Cell_handle> newCells_;
+
 	std::vector<CamReconstruction> cams_;
+	std::vector<PointReconstruction> points_;
+	std::vector<Vertex3D_handle> vecVertexHandles_;
 	std::vector<glm::vec3> camsPositions_;
 	std::vector<int> curPointsVisible_;
-	std::vector<Vertex3D_handle> vecVertexHandles_;
-	std::vector<Delaunay3::Cell_handle> freeSpaceTets_;
-	std::vector<int> idxPointsForRayTracing_;
 
+//	std::vector<int> idxPointsForRayTracing_;
 	std::map<std::pair<int, int>, RayReconstruction*> rays_;
-	std::map<int, RayReconstruction*> camerasRays_;
-	std::map<int, RayReconstruction*> pointsRays_;
-	std::set<FSConstraint, FSConstraint::LtFSConstraint> curConstraints_;
+	std::map<int, std::set<RayReconstruction*>> camerasRays_;
+	std::map<int, std::set<RayReconstruction*>> pointsRays_;
+
+	std::map<std::pair<int, int>, RayPath*> rayPaths_;
+	std::map<int, std::set<RayPath*>> camerasRayPaths_;
+	std::map<int, std::set<RayPath*>> pointsRayPaths_;
+
+//	std::set<FSConstraint, FSConstraint::LtFSConstraint> curConstraints_;
 	std::vector<DistanceWeight> vecDistanceWeight_;
 
-	ManifoldManager * manifoldManager_;
-	OutputCreator *outputM_;
+	/*	raysToBeTraced_ contains all the rays <cameraIndex, pointIndex> that need to be traced by rayTracing.
+	 *	See rayTracing
+	 */
+	std::set<std::pair<int, int>> raysToBeTraced_;
+
+	/*	raysToBeRetraced_ contains all the rays <cameraIndex, pointIndex> that need to be retraced by rayRetracing.
+	 * 	A ray is retraced by rayRetracing if it were intersecting some cells that were removed from the triangulation.
+	 *	See rayRetracing
+	 */
+	std::set<std::pair<int, int>> raysToBeRetraced_;
+
+	std::set<int> updatedCamerasIdx_;
 	std::vector<int> pointsMovedIdx_;
+	std::vector<int> movedCamerasIdx_;
 
 	float l_, stepX_, stepY_, stepZ_;
 
+	ManifoldReconstructionConfig conf_;
+	utilities::Logger logger_;
+	ManifoldManager * manifoldManager_;
+	OutputCreator *outputM_;
 	std::ofstream fileOut_;
 };
 

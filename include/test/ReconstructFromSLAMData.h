@@ -18,9 +18,10 @@
 
 class ReconstructFromSLAMData {
 public:
-  ReconstructFromSLAMData(const CameraPointsCollection& cp_data, ManifoldReconstructionConfig& manifConf);
+  ReconstructFromSLAMData(ManifoldReconstructionConfig& manifConf);
   virtual ~ReconstructFromSLAMData();
 
+  void moveCamera(CameraType* camera);
   void addCamera(CameraType* newCamera);
   void updateManifold();
   void saveManifold(std::string namePrefix, std::string nameSuffix);
@@ -44,7 +45,6 @@ private:
   ManifoldMeshReconstructor* manifRec_;
   utilities::Logger logger_;
 
-  CameraPointsCollection cp_data_;
   std::set<CameraType*> rayTracingSet_;
   std::set<CameraType*> insertNewPointsFromCamSet_;
 

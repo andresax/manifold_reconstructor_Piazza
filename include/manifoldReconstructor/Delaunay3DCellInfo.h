@@ -19,6 +19,8 @@
 #include <glm.hpp>
 #include "FSConstraint.h"
 
+struct RayPath;
+
 class Delaunay3DCellInfo {
 public:
 
@@ -125,6 +127,10 @@ public:
 	bool isKeptByVoteCountProb(const float nVoteThresh) const;
 
 	void setWeights(float w_1, float w_2, float w_3);
+
+	void addPath(RayPath* p);
+	void removePath(RayPath* p);
+	std::set<RayPath*> getPaths();
 
 	void printIntersections();
 
@@ -469,6 +475,7 @@ private:
 	bool isCacheValid_ = false;
 
 	// set of rays accounting for w_1, w_2, w_3
+	std::set<RayPath*>* paths_;
 	std::vector<RayReconstruction*>* Lw1_;
 	std::vector<RayReconstruction*>* Lw2_;
 	std::vector<RayReconstruction*>* Lw3_;

@@ -32,7 +32,7 @@ void CameraPointsCollection::addCamera(CameraType* cam) {
 }
 
 CameraType* CameraPointsCollection::getCamera(long unsigned int camId) {
-	return cameras_[camId];
+	return cameras_.at(camId);
 }
 
 int CameraPointsCollection::numCameras() {
@@ -48,7 +48,7 @@ void CameraPointsCollection::addPoint(PointType* point) {
 }
 
 PointType* CameraPointsCollection::getPoint(long unsigned int pointId) {
-	return points_[pointId];
+	return points_.at(pointId);
 }
 
 int CameraPointsCollection::numPoints() {

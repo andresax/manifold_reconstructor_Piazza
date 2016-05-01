@@ -35,7 +35,7 @@ private:
 	void parseIntrinsics();
 
 	rapidjson::Document document_;
-	const rapidjson::Value& jsonViewsArray_;
+	rapidjson::Value jsonViewsArray_;
 	rapidjson::SizeType jsonViewIndex_;
 	std::ifstream fileStream_;
 	std::string fileName_;

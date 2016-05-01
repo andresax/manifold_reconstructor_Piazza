@@ -43,8 +43,10 @@ public:
 	void writeUsedVOFF(const std::string filename);
 	void writeNotUsedVOFF(const std::string filename);
 	void writeBoundaryOFF(const std::string filename, const std::vector<Delaunay3::Cell_handle> &boundaryCells);
+
+	void writeTetrahedraToOFF(std::string pathPrefix, std::vector<int> ids, std::vector<Delaunay3::Cell_handle> & cells);
 	void writeTetrahedraAndRayToOFF(std::string pathPrefix, int cameraIndex, int pointIndex, std::vector<Delaunay3::Cell_handle> & cells, Segment constraint);
-	void writeOneTriangleAndRayToOFF(std::string prefixPath, std::vector<int> ids, Delaunay3::Triangle & triangle, Segment constraint);
+	void writeOneTriangleAndRayToOFF(std::string pathPrefix, std::vector<int> ids, Delaunay3::Triangle & triangle, Segment constraint);
 
 private:
 

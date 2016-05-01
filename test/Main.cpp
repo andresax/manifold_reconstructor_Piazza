@@ -85,20 +85,19 @@ int main(int argc, char **argv) {
 	log.startEvent();
 	ORBIncrementalParser op(argv[1]);
 	op.ParseToOFF("output/all_points_", 10);
-	log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
+	log.endEventAndPrint("Parsing\t\t\t\t", true);
 	return 0;
 #else
 	std::cout << "start parsing " << argv[1] << std::endl;
 	log.startEvent();
 	ORBIncrementalParser op(argv[1]);
-	log.endEventAndPrint("Parsing\t\t\t\t\t\t", true);
+	log.endEventAndPrint("Parsing\t\t\t\t", true);
 
-	CameraPointsCollection orb_data_ = op.getData();
 	std::cout << "orb: " << op.numCameras() << " cams" << std::endl << std::endl;
 
-	ReconstructFromSLAMData m(orb_data_, confManif);
+	ReconstructFromSLAMData m(confManif);
 
-	// main loop
+	// Main loop
 	for (int i = 0; i < op.numCameras(); i++) {
 		CameraType* camera = op.nextCamera();
 
@@ -118,7 +117,70 @@ int main(int argc, char **argv) {
 
 		if (m.iterationCount && !(m.iterationCount % SAVE_MANIFOLD_EVERY)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
-		log.endEventAndPrint("main loop\t\t\t\t\t\t\t", true);
+		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
+		std::cout << std::endl;
+
+#ifdef PRODUCE_STATS
+		statsFile.open("output/stats/stats.txt", std::ios_base::app);
+		statsFile << std::endl << std::endl << "Iteration " << m.iterationCount << std::endl;
+		statsFile << op.getStats();
+		statsFile.close();
+
+		std::ostringstream nameVisiblePoints; nameVisiblePoints << "output/vp/visible_points_" << camera->idCam << ".off";
+		visiblePointsFile.open(nameVisiblePoints.str().c_str());
+		visiblePointsFile << op.getDataOFF();
+		visiblePointsFile.close();
+#endif
+	}
+
+	// Do a last manifold update in case op.numCameras() isn't a multiple of MANIFOLD_UPDATE_EVERY
+	if (m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP) m.updateManifold();
+
+	m.saveManifold("output/", "final");
+
+	log.endEventAndPrint("main\t\t\t\t\t\t", true);
+
+	log.startEvent();
+
+	/***
+	 *
+	 *  second loop: move everything to one side
+	 *
+	 *
+	 */
+
+	for (auto cameraMapPair : op.getData().getCameras()) {
+		CameraType* camera = cameraMapPair.second;
+		glm::vec3 pCamera = camera->center;
+		camera->center = glm::vec3(pCamera.x, pCamera.y, pCamera.z + 10.0);
+	}
+
+	for (auto pointMapPair : op.getData().getPoints()) {
+		PointType* point = pointMapPair.second;
+		glm::vec3 pPoint = point->position;
+		point->position = glm::vec3(pPoint.x, pPoint.y, pPoint.z + 10.0);
+	}
+
+	for (auto cameraMapPair : op.getData().getCameras()) {
+		CameraType* camera = cameraMapPair.second;
+
+		if (camera == NULL) {
+			continue;
+		}
+
+		// If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
+		if (maxIterations_ && m.iterationCount >= 2*maxIterations_) break;
+
+		log.startEvent();
+
+		m.addCamera(camera);
+
+		// Skip the manifold update for the first INITIAL_MANIFOLD_UPDATE_SKIP cameras
+		if (m.iterationCount > INITIAL_MANIFOLD_UPDATE_SKIP && !(m.iterationCount % MANIFOLD_UPDATE_EVERY)) m.updateManifold();
+
+		if (m.iterationCount && !(m.iterationCount % SAVE_MANIFOLD_EVERY)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
+
+		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
 		std::cout << std::endl;
 
 #ifdef PRODUCE_STATS

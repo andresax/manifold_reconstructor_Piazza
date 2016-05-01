@@ -10,20 +10,20 @@
 #include <utilities.hpp>
 
 #define VERBOSE_CAMERA_ADD
+#define VERBOSE_CAMERA_UPDATE
 //#define VERBOSE_POINT_ADD
 //#define VERBOSE_POINT_UPDATE
 //#define VERBOSE_POINT_IGNORE
 //#define VERBOSE_ADD_VISIBILITY_PAIR
-#define VERBOSE_POINTS_COUNT
+//#define VERBOSE_POINTS_COUNT
 //#define OUTLIER_FILTERING
 
 #define PRIMARY_POINTS_VISIBILITY_THRESHOLD     3
 #define SECONDARY_POINTS_VISIBILITY_THRESHOLD   1
 
-ReconstructFromSLAMData::ReconstructFromSLAMData(const CameraPointsCollection& cp_data, ManifoldReconstructionConfig& manifConf) {
+ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& manifConf) {
 	iterationCount = 0;
 
-	cp_data_ = cp_data;
 	manifConf_ = manifConf;
 	manifRec_ = new ManifoldMeshReconstructor(manifConf_);
 	utilities::Logger logger_;
@@ -50,17 +50,34 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 	//outlierFiltering(inliers);
 #endif
 
-	// Add the new camera to ManifoldMeshReconstructor
-	glm::vec3 center = newCamera->center;
-	manifRec_->addCameraCenter(center.x, center.y, center.z);
-	insertNewPointsFromCamSet_.insert(newCamera);
+	bool isCameraNew;
 
-	// Generate the ManifoldMeshReconstructor's index if the camera hasn't got one already
-	if (newCamera->idReconstruction < 0) newCamera->idReconstruction = cameraNextId++;
+	if (newCamera->idReconstruction < 0) {
+
+		// Add the new camera to ManifoldMeshReconstructor
+		glm::vec3 center = newCamera->center;
+		manifRec_->addCameraCenter(center.x, center.y, center.z);
+		//insertNewPointsFromCamSet_.insert(newCamera); TODO remove
+
+		// Generate the ManifoldMeshReconstructor's index if the camera hasn't got one already
+		isCameraNew = true;
+		newCamera->idReconstruction = cameraNextId++;
 
 #ifdef VERBOSE_CAMERA_ADD
-	std::cout << "ADD cam " << newCamera->idCam << " (" << newCamera->idReconstruction << ")" << ": " << center.x << ", " << center.y << ", " << center.z << std::endl;
+		std::cout << "ADD cam " << newCamera->idCam << " (" << newCamera->idReconstruction << ")" << ": " << center.x << ", " << center.y << ", " << center.z << std::endl;
 #endif
+
+	} else {
+		// if the camera already has the ManifoldMeshReconstructor's index, then it is updated
+		isCameraNew = false;
+		rayTracingSet_.insert(newCamera);
+		glm::vec3 center = newCamera->center;
+		manifRec_->moveCamera(newCamera->idReconstruction, center.x, center.y, center.z);
+
+#ifdef VERBOSE_CAMERA_UPDATE
+		std::cout << "UPDATE cam " << newCamera->idCam << " (" << newCamera->idReconstruction << ")" << ": " << center.x << ", " << center.y << ", " << center.z << std::endl;
+#endif
+	}
 
 	// Add the points associated to the new camera to ManifoldMeshReconstructor
 	int countIgnoredPoints = 0, countUpdatedPoints = 0, countAddedPoints = 0, countPairedPoints = 0;
@@ -108,13 +125,8 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 
 		} else {
 
-			/** !!!TODO
-			 *  Debug: MoveVertex, rayTracing
-			 *  Do move point only after running insertNewPointsFromCam
-			 *
-			 */
 			// The point was already added to ManifoldMeshReconstructor, so it is only updated
-			if (iterationCount > 7) { // 7: workaround. movePoint only after insertNewPointsFomrCam
+			if (true || iterationCount > 7) { // 7: workaround. movePoint only after insertNewPointsFomrCam // TODO try to remove
 				glm::vec3 position = p->position;
 				manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z);
 				countUpdatedPoints++;
@@ -125,13 +137,15 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 #endif
 			}
 
-			// Add visibility with the (already added) point
-			manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
-			rayTracingSet_.insert(newCamera);
-			countPairedPoints++;
+			if (isCameraNew) {
+				// Add visibility between the (already added) point and the just added camera
+				manifRec_->addVisibilityPair(newCamera->idReconstruction, p->idReconstruction);
+				rayTracingSet_.insert(newCamera);
+				countPairedPoints++;
 #ifdef VERBOSE_ADD_VISIBILITY_PAIR
-			std::cout << "add visibility with new camera " << newCamera->idCam << ", point " << p->idPoint << std::endl;
+				std::cout << "add visibility with new camera " << newCamera->idCam << ", point " << p->idPoint << std::endl;
 #endif
+			} //else: if the camera is being updated, the visibility pair was already added
 		}
 	}
 
@@ -147,26 +161,22 @@ void ReconstructFromSLAMData::updateManifold() {
 	manifoldUpdatedSinceSave_ = true;
 	//TODO actually manage the case of newCameras have too few or no points associated (in ManifoldMeshReconstructior) : count( newCamera.points st idRec>=0 )
 
-	// Tell ManifoldMeshReconstructor to shrink the manifold for all cameras added since last shrinking
-//  logger_.startEvent();
-//  std::cout << std::endl << "┍ insertNewPoints" << std::endl;
-//  for(auto camera : insertNewPointsFromCamSet_){
-//    std::cout << "├ insertNewPointsFromCam " << camera->idCam << std::endl;
-//    manifRec_->insertNewPointsFromCam(camera->idReconstruction, true);
-//  }
-//  insertNewPointsFromCamSet_.clear();
-//  logger_.endEventAndPrint("insertNewPoints\t\t\t\t\t", true);
-
-	// Tell ManifoldMeshReconstructor to do ray tracing for all cameras for which visibility pairs has been added
-	std::cout << std::endl << "┍ insertNewPoints and rayTracing" << std::endl;
+	// Tell ManifoldMeshReconstructor to update the triangulation with the new cameras and points
+	std::cout << "┍ updateTriangulation" << std::endl;
 	logger_.startEvent();
-	for (auto camera : rayTracingSet_) {
-		std::cout << "├ insertNewPointsFromCam and rayTracingFromCam " << camera->idCam << std::endl;
-		manifRec_->insertNewPointsFromCam(camera->idReconstruction, true);
-		manifRec_->rayTracingFromCam(camera->idReconstruction);
-	}
-	rayTracingSet_.clear();
-	logger_.endEventAndPrint("insertNewPoints and rayTracing\t\t\t", true);
+	manifRec_->updateTriangulation();
+	logger_.endEventAndPrint("updateTriangulation\t\t", true);
+
+//	std::cout << std::endl << "┍ updateTriangulation" << std::endl;
+//	logger_.startEvent();
+//	for (auto camera : rayTracingSet_) {
+//		std::cout << "├ insertNewPointsFromCam and rayTracingFromCam " << camera->idCam << std::endl;
+//		manifRec_->insertNewPointsFromCam(camera->idReconstruction, true);
+//		//manifRec_->rayTracingFromCam(camera->idReconstruction);
+//	}
+//	rayTracingSet_.clear();
+//	logger_.endEventAndPrint("updateTriangulation\t\t\t", true);
+
 
 	// Tell ManifoldMeshReconstructor to grow back the manifold
 	logger_.startEvent();
@@ -174,17 +184,17 @@ void ReconstructFromSLAMData::updateManifold() {
 	logger_.startEvent();
 	std::cout << std::endl << "┍ growManifold" << std::endl;
 	manifRec_->growManifold();
-	logger_.endEventAndPrint("├ growManifold\t\t\t\t\t", true);
+	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
 
 	logger_.startEvent();
 	manifRec_->growManifoldSev();
-	logger_.endEventAndPrint("├ growManifoldSev\t\t\t\t", true);
+	logger_.endEventAndPrint("├ growManifoldSev\t\t", true);
 
 	logger_.startEvent();
 	manifRec_->growManifold();
-	logger_.endEventAndPrint("├ growManifold\t\t\t\t\t", true);
+	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
 
-	logger_.endEventAndPrint("growManifold\t\t\t\t\t", true);
+	logger_.endEventAndPrint("growManifold\t\t\t", true);
 }
 
 void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string nameSuffix) {
@@ -198,7 +208,7 @@ void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string n
 	nameManifold << namePrefix << "manifold_" << nameSuffix << ".off";
 	std::cout << "saving " << nameManifold.str() << std::endl;
 	manifRec_->saveManifold(nameManifold.str());
-	logger_.endEventAndPrint("save manifold\t\t\t\t\t", true);
+	logger_.endEventAndPrint("save manifold\t\t\t", true);
 
 //
 //  logger_.startEvent();
@@ -218,12 +228,12 @@ void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string n
 
 }
 
-void ReconstructFromSLAMData::overwriteFocalY(float f) {
-	for (auto const &kvCamera : cp_data_.getCameras()) {
-		kvCamera.second->intrinsics[1][1] = f;
-	}
-
-}
+//void ReconstructFromSLAMData::overwriteFocalY(float f) {
+//	for (auto const &kvCamera : cp_data_.getCameras()) {
+//		kvCamera.second->intrinsics[1][1] = f;
+//	}
+//
+//}
 
 //
 //void ReconstructFromSLAMData::outlierFiltering(std::vector<bool>& inliers) {
