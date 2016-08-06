@@ -1,0 +1,39 @@
+Problema 2: se non definisco NO_HEURISTIC_K non compila, perché manca la funzione addIntersection con i parametri corrispondenti (che invece è presente con NO_HEURISTIC_K definito).
+
+no matching function for call to ‘Delaunay3DCellInfo::addIntersection(int&, int&, float&, int&, std::vector<PointReconstruction>&, std::vector<glm::tvec3<float, (glm::precision)0u> >&)’ nearCellNotIntersected->info().addIntersection(idxCam, idxPoint, conf_.w_2, points_[idxPoint].idVertex, points_, camsPositions_);
+
+Problema 3:
+Mentre testavo moveVertex e moveCamera è successo questo.
+Proprio all'ultima iterazione di test dello spostamento! (cioè, ha funzionato tutto 9 volte, alla decima è fallito)
+Non ho ancora guardato cos'è l'errore, ma magari l'hai già visto o ti può essere utile sapere che sta roba può succedere.
+
+terminate called after throwing an instance of 'CGAL::Precondition_exception'
+  what():  CGAL ERROR: precondition violation!
+Expr: v != Vertex_handle()
+File: /usr/local/include/CGAL/Triangulation_data_structure_3.h
+Line: 1175
+
+Stack:
+
+manifoldReconstructor [4081] [cores: 0,1]	
+	Thread #1 [manifoldReconst] 4081 [core: 0] (Suspended : Signal : SIGABRT:Aborted)	
+		__GI_raise() at raise.c:56 0x7ffff56d6cc9	
+		__GI_abort() at abort.c:89 0x7ffff56da0d8	
+		__gnu_cxx::__verbose_terminate_handler() at 0x7ffff5fe1535	
+		0x7ffff5fdf6d6	
+		std::terminate() at 0x7ffff5fdf703	
+		__cxa_throw() at 0x7ffff5fdf922	
+		CGAL::precondition_fail() at 0x7ffff66b5b49	
+		CGAL::Triangulation_data_structure_3<...>() at Triangulation_data_structure_3.h:1,175 0x62775e	
+		CGAL::Triangulation_data_structure_3<...>() at Triangulation_data_structure_3.h:1,008 0x6214d6	
+		CGAL::Triangulation_data_structure_3<...>() at Triangulation_data_structure_3.h:1,015 0x61d92a	
+		CGAL::Triangulation_3<...>() at Triangulation_3.h:1,850 0x61a17c	
+		ManifoldMeshReconstructor::rayTracing() at ManifoldMeshReconstructor.cpp:275 0x61092f	
+		ManifoldMeshReconstructor::rayTracingFromCam() at ManifoldMeshReconstructor.cpp:242 0x610666	
+		ManifoldMeshReconstructor::moveCameraConstraints() at ManifoldMeshReconstructor.cpp:974 0x6150d9	
+		ManifoldMeshReconstructor::insertNewPointsFromCam() at ManifoldMeshReconstructor.cpp:225 0x610375	
+		ReconstructFromSLAMData::updateManifold() at ReconstructFromSLAMData.cpp:188 0x6a9f82	
+		main() at Main.cpp:177 0x6d6d2f	
+	Thread #2 [manifoldReconst] 4086 [core: 1] (Suspended : Container)	
+
+

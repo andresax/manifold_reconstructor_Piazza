@@ -47,6 +47,8 @@ public:
 	ManifoldMeshReconstructor(ManifoldReconstructionConfig conf);
 	virtual ~ManifoldMeshReconstructor();
 
+	void printWhatever();
+
 	void printIdxPointsForRayTracing();
 
 	/*Functions to add informations about the points, the cameras and visibility
@@ -107,6 +109,8 @@ public:
 
 	void setWeights(float w_1, float w_2, float w_3);
 
+	std::ofstream timeStatsFile_;
+
 private:
 	void shrinkManifold(const PointD3 &camCenter);
 	/*create the initial grid of steiner points to avoid the infinite tetrahedra issue, while growing the mesh.
@@ -162,8 +166,12 @@ private:
 	std::set<RayPath*> getRayPathsFromCamera(int cameraId);
 	std::set<RayPath*> getRayPathsFromPoint(int pointId);
 
+	float weightFunction(RayPath* r);
+
 	void getDegree1Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours);
 	void getDegree2Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours, std::set<Delaunay3::Cell_handle>& d2Neighbours);
+
+	int iterationCounter_ = 0;
 
 	Delaunay3 dt_;
 	std::vector<Delaunay3::Cell_handle> freeSpaceTets_;
@@ -198,6 +206,8 @@ private:
 	 */
 	std::set<std::pair<int, int>> raysToBeRetraced_;
 
+	std::set<std::pair<int, int>> raysToBeUntraced_;
+
 	std::set<int> updatedCamerasIdx_;
 	std::vector<int> pointsMovedIdx_;
 	std::vector<int> movedCamerasIdx_;
@@ -209,6 +219,7 @@ private:
 	ManifoldManager * manifoldManager_;
 	OutputCreator *outputM_;
 	std::ofstream fileOut_;
+
 };
 
 #endif /* MANIFOLDMESHRECONSTRUCTOR_H_ */

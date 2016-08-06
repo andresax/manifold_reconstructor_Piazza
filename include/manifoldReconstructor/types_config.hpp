@@ -162,6 +162,36 @@ typedef struct {
   float w_1;
   float w_2;
   float w_3;
+  float steinerGridSideLength;
+  float steinerGridStepLength;
+
+  int manifold_update_every;
+  int initial_manifold_update_skip;
+  int save_manifold_every;
+  int primary_points_visibility_threshold;
+
+
+  std::string toString() {
+    std::stringstream out;
+    out << "inverseConicEnabled: " << inverseConicEnabled << std::endl;
+    out << "maxDistanceCamFeature: " << maxDistanceCamFeature << std::endl;
+    out << "probOrVoteThreshold: " << probOrVoteThreshold << std::endl;
+    out << "enableSuboptimalPolicy: " << enableSuboptimalPolicy << std::endl;
+    out << "suboptimalMethod: " << suboptimalMethod << std::endl;
+    out << "w_1: " << w_1 << std::endl;
+    out << "w_2: " << w_2 << std::endl;
+    out << "w_3: " << w_3 << std::endl;
+    out << "steinerGridStepLength: " << steinerGridStepLength << std::endl;
+    out << "steinerGridSideLength: " << steinerGridSideLength << std::endl;
+
+    out << "manifold_update_every: " << manifold_update_every << std::endl;
+    out << "initial_manifold_update_skip: " << initial_manifold_update_skip << std::endl;
+    out << "save_manifold_every: " << save_manifold_every << std::endl;
+    out << "primary_points_visibility_threshold: " << primary_points_visibility_threshold << std::endl;
+
+    return out.str();
+  }
+
 } ManifoldReconstructionConfig;
 
 

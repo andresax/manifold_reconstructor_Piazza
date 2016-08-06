@@ -18,7 +18,7 @@
 //#define VERBOSE_POINTS_COUNT
 //#define OUTLIER_FILTERING
 
-#define PRIMARY_POINTS_VISIBILITY_THRESHOLD     3
+//#define PRIMARY_POINTS_VISIBILITY_THRESHOLD     3
 #define SECONDARY_POINTS_VISIBILITY_THRESHOLD   1
 
 ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& manifConf) {
@@ -34,7 +34,7 @@ ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& m
 	// initially the manifold is empty, so it is considered not to be saved until the first update
 	manifoldUpdatedSinceSave_ = false;
 
-	if (PRIMARY_POINTS_VISIBILITY_THRESHOLD < SECONDARY_POINTS_VISIBILITY_THRESHOLD)
+	if (manifConf_.primary_points_visibility_threshold < SECONDARY_POINTS_VISIBILITY_THRESHOLD)
 		std::cerr << "PRIMARY_POINTS_VISIBILITY_THRESHOLD should be greater than SECONDARY_POINTS_VISIBILITY_THRESHOLD" << std::endl;
 }
 
@@ -84,7 +84,7 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 	for (auto const &p : newCamera->visiblePointsT) {
 
 		// Only consider points that were observed in many frames
-		if (p->getNunmberObservation() < PRIMARY_POINTS_VISIBILITY_THRESHOLD) {
+		if (p->getNunmberObservation() < manifConf_.primary_points_visibility_threshold) {
 			countIgnoredPoints++;
 #ifdef VERBOSE_POINT_IGNORE
 			//std::cout << "IGNORE point \t" << p->idPoint << "\t (recId:" <<  p->idReconstruction << "),\tobs: " << p->getNunmberObservation() << std::endl;
@@ -113,7 +113,7 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 				} else {
 					// All the previous cameras should have been added already.
 					// This shouldn't happen, unless some cameras are in CameraPointsCollection but weren't added by ReconstructFromSLAMData::addCamera (this function)
-					std::cerr << "camera " << coCamera->idCam << " ignored" << std::endl;
+					;//std::cerr << "camera " << coCamera->idCam << " ignored" << std::endl;
 				}
 			}
 
@@ -185,14 +185,17 @@ void ReconstructFromSLAMData::updateManifold() {
 	std::cout << std::endl << "┍ growManifold" << std::endl;
 	manifRec_->growManifold();
 	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
+	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
 
 	logger_.startEvent();
 	manifRec_->growManifoldSev();
 	logger_.endEventAndPrint("├ growManifoldSev\t\t", true);
+	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
 
 	logger_.startEvent();
 	manifRec_->growManifold();
 	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
+	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
 
 	logger_.endEventAndPrint("growManifold\t\t\t", true);
 }
@@ -209,14 +212,15 @@ void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string n
 	std::cout << "saving " << nameManifold.str() << std::endl;
 	manifRec_->saveManifold(nameManifold.str());
 	logger_.endEventAndPrint("save manifold\t\t\t", true);
+	manifRec_->timeStatsFile_ << logger_.getLastDelta();
 
-//
-//  logger_.startEvent();
-//  std::ostringstream nameFreespace; nameFreespace << namePrefix << "free_space_manifold_" << nameSuffix << ".off";
-//  std::cout << "saving " << nameFreespace.str() << std::endl;
-//  manifRec_->saveFreespace("FreeFinal.off");
-//  logger_.endEventAndPrint("save free_space_manifold\t\t\t", true);
-//
+
+  logger_.startEvent();
+  std::ostringstream nameFreespace; nameFreespace << namePrefix << "free_space_manifold_" << nameSuffix << ".off";
+  std::cout << "saving " << nameFreespace.str() << std::endl;
+  manifRec_->saveFreespace(nameFreespace.str());
+  logger_.endEventAndPrint("save free_space_manifold\t\t\t", true);
+
 //  std::vector<int> age;
 //  for (int cur = 0; cur < cp_data_.numCameras(); cur++) age.push_back(cur);
 //

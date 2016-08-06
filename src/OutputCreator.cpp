@@ -35,7 +35,7 @@ void OutputCreator::tetrahedraToTriangles(std::vector<PointD3>& points, std::vec
 //	std::cout << "numManifold: " << numManifold << ", tets" << std::endl;
 //	std::cout << "numNotManifold: " << numNotManifold << ", tets" << std::endl;
 
-	// Initialize points and tris as empty:
+// Initialize points and tris as empty:
 	if (!points.empty()) points.clear();
 	if (!tris.empty()) tris.clear();
 
@@ -707,6 +707,38 @@ void OutputCreator::writeNotUsedVOFF(const std::string filename) {
 	outfile.close();
 }
 
+void OutputCreator::writeAllVerticesToOFF(std::string prefixPath, std::vector<int> ids) {
+
+	std::ofstream outputFile;
+	std::ostringstream outputFileName;
+	outputFileName << prefixPath;
+	for (auto id : ids)
+		outputFileName << "_" << id;
+	outputFileName << ".off";
+	outputFile.open(outputFileName.str().c_str());
+
+	std::vector<PointD3> points;
+
+	for (auto v = dt_.vertices_begin(); v != dt_.vertices_end(); v++) {
+		points.push_back(v->point());
+	}
+
+	if (!outputFile.is_open()) {
+		std::cerr << "Unable to open file: " << outputFileName.str() << std::endl;
+		return;
+	}
+
+	outputFile << "OFF" << std::endl;
+	outputFile << points.size() << " 0 0" << std::endl;
+
+	// Write out lines one by one.
+	for (auto p : points)
+		outputFile << static_cast<float>(p.x()) << " " << static_cast<float>(p.y()) << " " << static_cast<float>(p.z()) << std::endl;
+
+	// Close the file and return
+	outputFile.close();
+}
+
 void OutputCreator::writeTetrahedraToOFF(std::string pathPrefix, std::vector<int> ids, std::vector<Delaunay3::Cell_handle> & cells) {
 	// Refuse to create a file with without tetrahedra
 	std::ostringstream outputFileName;
@@ -822,3 +854,34 @@ void OutputCreator::writeOneTriangleAndRayToOFF(std::string prefixPath, std::vec
 	outputFile.close();
 }
 
+void OutputCreator::writeRaysToOFF(std::string prefixPath, std::vector<int> ids, std::vector<Segment> &constraints) {
+
+	std::ofstream outputFile;
+	std::ostringstream outputFileName;
+	outputFileName << prefixPath;
+	for (auto id : ids)
+		outputFileName << "_" << id;
+	outputFileName << ".off";
+	outputFile.open(outputFileName.str().c_str());
+
+	std::vector<PointD3> vertices;
+	int triangleNum = constraints.size();
+
+	// insert the rays as triangles degenerated to segments
+	for (auto constraint : constraints) {
+		vertices.push_back(constraint.source());
+		vertices.push_back(constraint.source());
+		vertices.push_back(constraint.target());
+	}
+
+	outputFile << "OFF" << std::endl;
+	outputFile << vertices.size() << " " << triangleNum << " 0" << std::endl;
+
+	for (auto v : vertices)
+		outputFile << static_cast<float>(v.x()) << " " << static_cast<float>(v.y()) << " " << static_cast<float>(v.z()) << std::endl;
+
+	for (int t = 0; t < triangleNum; t++)
+		outputFile << "3 " << 3 * t + 0 << " " << 3 * t + 1 << " " << 3 * t + 2 << std::endl;
+
+	outputFile.close();
+}

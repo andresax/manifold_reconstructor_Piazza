@@ -1,0 +1,190 @@
+{
+    "slam_data_version": "0.2",
+    "root_path": "/home/andrea/Scrivania/Datasets/Middelbury/dinoRing",
+    "intrinsics": [
+        {
+            "intrinsicId": 0,
+            "value": {
+                "polymorphic_id": 0,
+                "polymorphic_name": "pinhole",
+                "ptr_wrapper": {
+                    "data": {
+                        "width": 640,
+                        "height": 480,
+                        "focal_length": 0.0,
+                        "principal_point": [
+                            1.0,
+                            2.0
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "views": [
+        {
+            "viewId": 0,
+            "local_path": "/",
+            "filename": "TODO",
+            "width": 640,
+            "height": 480,
+            "id_intrinsic": 0,
+            "extrinsic": {
+                "rotation": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                ],
+                "center": [
+                    0.001,
+                    0.0,
+                    0.0
+                ]
+            },
+            "observations": [
+                {
+                    "pointId": 0,
+                    "X": [
+                        0.02,
+                        0.01,
+                        0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                },
+                {
+                    "pointId": 1,
+                    "X": [
+                        0.02,
+                        0.01,
+                        -0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                },
+                {
+                    "pointId": 2,
+                    "X": [
+                        0.02,
+                        -0.01,
+                        0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                },
+                {
+                    "pointId": 3,
+                    "X": [
+                        0.02,
+                        -0.01,
+                        -0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                }
+            ]
+        },
+        {
+            "viewId": 1,
+            "local_path": "/",
+            "filename": "TODO",
+            "width": 640,
+            "height": 480,
+            "id_intrinsic": 0,
+            "extrinsic": {
+                "rotation": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                ],
+                "center": [
+                    0.01,
+                    0.0,
+                    0.0
+                ]
+            },
+            "observations": [
+                {
+                    "pointId": 0,
+                    "X": [
+                        0.02,
+                        0.01,
+                        0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                },
+                {
+                    "pointId": 1,
+                    "X": [
+                        0.02,
+                        0.01,
+                        -0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                },
+                {
+                    "pointId": 2,
+                    "X": [
+                        0.02,
+                        -0.01,
+                        0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                },
+                {
+                    "pointId": 3,
+                    "X": [
+                        0.02,
+                        -0.01,
+                        -0.01
+                    ],
+                    "x": [
+                        1.0,
+                        2.0
+                    ]
+                }
+            ]
+        }
+    ]
+}
