@@ -7,6 +7,7 @@
 #include <OutputCreator.h>
 #include <fstream>
 #include <iostream>
+#include <Logger.h>
 /**
  * This class provides the basic tools to manage the actual manifold creation,
  * such as the region growing procedure, the manifoldness tests and the update of the
@@ -41,6 +42,9 @@ public:
 	/*Grow the manifold several-tet-at-one in order to handle the genus change It bootstraps from the boundary between inside and outside the manifold*/
 	void growSeveralAtOnce();
 
+	void shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance);
+	void shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance);
+
 	/*shrink the manifold such that all the space inside the sphere with center in camPosition
 	 and ray maxPointToPointDistance+maxPointToCamDistance is matter. In this way, our are
 	 the able to add points seen from the cam in cam position
@@ -48,7 +52,7 @@ public:
 	void shrinkManifold(const PointD3 &camPosition, const float &maxPointToPointDistance, const float &maxPointToCamDistance);
 
 	/*shrink the manifold several-tet-at-once in order to handle the genus change*/
-	void shrinkSeveralAtOnce();
+	void shrinkSeveralAtOnce(const PointD3 &camPosition, const float &maxPointToPointDistance, const float &maxPointToCamDistance);
 
 	const std::vector<Delaunay3::Cell_handle>& getBoundaryCells() const {
 		return boundaryCells_;
@@ -68,6 +72,7 @@ private:
 	bool removeAndCheckManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh);
 	bool addAndCheckManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh);
 	bool isRegular(Delaunay3::Vertex_handle &v);
+	bool isRegularProfiled(Delaunay3::Vertex_handle &v);
 
 	/******************************************************/
 	/************Boundary update functions*****************/
@@ -76,9 +81,10 @@ private:
 	bool isInBoundary(Delaunay3::Cell_handle &cellToTest);
 	bool isInBoundary(Delaunay3::Cell_handle &cellToTest, std::vector<int> &neighNotManifold);
 	bool insertInBoundary(Delaunay3::Cell_handle &cellToTest);
-	bool removeFromBoundary(Delaunay3::Cell_handle &cellToTest);
-	void addTetAndUpdateBoundary(Delaunay3::Cell_handle &cell);
-	void subTetAndUpdateBoundary(Delaunay3::Cell_handle &cell);
+	bool removeFromBoundary(Delaunay3::Cell_handle &cellToBeRemoved);
+	void addTetAndUpdateBoundary(Delaunay3::Cell_handle& cell);
+//	void subTetAndUpdateBoundary(Delaunay3::Cell_handle& cell);
+	void subTetAndUpdateBoundary(Delaunay3::Cell_handle& currentTet, std::vector<Delaunay3::Cell_handle>& newBoundaryTets);
 
 	bool isFreespace(Delaunay3::Cell_handle &cell);
 
@@ -90,6 +96,11 @@ private:
 	float probabTh_;
 
 	std::ofstream fileOut_;
+
+
+	long long functionProfileTimer_isRegular_ = 0;
+	long functionProfileCounter_isRegular_ = 0;
+	utilities::Logger logger_;
 };
 
 #endif /* MANIFOLDMANAGER_H_ */

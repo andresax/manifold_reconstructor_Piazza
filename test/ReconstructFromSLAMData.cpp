@@ -9,8 +9,11 @@
 #include <ReconstructFromSLAMData.h>
 #include <utilities.hpp>
 
-#define VERBOSE_CAMERA_ADD
-#define VERBOSE_CAMERA_UPDATE
+#define VERBOSE_UPDATE_MANIFOLD_FUNCTION
+//#define VERBOSE_ADD_CAMERA_FUNCTION
+//#define VERBOSE_SAVE_MANIFOLD_FUNCTION
+//#define VERBOSE_CAMERA_ADD
+//#define VERBOSE_CAMERA_UPDATE
 //#define VERBOSE_POINT_ADD
 //#define VERBOSE_POINT_UPDATE
 //#define VERBOSE_POINT_IGNORE
@@ -19,7 +22,7 @@
 //#define OUTLIER_FILTERING
 
 //#define PRIMARY_POINTS_VISIBILITY_THRESHOLD     3
-#define SECONDARY_POINTS_VISIBILITY_THRESHOLD   1
+#define SECONDARY_POINTS_VISIBILITY_THRESHOLD   2
 
 ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& manifConf) {
 	iterationCount = 0;
@@ -41,8 +44,14 @@ ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& m
 ReconstructFromSLAMData::~ReconstructFromSLAMData() {
 }
 
+void ReconstructFromSLAMData::setExpectedTotalIterationsNumber(int n){
+	expectedTotalIterationsNumber_ = n;
+}
+
 void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
-	std::cout << std::endl << "ReconstructFromSLAMData::addCamera iteration " << iterationCount << std::endl;
+#ifdef VERBOSE_ADD_CAMERA_FUNCTION
+	std::cout << std::endl << "ReconstructFromSLAMData::addCamera iteration " << iterationCount << " / " << expectedTotalIterationsNumber_-1 << std::endl;
+#endif
 
 #ifdef OUTLIER_FILTERING
 	//std::cout << "start outlier filtering" << std::endl;
@@ -157,7 +166,10 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 }
 
 void ReconstructFromSLAMData::updateManifold() {
-	std::cout << std::endl << "ReconstructFromSLAMData::updateManifold" << std::endl;
+#ifdef VERBOSE_UPDATE_MANIFOLD_FUNCTION
+	std::cout << std::endl << "ReconstructFromSLAMData::updateManifold iteration " << iterationCount << " / " << expectedTotalIterationsNumber_-1 << std::endl;
+#endif
+
 	manifoldUpdatedSinceSave_ = true;
 	//TODO actually manage the case of newCameras have too few or no points associated (in ManifoldMeshReconstructior) : count( newCamera.points st idRec>=0 )
 
@@ -201,10 +213,13 @@ void ReconstructFromSLAMData::updateManifold() {
 }
 
 void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string nameSuffix) {
-	std::cout << std::endl << "ReconstructFromSLAMData::saveManifold" << std::endl;
+#ifdef VERBOSE_SAVE_MANIFOLD_FUNCTION
+	std::cout << std::endl << "ReconstructFromSLAMData::saveManifold iteration " << iterationCount << " / " << expectedTotalIterationsNumber_-1 << std::endl;
+#endif
 
 	if (manifoldUpdatedSinceSave_ == false) return;
 	manifoldUpdatedSinceSave_ = false;
+
 
 	logger_.startEvent();
 	std::ostringstream nameManifold;
@@ -212,24 +227,28 @@ void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string n
 	std::cout << "saving " << nameManifold.str() << std::endl;
 	manifRec_->saveManifold(nameManifold.str());
 	logger_.endEventAndPrint("save manifold\t\t\t", true);
-	manifRec_->timeStatsFile_ << logger_.getLastDelta();
+//	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
 
 
-  logger_.startEvent();
-  std::ostringstream nameFreespace; nameFreespace << namePrefix << "free_space_manifold_" << nameSuffix << ".off";
-  std::cout << "saving " << nameFreespace.str() << std::endl;
-  manifRec_->saveFreespace(nameFreespace.str());
-  logger_.endEventAndPrint("save free_space_manifold\t\t\t", true);
-
+//  logger_.startEvent();
+//  std::ostringstream nameFreespace; nameFreespace << namePrefix << "free_space_manifold_" << nameSuffix << ".off";
+//  std::cout << "saving " << nameFreespace.str() << std::endl;
+//  manifRec_->saveFreespace(nameFreespace.str());
+//  logger_.endEventAndPrint("save free_space_manifold\t\t\t", true);
+//
 //  std::vector<int> age;
 //  for (int cur = 0; cur < cp_data_.numCameras(); cur++) age.push_back(cur);
 //
 //  logger_.startEvent();
 //  std::ostringstream nameManifoldWithoutSteinerPoints; nameManifoldWithoutSteinerPoints << namePrefix << "manifold_without_steiner_points_" << nameSuffix << ".off";
-//  std::cout << "saving " << nameManifoldWithoutSteinerPoints.str().str() << std::endl;
+//  std::cout << "saving " << nameManifoldWithoutSteinerPoints.str() << std::endl;
 //  manifRec_->saveOldManifold(nameManifoldWithoutSteinerPoints.str(), age);
 //  logger_.endEventAndPrint("save manifold_without_steiner_points\t", true);
 
+}
+
+void ReconstructFromSLAMData::insertStatValue(float v){
+	manifRec_->timeStatsFile_ << v << ", ";
 }
 
 //void ReconstructFromSLAMData::overwriteFocalY(float f) {

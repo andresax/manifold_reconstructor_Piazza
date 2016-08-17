@@ -37,24 +37,34 @@ int main(int argc, char **argv) {
 	log.startEvent();
 	std::ofstream statsFile, visiblePointsFile;
 	ManifoldReconstructionConfig confManif;
+	std::string input_file;
+	std::string config_file;
 
 	int maxIterations_ = 0;
 
-	if (argc == 3) {
-		maxIterations_ = atoi(argv[2]);
+	if (argc == 4) {
+		maxIterations_ = atoi(argv[3]);
+		config_file = argv[2];
+	} else if (argc == 3) {
+		config_file = argv[2];
+		std::cout << "max_iterations not set" << std::endl << std::endl;
 	} else if (argc == 2) {
+		input_file = argv[1];
+		config_file = "config/manifRecConfig_default.json";
 		std::cout << "max_iterations not set" << std::endl << std::endl;
 	} else {
-		std::cerr << std::endl << "Usage: ./manifoldReconstructor path_to_input.json [max_iterations]" << std::endl;
+		std::cerr << std::endl << "Usage: ./manifoldReconstructor path_to_input.json [path_to_config.json [max_iterations]]" << std::endl;
 		return 1;
 	}
 
 	ConfigParser configParser = ConfigParser();
-	confManif = configParser.parse("config/manifRecConfig.json");
+	confManif = configParser.parse(config_file);
 
-	std::cout << confManif.toString() << std::endl;
-	std::cout << "input set to: " << argv[1] << std::endl;
+	std::cout << "input set to: " << input_file << std::endl;
+	std::cout << "config set to: " << config_file << std::endl;
 	std::cout << "max_iterations set to: " << maxIterations_ << std::endl;
+	std::cout << confManif.toString() << std::endl;
+
 
 	if (confManif.manifold_update_every <= 0 || confManif.save_manifold_every <= 0) {
 		std::cerr << std::endl << "constraint: confManif.manifold_update_every > 0, confManif.save_manifold_every > 0" << std::endl;
@@ -80,7 +90,7 @@ int main(int argc, char **argv) {
 	std::cout << "start parsing " << argv[1] << std::endl;
 	log.startEvent();
 	ORBIncrementalParser op(argv[1]);
-	op.ParseToOFF("output/all_points_", 10);
+	op.ParseToOFF("output/all_points/all_points_", 10);
 	log.endEventAndPrint("Parsing\t\t\t\t", true);
 	return 0;
 #else
@@ -92,6 +102,8 @@ int main(int argc, char **argv) {
 	std::cout << "orb: " << op.numCameras() << " cams" << std::endl << std::endl;
 
 	ReconstructFromSLAMData m(confManif);
+
+	m.setExpectedTotalIterationsNumber((maxIterations_) ? maxIterations_ + 1 : op.numCameras());
 
 	// Main loop
 	for (int i = 0; i < op.numCameras(); i++) {
@@ -114,8 +126,9 @@ int main(int argc, char **argv) {
 		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/", "current");
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
-		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
+		log.endEventAndPrint();
 		std::cout << std::endl;
+		if (m.iterationCount > confManif.initial_manifold_update_skip && !(m.iterationCount % confManif.manifold_update_every)) m.insertStatValue(log.getLastDelta());
 
 #ifdef PRODUCE_STATS
 		statsFile.open("output/stats/stats.txt", std::ios_base::app);

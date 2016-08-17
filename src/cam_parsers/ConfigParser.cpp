@@ -87,6 +87,14 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document["primary_points_visibility_threshold"].IsInt()) throw JsonAccessException("");
 		c.primary_points_visibility_threshold = document["primary_points_visibility_threshold"].GetInt();
 
+		if (!document.HasMember("all_sort_of_output")) throw JsonAccessException("");
+		if (!document["all_sort_of_output"].IsBool()) throw JsonAccessException("");
+		c.all_sort_of_output = document["all_sort_of_output"].GetBool();
+
+		if (!document.HasMember("update_points_position")) throw JsonAccessException("");
+		if (!document["update_points_position"].IsBool()) throw JsonAccessException("");
+		c.update_points_position = document["update_points_position"].GetBool();
+
 	} catch (JsonAccessException& e) {
 		std::cerr << e.what() << std::endl;
 		std::cout << e.what() << std::endl;

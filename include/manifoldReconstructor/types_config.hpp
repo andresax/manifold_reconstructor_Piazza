@@ -170,6 +170,9 @@ typedef struct {
   int save_manifold_every;
   int primary_points_visibility_threshold;
 
+  bool all_sort_of_output;
+  bool update_points_position;
+
 
   std::string toString() {
     std::stringstream out;
@@ -188,6 +191,9 @@ typedef struct {
     out << "initial_manifold_update_skip: " << initial_manifold_update_skip << std::endl;
     out << "save_manifold_every: " << save_manifold_every << std::endl;
     out << "primary_points_visibility_threshold: " << primary_points_visibility_threshold << std::endl;
+
+    out << "all_sort_of_output: " << all_sort_of_output << std::endl;
+    out << "update_points_position: " << update_points_position << std::endl;
 
     return out.str();
   }

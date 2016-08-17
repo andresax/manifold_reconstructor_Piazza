@@ -11,6 +11,12 @@
 #include <OutputCreator.h>
 #include <sstream>
 #include <iostream>
+#include <chrono>
+#include <ctime>
+
+using std::cout;
+using std::cerr;
+using std::endl;
 
 ManifoldManager::ManifoldManager(Delaunay3 &dt, bool inverseConic, float probabTh) :
 		dt_(dt) {
@@ -44,79 +50,246 @@ void ManifoldManager::regionGrowingBatch(PointD3 firstCamPosition) {
 
 }
 
-void ManifoldManager::shrinkManifold(const PointD3 &camPosition, const float &maxPointToPointDistance, const float &maxPointToCamDistance) {
-	bool somethingHasChanged = false;
-	bool singleTetGrowingMode = true;
+void ManifoldManager::shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance) {
+	bool fixedPoint = false;
+//	float r = maxPointToPointDistance + maxPointToCamDistance;
 
-//populate the list with the boundary tetrahedra  belonging to the carved space
+//	std::set<Delaunay3::Cell_handle> enclosingSet;
+//	for(auto p : points){
+//		int li, lj;
+//		Delaunay3::Locate_type lt;
+//		Delaunay3::Cell_handle c = dt_.locate(p, lt, li, lj);
+//		Delaunay3::Facet f;
+//		std::vector<Delaunay3::Cell_handle> enclosingVector;
+//		dt_.find_conflicts(p, c, CGAL::Oneset_iterator<Delaunay3::Facet>(f), std::back_inserter(enclosingVector));
+//		for(auto cell : enclosingVector){
+//			if(dt_.is_cell(cell))
+//				enclosingSet.insert(cell);
+//			else cerr << "ManifoldManager::shrinkManifold:\t DEAD CELL " << endl;
+////			for(int i = 0; i < 4; i++) enclosingSet.insert(cell->neighbor(i));
+//		}
+//	}
+//
+//	std::vector<Delaunay3::Cell_handle> saveVector;
+//	for(auto cell : enclosingSet) saveVector.push_back(cell);
+//	outputM_->writeTetrahedraToOFF("output/boundary/boundary", std::vector<int> {saveVector.size()}, saveVector);
+
+// Populate the list with the boundary tetrahedra (? belonging to the carved space)
+	std::vector<Delaunay3::Cell_handle> tetNotCarved;
+//	std::set<Delaunay3::Cell_handle> shrinkedTets;
 	std::deque<Delaunay3::Cell_handle> tetsQueue;
 	tetsQueue.insert(tetsQueue.begin(), boundaryCells_.begin(), boundaryCells_.end());
 	std::sort(tetsQueue.begin(), tetsQueue.end());
 
-	int curIter = 0;
-	//Shrink process
-	std::vector<Delaunay3::Cell_handle> tetNotCarved;
-	while (!tetsQueue.empty()) {
-		if (singleTetGrowingMode) {
-			//Single-tet-at-once
+	// Stats
+	int countInEnclosingVolume = 0, countShrinked = 0, countTotal = 0, countCheckIfExplored = 0, countRepeatedVisits = 0, countIterations = 1;
+
+	while (!fixedPoint) {
+
+		fixedPoint = true;
+
+		//Shrink process
+		while (!tetsQueue.empty()) {
+
 			Delaunay3::Cell_handle currentTet = tetsQueue.front();
 			tetsQueue.pop_front();
 
-			float distance;
-			bool testTest = false;
-			PointD3 firstCamPosition = camPosition;
+			countTotal++;
 
-			for (int curVertex = 0; curVertex < 4; ++curVertex) {
-				PointD3 curPt = currentTet->vertex(curVertex)->point();
-				distance = utilities::distanceEucl(curPt, firstCamPosition);
-				if (distance < maxPointToPointDistance + maxPointToCamDistance) {
-					testTest = true;
-				}
-			}
-
-			if (testTest) {
-
-				if (singleTetTest(currentTet) == true) {
-
-					subTetAndUpdateBoundary(currentTet);
-
-					//add the adjacent tets to the queue
-					for (int curNeig = 0; curNeig < 4; ++curNeig) {
-						if (currentTet->neighbor(curNeig)->info().iskeptManifold()) {
-							//keep the list ordered
-							std::deque<Delaunay3::Cell_handle>::iterator it;
-
-							it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), currentTet->neighbor(curNeig), sortTetByIntersection());
-							tetsQueue.insert(it, currentTet->neighbor(curNeig));
-
-							somethingHasChanged = true;
-
-						}
+			bool isInEnclosingVolume = false;
+			for (int vertexId = 0; vertexId < 4; ++vertexId) {
+				for (auto p : points) {
+					if (utilities::distanceEucl(currentTet->vertex(vertexId)->point(), p) < maxPointToPointDistance) {
+						isInEnclosingVolume = true;
+						break;
 					}
-
-				} else {
-					bool numReg = 0;
-
-					std::vector<Delaunay3::Cell_handle>::iterator it;
-
-					it = std::lower_bound(tetNotCarved.begin(), tetNotCarved.end(), currentTet, sortTetByIntersection());
-					tetNotCarved.insert(it, currentTet);
-
 				}
+				if (isInEnclosingVolume) break;
 			}
 
-			if (tetsQueue.empty() && somethingHasChanged) {
-				somethingHasChanged = false;
-				//tetsQueue.insert(tetsQueue.begin(), tetNotCarved.begin(), tetNotCarved.end());
-				tetNotCarved.clear();
-			} else if (tetsQueue.empty() && !somethingHasChanged) {
-				//switch to several tet at once
-				singleTetGrowingMode = false;
+			// TODO check why this happens
+//			if (countIterations > 1 && !isInEnclosingVolume)
+//				cerr << "ManifoldManager::shrinkManifold:\t reinserted tet outside enclosing volume\t iteration: " << countIterations << endl;
+			//			if (shrinkedTets.count(currentTet)) cerr << "ManifoldManager::shrinkManifold:\t Tet visited multiple times\t iteration: " << countIterations << endl;
+			if (isInEnclosingVolume) countInEnclosingVolume++;
+			else continue;
+
+			if (singleTetTest(currentTet)) {
+				countShrinked++;
+
+				if (!currentTet->info().iskeptManifold()) cerr << "ManifoldManager::shrinkManifold:\t wrong shrink order\t iteration: " << countIterations << endl;
+
+				std::vector<Delaunay3::Cell_handle> newBoundaryTets;
+				subTetAndUpdateBoundary(currentTet, newBoundaryTets);
+				//				shrinkedTets.insert(currentTet);
+
+				for (auto neighbour : newBoundaryTets) {
+					if (neighbour->info().iskeptManifold()) {
+						countCheckIfExplored++;
+
+						//						if (true || !shrinkedTets.count(neighbour)) {
+						std::deque<Delaunay3::Cell_handle>::iterator it;
+						it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
+						tetsQueue.insert(it, neighbour);
+						fixedPoint = false;
+						//						}
+					} else cerr << "ManifoldManager::shrinkManifold:\t subTetAndUpdateBoundary return non inManifoldSet tet\t iteration: " << countIterations << endl;
+				}
+
+			} else {
+
+				std::vector<Delaunay3::Cell_handle>::iterator it;
+				it = std::lower_bound(tetNotCarved.begin(), tetNotCarved.end(), currentTet, sortTetByIntersection());
+				tetNotCarved.insert(it, currentTet);
+
 			}
+
 		}
-		curIter++;
+
+		if (tetsQueue.empty() && !fixedPoint) {
+			countIterations++;
+			tetsQueue.insert(tetsQueue.begin(), tetNotCarved.begin(), tetNotCarved.end());
+			tetNotCarved.clear();
+		}
 	}
 
+	cout << "\t\t\t s:\t" << countShrinked << "\t / \t" << countTotal << "\t c:\t" << dt_.number_of_finite_cells() << "\t i:\t" << countIterations << endl;
+}
+
+void ManifoldManager::shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance) {
+
+	functionProfileTimer_isRegular_ = 0;
+	functionProfileCounter_isRegular_ = 0;
+	long long timerAddAndCheckManifoldness = 0, timerEnclosing = 0;
+
+	std::deque<Delaunay3::Cell_handle> tetsQueue;
+	tetsQueue.insert(tetsQueue.begin(), boundaryCells_.begin(), boundaryCells_.end());
+
+	while (!tetsQueue.empty()) {
+		Delaunay3::Cell_handle currentTet = tetsQueue.back();
+		tetsQueue.pop_back();
+
+		auto start = std::chrono::high_resolution_clock::now();
+
+		bool isInEnclosingVolume = false;
+		for (int vertexId = 0; vertexId < 4; ++vertexId) {
+			for (auto p : points) {
+				if (utilities::distanceEucl(currentTet->vertex(vertexId)->point(), p) < maxPointToPointDistance) {
+					isInEnclosingVolume = true;
+					break;
+				}
+			}
+			if (isInEnclosingVolume) break;
+		}
+
+		auto elapsed = std::chrono::high_resolution_clock::now() - start;
+		timerEnclosing += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+
+		if (isInEnclosingVolume) {
+			// TODO check on non boundary edges first
+			for (int curIdx = 0; curIdx < 4; ++curIdx) {
+				if(!currentTet->info().isBoundary())  break;
+
+				auto start = std::chrono::high_resolution_clock::now();
+
+				bool success = addAndCheckManifoldness(currentTet, curIdx);
+
+				auto elapsed = std::chrono::high_resolution_clock::now() - start;
+				timerAddAndCheckManifoldness += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+
+				if(success) break;
+			}
+		}
+	}
+
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce2:\t\t functionProfileTimer enclosing:\t\t\t " << timerEnclosing / 1000000.0 << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce2:\t\t functionProfileTimer addAndCheckManifoldness:\t\t " << timerAddAndCheckManifoldness / 1000000.0 << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce2:\t\t functionProfileTimer isRegular:\t\t\t " << functionProfileTimer_isRegular_ / 1000000.0 << "s\t / \t" << functionProfileCounter_isRegular_ << endl;
+
+}
+
+void ManifoldManager::shrinkManifold(const PointD3 &camPosition, const float &maxPointToPointDistance, const float &maxPointToCamDistance) {
+	bool fixedPoint = false;
+	float r = maxPointToPointDistance + maxPointToCamDistance;
+
+	// Populate the list with the boundary tetrahedra (? belonging to the carved space)
+	std::vector<Delaunay3::Cell_handle> tetNotCarved;
+//	std::set<Delaunay3::Cell_handle> shrinkedTets;
+	std::deque<Delaunay3::Cell_handle> tetsQueue;
+	tetsQueue.insert(tetsQueue.begin(), boundaryCells_.begin(), boundaryCells_.end());
+	std::sort(tetsQueue.begin(), tetsQueue.end());
+
+	// Stats
+	int countInEnclosingVolume = 0, countShrinked = 0, countTotal = 0, countCheckIfExplored = 0, countRepeatedVisits = 0, countIterations = 1;
+
+	while (!fixedPoint) {
+
+		fixedPoint = true;
+
+		//Shrink process
+		while (!tetsQueue.empty()) {
+
+			Delaunay3::Cell_handle currentTet = tetsQueue.front();
+			tetsQueue.pop_front();
+
+			countTotal++;
+
+			bool isInEnclosingVolume = false;
+			for (int vertexId = 0; vertexId < 4; ++vertexId)
+				if (utilities::distanceEucl(currentTet->vertex(vertexId)->point(), camPosition) < r) {
+					isInEnclosingVolume = true;
+					break;
+				}
+
+			if (countIterations > 1 && !isInEnclosingVolume)
+				cerr << "ManifoldManager::shrinkManifold:\t reinserted tet outside enclosing volume\t iteration: " << countIterations << endl;
+//			if (shrinkedTets.count(currentTet)) cerr << "ManifoldManager::shrinkManifold:\t Tet visited multiple times\t iteration: " << countIterations << endl;
+			if (isInEnclosingVolume) countInEnclosingVolume++;
+			else continue;
+
+			if (singleTetTest(currentTet)) {
+				countShrinked++;
+
+				if (!currentTet->info().iskeptManifold()) cerr << "ManifoldManager::shrinkManifold:\t wrong shrink order\t iteration: " << countIterations << endl;
+
+				std::vector<Delaunay3::Cell_handle> newBoundaryTets;
+				subTetAndUpdateBoundary(currentTet, newBoundaryTets);
+//				shrinkedTets.insert(currentTet);
+
+				for (auto neighbour : newBoundaryTets) {
+					if (neighbour->info().iskeptManifold()) {
+						countCheckIfExplored++;
+
+//						if (true || !shrinkedTets.count(neighbour)) {
+						std::deque<Delaunay3::Cell_handle>::iterator it;
+						it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
+						tetsQueue.insert(it, neighbour);
+						fixedPoint = false;
+//						}
+					} else cerr << "ManifoldManager::shrinkManifold:\t subTetAndUpdateBoundary return non inManifoldSet tet\t iteration: " << countIterations << endl;
+				}
+
+			} else {
+
+				std::vector<Delaunay3::Cell_handle>::iterator it;
+				it = std::lower_bound(tetNotCarved.begin(), tetNotCarved.end(), currentTet, sortTetByIntersection());
+				tetNotCarved.insert(it, currentTet);
+
+			}
+
+		}
+
+		if (tetsQueue.empty() && !fixedPoint) {
+			countIterations++;
+			tetsQueue.insert(tetsQueue.begin(), tetNotCarved.begin(), tetNotCarved.end());
+			tetNotCarved.clear();
+		}
+	}
+
+	cout << "\t\t\t shrinked:\t\t" << countShrinked << "\tenclosed: " << countInEnclosingVolume << "\ttotal: " << countTotal << endl;
+//	cout << "\t\t\t explored cells:\t\t" << shrinkedTets.size() << "\tchecked if already explored: " << countCheckIfExplored << endl;
+	cout << "\t\t\t total triangulation cells:\t" << dt_.number_of_finite_cells() << endl;
+	cout << "\t\t\t iterations untill fixed point:\t" << countIterations << endl;
 }
 
 void ManifoldManager::regionGrowingBatch(Delaunay3::Cell_handle &startingCell) {
@@ -136,6 +309,10 @@ bool ManifoldManager::isInBoundary(Delaunay3::Cell_handle &cellToTest) {
 	return isInBoundary(cellToTest, toThrowAway);
 }
 
+/*
+ *	Returns true if cellToTest is kept manifold (?) and some neighbour of cellToTest isn't.
+ *	If cellToTest is kept manifold, then neighNotManifold contains the indeces of the neighbours that aren't kept manifold.
+ */
 bool ManifoldManager::isInBoundary(Delaunay3::Cell_handle &cellToTest, std::vector<int> &neighNotManifold) {
 
 	if (!cellToTest->info().iskeptManifold()) {
@@ -154,6 +331,9 @@ bool ManifoldManager::isInBoundary(Delaunay3::Cell_handle &cellToTest, std::vect
 	}
 }
 
+/*
+ *	If cellToBeAdded->info().isBoundary() is false, then insert cellToBeAdded in boundaryCells_ (maintaining the order) and set cellToBeAdded->info().isBoundary() to true.
+ */
 bool ManifoldManager::insertInBoundary(Delaunay3::Cell_handle &cellToBeAdded) {
 
 	if (!cellToBeAdded->info().isBoundary()) {
@@ -173,10 +353,15 @@ bool ManifoldManager::insertInBoundary(Delaunay3::Cell_handle &cellToBeAdded) {
 
 }
 
+/*
+ *	If cellToBeRemoved->info().isBoundary() is set to true, removes cellToBeRemoved from boundaryCells_ and set cellToBeRemoved->info().isBoundary() to false,
+ *	otherwise does nothing.
+ */
 bool ManifoldManager::removeFromBoundary(Delaunay3::Cell_handle &cellToBeRemoved) {
 	if (!cellToBeRemoved->info().isBoundary()) {
 		return false;
 	} else {
+
 		std::vector<Delaunay3::Cell_handle>::iterator it2;
 
 		int num = 0;
@@ -210,7 +395,7 @@ bool ManifoldManager::removeFromBoundary(Delaunay3::Cell_handle &cellToBeRemoved
 
 void ManifoldManager::addTetAndUpdateBoundary(Delaunay3::Cell_handle &currentTet) {
 
-	//add the current tetrahedron in the manifold set and add it to the boundary if needed
+//add the current tetrahedron in the manifold set and add it to the boundary if needed
 	currentTet->info().setKeptManifold(true);
 	currentTet->info().setShrinked(false);
 
@@ -244,13 +429,13 @@ void ManifoldManager::addTetAndUpdateBoundary(Delaunay3::Cell_handle &currentTet
 		}
 	}
 
-	//Check if the neigh of the added tetrahedron still belongs to the boundary
+//Check if the neigh of the added tetrahedron still belongs to the boundary
 	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
 		Delaunay3::Cell_handle currNeigh = currentTet->neighbor(curNeighId);
-		//if needed, remove the neighbor of currentTet from the boundary if no facet belongs  to the manifold
-		//note that isBoundary function returns the state flag of the tetrahedron, while
-		//isInBoundary() check for the current real state of the tetrahedron inside the triangulation after
-		// the new tetrahedron has been added
+//if needed, remove the neighbor of currentTet from the boundary if no facet belongs  to the manifold
+//note that isBoundary function returns the state flag of the tetrahedron, while
+//isInBoundary() check for the current real state of the tetrahedron inside the triangulation after
+// the new tetrahedron has been added
 		if (currNeigh->info().isBoundary()) {
 			//We nested this if since it is more efficient to test firstly
 			// if the boundary state flag of the tetrahedron is set true
@@ -265,19 +450,17 @@ void ManifoldManager::addTetAndUpdateBoundary(Delaunay3::Cell_handle &currentTet
 	}
 }
 
-void ManifoldManager::subTetAndUpdateBoundary(Delaunay3::Cell_handle &currentTet) {
-
-	//remove the current tetrahedron from the manifold set and remove it from the boundary if needed
+/*
+ * 	Remove the current tetrahedron from the manifold set and from the boundary set,
+ * 	and add or remove its neighbours from the boundary set accordingly.
+ */
+void ManifoldManager::subTetAndUpdateBoundary(Delaunay3::Cell_handle &currentTet, std::vector<Delaunay3::Cell_handle>& newBoundaryTets) {
 	std::vector<int> notManifoldNeigh;
 	isInBoundary(currentTet, notManifoldNeigh);
 
 	removeFromBoundary(currentTet);
 
 	currentTet->info().setKeptManifold(false);
-
-	/*for (int curV = 0; curV < 4; ++curV) {
-	 currentTet->vertex(curV)->info().decrUsed();
-	 }*/
 
 	if (notManifoldNeigh.size() == 3) {
 		for (int curV = 0; curV < 4; ++curV) {
@@ -300,23 +483,32 @@ void ManifoldManager::subTetAndUpdateBoundary(Delaunay3::Cell_handle &currentTet
 	}
 	currentTet->info().setShrinked(true);
 
-	//Check if the neigh of the added tetrahedron belongs to the boundary
+// Check for each neighbour whether it should belong to the boundary set
 	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
 		Delaunay3::Cell_handle currNeigh = currentTet->neighbor(curNeighId);
-		//if needed, add the neighbor of currentTet from the boundary if at least one facet belongs  to the manifold
-		//note that isBoundary function returns the state flag of the tetrahedron, while
-		//isInBoundary() check for the current real state of the tetrahedron inside the triangulation after
-		// the new tetrahedron has been added
+// ((
+//if needed, add the neighbor of currentTet from the boundary if at least one facet belongs  to the manifold
+//note that isBoundary function returns the state flag of the tetrahedron, while
+//isInBoundary() check for the current real state of the tetrahedron inside the triangulation after
+// the new tetrahedron has been added
+// ))
+
+// If the neighbour wasn't in the boundary set before, it is now on the only condition of being in the manifold set,
+// in fact the remaining condition is satisfied. (Namely, it has at least a neighbour outside the manifold set, that is currentTet).
 		if (!currNeigh->info().isBoundary()) {
+
+			// ((
 			//We nested this "if" since it is more efficient to test firstly
 			// if the boundary state flag of the tetrahedron is set to false
+			// ))
+
 			if (currNeigh->info().iskeptManifold()) {
-				//if (isInBoundary(currNeigh)) {
 				insertInBoundary(currNeigh);
+				newBoundaryTets.push_back(currNeigh);
 			}
 		} else {
 			if (!currNeigh->info().iskeptManifold()) {
-				//if (isInBoundary(currNeigh)) {
+				cerr << "cell such that iskeptManifold() == false && isBoundary() == true" << endl;
 				removeFromBoundary(currNeigh);
 			}
 		}
@@ -328,7 +520,7 @@ void ManifoldManager::regionGrowingProcedure() {
 	bool somethingIsChanged = false;
 	bool singleTetGrowingMode = true;
 
-	//populate the list with the boundary tetrahedra not belonging to the carved space
+//populate the list with the boundary tetrahedra not belonging to the carved space
 	std::vector<Delaunay3::Cell_handle> tetsQueue;
 	for (auto itBound = boundaryCells_.begin(); itBound != boundaryCells_.end(); itBound++) {
 		for (int curIdx = 0; curIdx < 4; ++curIdx) {
@@ -359,7 +551,7 @@ void ManifoldManager::regionGrowingProcedure() {
 	Delaunay3::Cell_handle currentTet = tetsQueue.back();
 
 	int curIter = 0;
-	//Growing process
+//Growing process
 	somethingIsChanged = true;
 	int iC = 0;
 	OutputCreator oc(dt_);
@@ -479,7 +671,7 @@ void ManifoldManager::growSeveralAtOnce() {
 	}
 }
 
-void ManifoldManager::shrinkSeveralAtOnce() {
+void ManifoldManager::shrinkSeveralAtOnce(const PointD3 &camPosition, const float &maxPointToPointDistance, const float &maxPointToCamDistance) {
 
 	std::deque<Delaunay3::Cell_handle> tetsQueue;
 	tetsQueue.insert(tetsQueue.begin(), boundaryCells_.begin(), boundaryCells_.end());
@@ -487,26 +679,38 @@ void ManifoldManager::shrinkSeveralAtOnce() {
 	while (!tetsQueue.empty()) {
 		Delaunay3::Cell_handle currentTet = tetsQueue.back();
 		tetsQueue.pop_back();
-		float maxValue = 0.0;
-		int idXMax;
-		bool found = false;
-		/*
-		 bool id[4] = { false, false, false, false };
-		 for (int curIdx = 0; curIdx < 4; ++curIdx) {
-		 Delaunay3::Cell_handle curTetNeigh = currentTet->neighbor(curIdx);
-		 if (isFreespace(curTetNeigh) != isFreespace(currentTet)) {
-		 for (int curIdxI = 0; curIdxI < 4; ++curIdxI) {
-		 if (curIdxI != curIdx) {
-		 id[curIdxI] = true;
-		 }
-		 }
-		 }
-		 }*/
-		bool id[4] = { true, true, true, true };
-		for (int curIdx = 0; curIdx < 4; ++curIdx) {
-			if (id[curIdx] == true) {
+//		float maxValue = 0.0;
+//		int idXMax;
+//		bool found = false;
 
+		float distance;
+		bool isInEnclosingVolume = false;
+
+		for (int curVertex = 0; curVertex < 4; ++curVertex) {
+			PointD3 curPt = currentTet->vertex(curVertex)->point();
+			distance = utilities::distanceEucl(curPt, camPosition);
+			if (distance < maxPointToPointDistance + maxPointToCamDistance) {
+				isInEnclosingVolume = true;
+			}
+		}
+
+//		bool id[4] = { false, false, false, false };
+//		for (int curIdx = 0; curIdx < 4; ++curIdx) {
+//			Delaunay3::Cell_handle curTetNeigh = currentTet->neighbor(curIdx);
+//			if (isFreespace(curTetNeigh) != isFreespace(currentTet)) {
+//				for (int curIdxI = 0; curIdxI < 4; ++curIdxI) {
+//					if (curIdxI != curIdx) {
+//						id[curIdxI] = true;
+//					}
+//				}
+//			}
+//		}
+		if (isInEnclosingVolume) {
+			//bool id[4] = { true, true, true, true };
+			for (int curIdx = 0; curIdx < 4; ++curIdx) {
+				//if (id[curIdx] == true) {
 				addAndCheckManifoldness(currentTet, curIdx);
+				//}
 			}
 		}
 	}
@@ -570,44 +774,54 @@ bool ManifoldManager::removeAndCheckManifoldness(Delaunay3::Cell_handle &current
 	return true;
 }
 
+/*
+ * 	?
+ */
 bool ManifoldManager::addAndCheckManifoldness(Delaunay3::Cell_handle &currentTet, int curIdx) {
+
 	std::vector<Delaunay3::Cell_handle> incidentCells, cellsModified;
 	std::vector<Delaunay3::Vertex_handle> incidentV;
 	Delaunay3::Vertex_handle curV = currentTet->vertex(curIdx);
 	dt_.incident_cells(curV, std::back_inserter(incidentCells));
 	dt_.adjacent_vertices(curV, std::back_inserter(incidentV));
-	bool wrong = false;
+
+	bool testFailed = false;
 
 	for (auto ic : incidentCells) {
 		if (ic->info().iskeptManifold()) {
 			cellsModified.push_back(ic);
 		}
 		ic->info().setKeptManifold(false);
-
 	}
 
-	int count = 0;
 	for (auto iv : incidentV) {
-
-		if (!isRegular(iv)) {
-			wrong = true;
+//		if (!isRegular(iv)) {
+		if (!isRegularProfiled(iv)) {
+			testFailed = true;
+			break;
 		}
 	}
-	if (!isRegular(curV)) {
-		wrong = true;
+
+//	if (!testFailed && !isRegular(curV)) {
+	if (!testFailed && !isRegularProfiled(curV)) {
+		testFailed = true;
 	}
 
-	if (wrong) {
+	if (testFailed) {
 		for (auto ic : cellsModified) {
 			ic->info().setKeptManifold(true);
 		}
+
 		return false;
+
 	} else {
 		for (auto ic : cellsModified) {
 			ic->info().setKeptManifold(true);
 		}
+
 		for (auto ic : cellsModified) {
-			subTetAndUpdateBoundary(currentTet);
+			std::vector<Delaunay3::Cell_handle> newBoundaryTets;
+			subTetAndUpdateBoundary(ic, newBoundaryTets);
 		}
 	}
 
@@ -628,7 +842,20 @@ bool ManifoldManager::checkManifoldness(Delaunay3::Cell_handle &cellToTest1, int
 	return true;
 }
 
+bool ManifoldManager::isRegularProfiled(Delaunay3::Vertex_handle &v) {
+	functionProfileCounter_isRegular_++;
+
+	auto start = std::chrono::high_resolution_clock::now();
+
+	bool r = isRegular(v);
+
+	auto elapsed = std::chrono::high_resolution_clock::now() - start;
+	functionProfileTimer_isRegular_ += std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+	return r;
+}
+
 bool ManifoldManager::isRegular(Delaunay3::Vertex_handle &v) {
+
 	std::vector<Delaunay3::Cell_handle> incidentCells;
 	std::vector<Delaunay3::Vertex_handle> incidentV;
 	dt_.incident_cells(v, std::back_inserter(incidentCells));
@@ -715,7 +942,7 @@ bool ManifoldManager::isRegular(Delaunay3::Vertex_handle &v) {
 	Delaunay3::Vertex_handle initV = pathEdgeUnique[0].first->vertex(pathEdgeUnique[0].second);
 	Delaunay3::Vertex_handle curV = pathEdgeUnique[0].first->vertex(pathEdgeUnique[0].second);
 
-	//yetVisited[curEdgeIdx] = true;
+//yetVisited[curEdgeIdx] = true;
 
 	do {
 		int countConcurr = 0;
@@ -736,7 +963,7 @@ bool ManifoldManager::isRegular(Delaunay3::Vertex_handle &v) {
 			return false;
 		}
 
-		// std::cout << "Step2:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
+// std::cout << "Step2:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
 		if (curV == pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].second)) {
 
 			curV = pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].third);
@@ -748,7 +975,7 @@ bool ManifoldManager::isRegular(Delaunay3::Vertex_handle &v) {
 
 			//std::cerr << "isRegular SOMETHING WRONG" << std::endl;
 		}
-		//std::cout << "Step3:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
+//std::cout << "Step3:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
 
 		yetVisited[testEdgeOK] = true;
 

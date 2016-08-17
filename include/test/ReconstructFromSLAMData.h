@@ -21,12 +21,14 @@ public:
   ReconstructFromSLAMData(ManifoldReconstructionConfig& manifConf);
   virtual ~ReconstructFromSLAMData();
 
-  void moveCamera(CameraType* camera);
   void addCamera(CameraType* newCamera);
   void updateManifold();
   void saveManifold(std::string namePrefix, std::string nameSuffix);
 
   void overwriteFocalY(float f);
+
+  void setExpectedTotalIterationsNumber(int n);
+  void insertStatValue(float v);
 
   // Iteration counter. Incremented every time a camera is added
   int iterationCount;
@@ -53,6 +55,8 @@ private:
 
   // Flag representing whether the manifold was updated since the last time it was saved. Set to true by updateManifold, to false by saveManifold
   bool manifoldUpdatedSinceSave_;
+
+  int expectedTotalIterationsNumber_ = 0;
 };
 
 #endif /* RECONSTRUCTFROMSLAMDATA_H_ */

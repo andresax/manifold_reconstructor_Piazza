@@ -1,0 +1,22 @@
+{
+	"inverseConicEnabled": true,
+	"enableSuboptimalPolicy": false,
+	"suboptimalMethod": 0,
+	
+	"w_1": 10.0,
+	"w_2": 2.0,
+	"w_3": 1.0,
+	"probOrVoteThreshold": 20.0,
+	
+	"maxDistanceCamFeature": 40.0,
+	"steinerGridStepLength": 50.0,
+	"steinerGridSideLength": 280.0,
+	
+	"manifold_update_every": 4,
+	"initial_manifold_update_skip": 2,
+	"save_manifold_every": 32,
+	"primary_points_visibility_threshold": 3,
+	
+	"all_sort_of_output": false,
+	"update_points_position": false
+}

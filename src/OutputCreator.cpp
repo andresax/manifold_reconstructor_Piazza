@@ -717,15 +717,15 @@ void OutputCreator::writeAllVerticesToOFF(std::string prefixPath, std::vector<in
 	outputFileName << ".off";
 	outputFile.open(outputFileName.str().c_str());
 
+	if (!outputFile.is_open()) {
+		std::cerr << "OutputCreator::writeAllVerticesToOFF: Unable to open file: " << outputFileName.str() << std::endl;
+		return;
+	}
+
 	std::vector<PointD3> points;
 
 	for (auto v = dt_.vertices_begin(); v != dt_.vertices_end(); v++) {
 		points.push_back(v->point());
-	}
-
-	if (!outputFile.is_open()) {
-		std::cerr << "Unable to open file: " << outputFileName.str() << std::endl;
-		return;
 	}
 
 	outputFile << "OFF" << std::endl;
@@ -755,6 +755,11 @@ void OutputCreator::writeTetrahedraToOFF(std::string pathPrefix, std::vector<int
 
 	std::ofstream outputFile;
 	outputFile.open(outputFileName.str().c_str());
+
+	if (!outputFile.is_open()) {
+		std::cerr << "OutputCreator::writeTetrahedraToOFF: Unable to open file: " << outputFileName.str() << std::endl;
+		return;
+	}
 
 	std::vector<PointD3> vertices;
 	int triangleNum = 4 * cells.size();
@@ -791,6 +796,11 @@ void OutputCreator::writeTetrahedraAndRayToOFF(std::string prefixPath, int camer
 	std::ostringstream outputFileName;
 	outputFileName << prefixPath << "_" << cameraIndex << "_" << pointIndex << ".off";
 	outputFile.open(outputFileName.str().c_str());
+
+	if (!outputFile.is_open()) {
+		std::cerr << "OutputCreator::writeTetrahedraAndRayToOFF: Unable to open file: " << outputFileName.str() << std::endl;
+		return;
+	}
 
 	std::vector<PointD3> vertices;
 	int triangleNum = 4 * cells.size() + 1;
@@ -830,6 +840,11 @@ void OutputCreator::writeOneTriangleAndRayToOFF(std::string prefixPath, std::vec
 	outputFileName << ".off";
 	outputFile.open(outputFileName.str().c_str());
 
+	if (!outputFile.is_open()) {
+		std::cerr << "OutputCreator::writeOneTriangleAndRayToOFF: Unable to open file: " << outputFileName.str() << std::endl;
+		return;
+	}
+
 	std::vector<PointD3> vertices;
 	int triangleNum = 2;
 
@@ -863,6 +878,11 @@ void OutputCreator::writeRaysToOFF(std::string prefixPath, std::vector<int> ids,
 		outputFileName << "_" << id;
 	outputFileName << ".off";
 	outputFile.open(outputFileName.str().c_str());
+
+	if (!outputFile.is_open()) {
+		std::cerr << "OutputCreator::writeRaysToOFF: Unable to open file: " << outputFileName.str() << std::endl;
+		return;
+	}
 
 	std::vector<PointD3> vertices;
 	int triangleNum = constraints.size();

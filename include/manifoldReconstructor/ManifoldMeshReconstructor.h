@@ -99,7 +99,7 @@ public:
 	/*Saves the current manifold in OFF file format*/
 	void saveManifold(const std::string filename);
 	/*Saves the current boundary in OFF file format*/
-	void saveBoundary(const std::string filename);
+	void saveBoundary(int i, int j);
 	/*Saves the old manifold with points up to cam  idx in OFF file format*/
 	void saveOldManifold(const std::string filename, int idx);
 	/*Saves the submap manifold specified by the vector idx in OFF file format*/
@@ -112,7 +112,13 @@ public:
 	std::ofstream timeStatsFile_;
 
 private:
-	void shrinkManifold(const PointD3 &camCenter);
+	void shrinkManifold(const PointD3 &camCenter, int updatedCameraIndex);
+	void shrinkManifold2(std::set<PointD3> points);
+
+	void initSteinerPointGridAndBound();
+	void updateSteinerPointGridAndBound();
+	void updateSteinerGridTargetBounds(float x, float y, float z);
+
 	/*create the initial grid of steiner points to avoid the infinite tetrahedra issue, while growing the mesh.
 	 * The parameters inside these function are also useful to avoid the creation of too big tetrahedra wich may cause
 	 * visual artifacts in the final mesh*/
@@ -214,11 +220,21 @@ private:
 
 	float l_, stepX_, stepY_, stepZ_;
 
+	float sgMinX_, sgMaxX_, sgMinY_, sgMaxY_, sgMinZ_, sgMaxZ_;
+	float sgCurrentMinX_, sgCurrentMaxX_, sgCurrentMinY_, sgCurrentMaxY_, sgCurrentMinZ_, sgCurrentMaxZ_;
+
 	ManifoldReconstructionConfig conf_;
 	utilities::Logger logger_;
 	ManifoldManager * manifoldManager_;
 	OutputCreator *outputM_;
 	std::ofstream fileOut_;
+
+
+	float timerShrinkTime_ = 0.0;
+	float timerShrinkSeveralTime_ = 0.0;
+
+	// TODO remove
+	std::vector<Segment> movedPointsSegments_;
 
 };
 
