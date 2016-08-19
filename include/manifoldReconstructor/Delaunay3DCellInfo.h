@@ -35,6 +35,19 @@ public:
 	float getVoteCountProb() const;
 	float getVoteCountProbFromIntersections();
 
+	long getEnclosingVersion(){
+		return enclosingVersion_;
+	}
+
+	bool isInEnclosingVolume(){
+		return inEnclosingVolume_;
+	}
+
+	void setInEnclosingVolume(bool inEnclosingVolume, long enclosingVersion){
+		inEnclosingVolume_ = inEnclosingVolume;
+		enclosingVersion_ = enclosingVersion;
+	}
+
 	bool isBoundary() const {
 		return boundary;
 	}
@@ -468,6 +481,10 @@ private:
 	}
 
 	// Private Members
+
+	long enclosingVersion_ = -1;
+	bool inEnclosingVolume_ = false;
+
 
 	int Lw1_count_ = 0;
 

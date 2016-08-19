@@ -923,8 +923,7 @@ void ManifoldMeshReconstructor::growManifold(int camIdx) {
 }
 
 void ManifoldMeshReconstructor::growManifoldSev() {
-	manifoldManager_->growSeveralAtOnce();
-
+	manifoldManager_->growSeveralAtOnce2();
 }
 
 void ManifoldMeshReconstructor::saveManifold(const std::string filename) {
@@ -968,66 +967,44 @@ void ManifoldMeshReconstructor::saveFreespace(const std::string filename) {
 
 void ManifoldMeshReconstructor::shrinkManifold2(std::set<PointD3> points) {
 
-//	int countInBoundaryPoints = 0;
-//	std::set<Delaunay3::Cell_handle> enclosingSet;
-//	for (auto p : points) {
-//		int li, lj;
-//		Delaunay3::Locate_type lt;
-//		Delaunay3::Cell_handle c = dt_.locate(p, lt, li, lj);
-//		Delaunay3::Facet f;
-//		std::vector<Delaunay3::Cell_handle> enclosingVector;
-//		dt_.find_conflicts(p, c, CGAL::Oneset_iterator<Delaunay3::Facet>(f), std::back_inserter(enclosingVector));
-//		for (auto cell : enclosingVector) {
-//			if (cell->info().isBoundary()) {
-//				countInBoundaryPoints++;
-//				break;
-//			}
-//		}
-//	}
-//
-//	cout << "Boundary destroing points:\t" << countInBoundaryPoints << " / " << points.size() << endl;
-
-//		std::vector<Delaunay3::Cell_handle> saveVector;
-//		for(auto cell : enclosingSet) saveVector.push_back(cell);
-//		outputM_->writeTetrahedraToOFF("output/boundary/boundary", std::vector<int> {saveVector.size()}, saveVector);
-
 	if (conf_.all_sort_of_output) saveBoundary(0, 0);
 
 	logger_.startEvent();
-	manifoldManager_->shrinkManifold2(points, l_);
+	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
 	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
 	timerShrinkTime_ += logger_.getLastDelta();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 1);
 
 	logger_.startEvent();
-	manifoldManager_->shrinkSeveralAtOnce2(points, l_);
+	manifoldManager_->shrinkSeveralAtOnce2(points, l_, currentEnclosingVersion_);
 	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
 	timerShrinkSeveralTime_ += logger_.getLastDelta();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 2);
 
 	logger_.startEvent();
-	manifoldManager_->shrinkManifold2(points, l_);
+	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
 	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
 	timerShrinkTime_ += logger_.getLastDelta();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 3);
 
 	logger_.startEvent();
-	manifoldManager_->shrinkSeveralAtOnce2(points, l_);
+	manifoldManager_->shrinkSeveralAtOnce2(points, l_, currentEnclosingVersion_);
 	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
 	timerShrinkSeveralTime_ += logger_.getLastDelta();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 4);
 
 	logger_.startEvent();
-	manifoldManager_->shrinkManifold2(points, l_);
+	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
 	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
 	timerShrinkTime_ += logger_.getLastDelta();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 5);
 
+	currentEnclosingVersion_++;
 }
 
 void ManifoldMeshReconstructor::shrinkManifold(const PointD3 &camCenter, int updatedCameraIndex) {
@@ -1144,7 +1121,7 @@ void ManifoldMeshReconstructor::updateSteinerPointGridAndBound() {
 
 	dt_.insert(newPoints.begin(), newPoints.end());
 
-	cout << "\tManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: " << endl << "\t\t" << sgCurrentMinX_ << "\t←\tx\t→\t" << sgCurrentMaxX_ << endl << "\t\t" << sgCurrentMinY_ << "\t←\ty\t→\t" << sgCurrentMaxY_ << endl << "\t\t" << sgCurrentMinZ_ << "\t←\tz\t→\t" << sgCurrentMaxZ_ << endl;
+//	cout << "\tManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: " << endl << "\t\t" << sgCurrentMinX_ << "\t←\tx\t→\t" << sgCurrentMaxX_ << endl << "\t\t" << sgCurrentMinY_ << "\t←\ty\t→\t" << sgCurrentMaxY_ << endl << "\t\t" << sgCurrentMinZ_ << "\t←\tz\t→\t" << sgCurrentMaxZ_ << endl;
 }
 
 void ManifoldMeshReconstructor::updateSteinerGridTargetBounds(float x, float y, float z) {

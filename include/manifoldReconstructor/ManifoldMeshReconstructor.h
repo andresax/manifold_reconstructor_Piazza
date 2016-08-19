@@ -229,6 +229,7 @@ private:
 	OutputCreator *outputM_;
 	std::ofstream fileOut_;
 
+	long currentEnclosingVersion_ = 0;
 
 	float timerShrinkTime_ = 0.0;
 	float timerShrinkSeveralTime_ = 0.0;

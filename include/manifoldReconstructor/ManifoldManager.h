@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <Logger.h>
+#include <Chronometer.h>
 /**
  * This class provides the basic tools to manage the actual manifold creation,
  * such as the region growing procedure, the manifoldness tests and the update of the
@@ -41,9 +42,10 @@ public:
 
 	/*Grow the manifold several-tet-at-one in order to handle the genus change It bootstraps from the boundary between inside and outside the manifold*/
 	void growSeveralAtOnce();
+	void growSeveralAtOnce2();
 
-	void shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance);
-	void shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance);
+	void shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
+	void shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
 
 	/*shrink the manifold such that all the space inside the sphere with center in camPosition
 	 and ray maxPointToPointDistance+maxPointToCamDistance is matter. In this way, our are
@@ -97,10 +99,10 @@ private:
 
 	std::ofstream fileOut_;
 
-
-	long long functionProfileTimer_isRegular_ = 0;
-	long functionProfileCounter_isRegular_ = 0;
 	utilities::Logger logger_;
+
+	Chronometer functionProfileChronometer_isRegular_;
+	long functionProfileCounter_isRegular_ = 0;
 };
 
 #endif /* MANIFOLDMANAGER_H_ */
