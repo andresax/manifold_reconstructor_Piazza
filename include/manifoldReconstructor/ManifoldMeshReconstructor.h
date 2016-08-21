@@ -114,6 +114,7 @@ public:
 private:
 	void shrinkManifold(const PointD3 &camCenter, int updatedCameraIndex);
 	void shrinkManifold2(std::set<PointD3> points);
+	void shrinkManifold3(std::set<PointD3> points);
 
 	void initSteinerPointGridAndBound();
 	void updateSteinerPointGridAndBound();
@@ -236,6 +237,8 @@ private:
 
 	// TODO remove
 	std::vector<Segment> movedPointsSegments_;
+
+	std::set<PointD3> lastShrinkPoints_;
 
 };
 

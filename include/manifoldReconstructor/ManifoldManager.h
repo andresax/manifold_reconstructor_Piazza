@@ -3,10 +3,12 @@
 #define MANIFOLDMANAGER_H_
 
 //#include <Mesh.h>
-#include <types_reconstructor.hpp>
-#include <OutputCreator.h>
+#include <tuple>
 #include <fstream>
 #include <iostream>
+#include <types_reconstructor.hpp>
+#include <types_config.hpp>
+#include <OutputCreator.h>
 #include <Logger.h>
 #include <Chronometer.h>
 /**
@@ -17,7 +19,7 @@
  * */
 class ManifoldManager {
 public:
-	ManifoldManager(Delaunay3 &dt, bool inverseConic_, float probabTh_);
+	ManifoldManager(Delaunay3 &dt, bool inverseConic_, float probabTh_, ManifoldReconstructionConfig conf);
 	virtual ~ManifoldManager();
 
 	/*Tell on which delaunay triangulation the class instatiation will apply the grow/shrink algorithms*/
@@ -47,6 +49,9 @@ public:
 	void shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
 	void shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
 
+	void shrinkManifold3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
+	void shrinkSeveralAtOnce3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
+
 	/*shrink the manifold such that all the space inside the sphere with center in camPosition
 	 and ray maxPointToPointDistance+maxPointToCamDistance is matter. In this way, our are
 	 the able to add points seen from the cam in cam position
@@ -58,6 +63,10 @@ public:
 
 	const std::vector<Delaunay3::Cell_handle>& getBoundaryCells() const {
 		return boundaryCells_;
+	}
+
+	const std::map<index3, std::vector<Delaunay3::Cell_handle>>& getBoundaryCellsSpatialMap() const {
+		return boundaryCellsSpatialMap_;
 	}
 
 private:
@@ -91,11 +100,14 @@ private:
 	bool isFreespace(Delaunay3::Cell_handle &cell);
 
 	std::vector<Delaunay3::Cell_handle> boundaryCells_;
+	std::map<index3, std::vector<Delaunay3::Cell_handle>> boundaryCellsSpatialMap_;
+
 
 	Delaunay3& dt_;
 	OutputCreator *outputM_;
 	bool inverseConic_;
 	float probabTh_;
+	ManifoldReconstructionConfig conf_;
 
 	std::ofstream fileOut_;
 

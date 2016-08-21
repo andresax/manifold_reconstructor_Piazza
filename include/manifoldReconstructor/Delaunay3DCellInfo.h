@@ -18,6 +18,8 @@
 #include <vector>
 #include <glm.hpp>
 #include "FSConstraint.h"
+#include <CGAL/Point_3.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 
 struct RayPath;
 
@@ -46,6 +48,22 @@ public:
 	void setInEnclosingVolume(bool inEnclosingVolume, long enclosingVersion){
 		inEnclosingVolume_ = inEnclosingVolume;
 		enclosingVersion_ = enclosingVersion;
+	}
+//
+//	CGAL::Point_3<CGAL::Epick>* getLastEnclosingPoint(){
+//		return lastEnclosingPoint_;
+//	}
+//
+//	void setLastEnclosingPoint(CGAL::Point_3<CGAL::Epick>* lastEnclosingPoint){
+//		lastEnclosingPoint_ = lastEnclosingPoint;
+//	}
+
+	CGAL::Point_3<CGAL::Epick> getLastEnclosingPoint(){
+		return lastEnclosingPoint_;
+	}
+
+	void setLastEnclosingPoint(CGAL::Point_3<CGAL::Epick> lastEnclosingPoint){
+		lastEnclosingPoint_ = lastEnclosingPoint;
 	}
 
 	bool isBoundary() const {
@@ -484,7 +502,8 @@ private:
 
 	long enclosingVersion_ = -1;
 	bool inEnclosingVolume_ = false;
-
+//	CGAL::Point_3<CGAL::Epick>* lastEnclosingPoint_ = NULL;
+	CGAL::Point_3<CGAL::Epick> lastEnclosingPoint_;
 
 	int Lw1_count_ = 0;
 

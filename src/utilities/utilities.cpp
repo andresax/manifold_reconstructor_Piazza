@@ -25,6 +25,10 @@ double distanceEucl(PointD3 p1, PointD3 p2) {
   return sqrt((p1.x() - p2.x()) * (p1.x() - p2.x()) + (p1.y() - p2.y()) * (p1.y() - p2.y()) + (p1.z() - p2.z()) * (p1.z() - p2.z()));
 }
 
+double distanceEuclSquared(PointD3 p1, PointD3 p2) {
+  return std::pow(p1.x()-p2.x(), 2) + std::pow(p1.y()-p2.y(), 2) + std::pow(p1.z()-p2.z(), 2);
+}
+
 std::string getFrameNumber(int curFrame, int digitIdxLength) {
   std::ostringstream curNumber;
   if (digitIdxLength > 0) {

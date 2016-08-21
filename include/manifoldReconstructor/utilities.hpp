@@ -15,6 +15,7 @@ namespace utilities {
 float distanceEucl(cv::Point3f p1, cv::Point3f p2);
 double distanceEucl(cv::Point3d p1, cv::Point3d p2);
 double distanceEucl(PointD3 p1, PointD3 p2);
+double distanceEuclSquared(PointD3 p1, PointD3 p2);
 double distanceEucl(double x1, double x2, double y1, double y2, double z1, double z2);
 float distanceEucl(float x1, float x2, float y1, float y2, float z1, float z2);
 

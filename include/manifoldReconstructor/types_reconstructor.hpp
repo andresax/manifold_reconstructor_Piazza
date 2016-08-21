@@ -57,6 +57,28 @@ typedef Delaunay3::Vertex_handle Vertex3D_handle;
 typedef std::pair<PointD3, float> DistanceWeight;
 
 
+//	1 1 1
+//	1 1 2
+//	1 2 1
+//	1 2 2
+//	2 1 1
+//	2 1 2
+//	2 2 1
+//	2 2 2
+
+struct index3 {
+	int i, j, k;
+
+	index3(int i_, int j_, int k_){
+		i = i_;
+		j = j_;
+		k = k_;
+	}
+
+	bool operator==(const index3& b) const { return i == b.i && j == b.j && k == b.k; }
+	bool operator< (const index3& b) const { return i < b.i || (i == b.i && (j < b.j || (j == b.j && (k < b.k)))); }
+
+};
 
 struct PointType;
 
@@ -124,6 +146,11 @@ struct sortTetByIntersection {
 	}
 };
 
+struct sortTetByIntersectionAndDefaultLess {
+	inline bool operator()(const Delaunay3::Cell_handle& i, const Delaunay3::Cell_handle& j) {
+		return (i->info().getVoteCountProb() < j->info().getVoteCountProb()) || ((i->info().getVoteCountProb() == j->info().getVoteCountProb()) && i < j);
+	}
+};
 struct PointReconstruction { //TODO export in an actual class
 	int idReconstruction;
 	PointD3 position;

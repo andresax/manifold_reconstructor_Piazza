@@ -21,7 +21,7 @@ using std::pair;
 
 ManifoldMeshReconstructor::ManifoldMeshReconstructor(ManifoldReconstructionConfig conf) {
 	conf_ = conf;
-	manifoldManager_ = new ManifoldManager(dt_, conf_.inverseConicEnabled, conf_.probOrVoteThreshold);
+	manifoldManager_ = new ManifoldManager(dt_, conf_.inverseConicEnabled, conf_.probOrVoteThreshold, conf_);
 	outputM_ = new OutputCreator(dt_);
 
 	stepX_ = stepY_ = stepZ_ = conf_.steinerGridStepLength;
@@ -224,6 +224,10 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 	timeStatsFile_ << endl << cams_.size() << ", ";
 
+
+//	cout << "ManifoldMeshReconstructor::updateTriangulation: " << endl;
+//	for(auto kv : manifoldManager_->getBoundaryCellsSpatialMap()) cout << "\t\t\t (" << kv.first.i << ", " << kv.first.j << ", " << kv.first.k << ")\t→\t" << kv.second.size() << " cells" << endl;
+
 	if (dt_.number_of_vertices() == 0) {
 		logger_.startEvent();
 //		createSteinerPointGridAndBound();
@@ -249,6 +253,17 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 			if (points_[pIndex].new_ && utilities::distanceEucl(points_[pIndex].position, cams_[cIndex].position) < conf_.maxDistanceCamFeature)
 				shrinkPoints.insert(points_[pIndex].position);
 
+	// Useful when updating points, maybe...
+//	int countRepeatedShrinkPoints = 0;
+//	if(lastShrinkPoints_.size()){
+//		for( auto p : lastShrinkPoints_) if(shrinkPoints.count(p)) countRepeatedShrinkPoints++;
+//		cout << "countRepeatedShrinkPoints:\t" << countRepeatedShrinkPoints << endl;
+//	}
+//	lastShrinkPoints_.clear();
+//	lastShrinkPoints_.insert(shrinkPoints.begin(), shrinkPoints.end());
+
+
+
 //	int countInBoundaryPoints = 0;
 //	std::set<Delaunay3::Cell_handle> enclosingSet;
 //	for (auto p : shrinkPoints) {
@@ -273,7 +288,7 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	timerShrinkSeveralTime_ = 0.0;
 	if (shrinkPoints.size()) {
 		logger_.startEvent();
-		shrinkManifold2(shrinkPoints);
+		shrinkManifold3(shrinkPoints);
 		logger_.endEventAndPrint("├ shrinkManifold\t\t", true);
 		timeStatsFile_ << logger_.getLastDelta() << ", ";
 	} else {
@@ -963,6 +978,48 @@ void ManifoldMeshReconstructor::saveOldManifold(const std::string filename, std:
 
 void ManifoldMeshReconstructor::saveFreespace(const std::string filename) {
 	outputM_->writeFreespaceOFF(filename);
+}
+
+void ManifoldMeshReconstructor::shrinkManifold3(std::set<PointD3> points) {
+
+	if (conf_.all_sort_of_output) saveBoundary(0, 0);
+
+	logger_.startEvent();
+	manifoldManager_->shrinkManifold3(points, l_, currentEnclosingVersion_);
+	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+	timerShrinkTime_ += logger_.getLastDelta();
+
+	if (conf_.all_sort_of_output) saveBoundary(0, 1);
+
+	logger_.startEvent();
+	manifoldManager_->shrinkSeveralAtOnce3(points, l_, currentEnclosingVersion_);
+	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
+	timerShrinkSeveralTime_ += logger_.getLastDelta();
+
+	if (conf_.all_sort_of_output) saveBoundary(0, 2);
+
+	logger_.startEvent();
+	manifoldManager_->shrinkManifold3(points, l_, currentEnclosingVersion_);
+	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+	timerShrinkTime_ += logger_.getLastDelta();
+
+	if (conf_.all_sort_of_output) saveBoundary(0, 3);
+
+	logger_.startEvent();
+	manifoldManager_->shrinkSeveralAtOnce3(points, l_, currentEnclosingVersion_);
+	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
+	timerShrinkSeveralTime_ += logger_.getLastDelta();
+
+	if (conf_.all_sort_of_output) saveBoundary(0, 4);
+
+	logger_.startEvent();
+	manifoldManager_->shrinkManifold3(points, l_, currentEnclosingVersion_);
+	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+	timerShrinkTime_ += logger_.getLastDelta();
+
+	if (conf_.all_sort_of_output) saveBoundary(0, 5);
+
+	currentEnclosingVersion_++;
 }
 
 void ManifoldMeshReconstructor::shrinkManifold2(std::set<PointD3> points) {
