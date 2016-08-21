@@ -116,6 +116,8 @@ private:
 	void shrinkManifold2(std::set<PointD3> points);
 	void shrinkManifold3(std::set<PointD3> points);
 
+	void growManifold3(std::set<PointD3> points);
+
 	void initSteinerPointGridAndBound();
 	void updateSteinerPointGridAndBound();
 	void updateSteinerGridTargetBounds(float x, float y, float z);

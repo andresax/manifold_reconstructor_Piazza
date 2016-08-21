@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
 		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/", "current");
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
-		log.endEventAndPrint();
+		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
 		std::cout << std::endl;
 		if (m.iterationCount > confManif.initial_manifold_update_skip && !(m.iterationCount % confManif.manifold_update_every)) m.insertStatValue(log.getLastDelta());
 

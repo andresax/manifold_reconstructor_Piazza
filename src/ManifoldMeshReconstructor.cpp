@@ -224,7 +224,6 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 	timeStatsFile_ << endl << cams_.size() << ", ";
 
-
 //	cout << "ManifoldMeshReconstructor::updateTriangulation: " << endl;
 //	for(auto kv : manifoldManager_->getBoundaryCellsSpatialMap()) cout << "\t\t\t (" << kv.first.i << ", " << kv.first.j << ", " << kv.first.k << ")\t→\t" << kv.second.size() << " cells" << endl;
 
@@ -243,15 +242,18 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 	/* DEBUG BEGIN */
 
-	std::set<PointD3> shrinkPoints;
+	std::set<PointD3> enclosingVolumePoints;
 	if (conf_.update_points_position) for (auto pIndex : pointsMovedIdx_) {
 		//		shrinkPoints.insert(points_[pIndex].position);
-		shrinkPoints.insert(points_[pIndex].newPosition);
+		enclosingVolumePoints.insert(points_[pIndex].newPosition);
 	}
 	for (auto cIndex : updatedCamerasIdx_)
 		for (auto pIndex : cams_[cIndex].newVisiblePoints)
 			if (points_[pIndex].new_ && utilities::distanceEucl(points_[pIndex].position, cams_[cIndex].position) < conf_.maxDistanceCamFeature)
-				shrinkPoints.insert(points_[pIndex].position);
+				enclosingVolumePoints.insert(points_[pIndex].position);
+
+	// This is used to cache the enclosing information in the cells, incrementing it invalidates the cached values and need to be done when the points on which the enclosing volume is base are changed
+	currentEnclosingVersion_++;
 
 	// Useful when updating points, maybe...
 //	int countRepeatedShrinkPoints = 0;
@@ -261,8 +263,6 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 //	}
 //	lastShrinkPoints_.clear();
 //	lastShrinkPoints_.insert(shrinkPoints.begin(), shrinkPoints.end());
-
-
 
 //	int countInBoundaryPoints = 0;
 //	std::set<Delaunay3::Cell_handle> enclosingSet;
@@ -283,12 +283,11 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 //
 //	cout << "Boundary destroing points:\t" << countInBoundaryPoints << " / " << shrinkPoints.size() << endl;
 
-
 	timerShrinkTime_ = 0.0;
 	timerShrinkSeveralTime_ = 0.0;
-	if (shrinkPoints.size()) {
+	if (enclosingVolumePoints.size()) {
 		logger_.startEvent();
-		shrinkManifold3(shrinkPoints);
+		shrinkManifold3(enclosingVolumePoints);
 		logger_.endEventAndPrint("├ shrinkManifold\t\t", true);
 		timeStatsFile_ << logger_.getLastDelta() << ", ";
 	} else {
@@ -406,8 +405,9 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 		return !dt_.is_cell(cell) || cell->info().getIntersections().size() == 0;
 	}), freeSpaceTets_.end());
 
-	printWhatever();
+//	printWhatever();
 //	outputM_->writeAllVerticesToOFF("output/triangulation_vertices/all_vertices", std::vector<int> { });
+	growManifold3(enclosingVolumePoints);
 
 	iterationCounter_++;
 }
@@ -893,6 +893,51 @@ void ManifoldMeshReconstructor::markTetraedron(
 	}
 }
 
+void ManifoldMeshReconstructor::growManifold3(std::set<PointD3> points) {
+	if (!freeSpaceTets_.size()) {
+		cerr << "freeSpaceTets_ is empty; Can't grow" << endl;
+		return;
+	}
+
+	if (conf_.all_sort_of_output) saveBoundary(1, 0);
+
+	// TODO move the initialisation to updateTriangulation
+	logger_.startEvent();
+	if (manifoldManager_->getBoundarySize() == 0) {
+		// If the boundary is still empty, initialise all the cells' informations and start growing from the cell with highest vote
+		std::sort(freeSpaceTets_.begin(), freeSpaceTets_.end(), sortTetByIntersection());
+		for (Delaunay3::Finite_cells_iterator itCell = dt_.finite_cells_begin(); itCell != dt_.finite_cells_end(); itCell++) {
+			itCell->info().setKeptManifold(false);
+			for (int curV = 0; curV < 4; ++curV) {
+				itCell->vertex(curV)->info().setUsed(0);
+				itCell->vertex(curV)->info().setNotUsed(true);
+			}
+		}
+		Delaunay3::Cell_handle startingCell = freeSpaceTets_[freeSpaceTets_.size() - 1];
+		manifoldManager_->regionGrowingBatch3(startingCell, points);
+	} else {
+		manifoldManager_->regionGrowing3(points);
+	}
+	logger_.endEventAndPrint("│ ├ growManifold\t\t", true);
+	timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+	if (conf_.all_sort_of_output) saveBoundary(1, 1);
+
+	logger_.startEvent();
+	manifoldManager_->growSeveralAtOnce3(points);
+	logger_.endEventAndPrint("│ ├ growManifoldSev\t\t", true);
+	timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+	if (conf_.all_sort_of_output) saveBoundary(1, 2);
+
+	logger_.startEvent();
+	manifoldManager_->regionGrowing3(points);
+	logger_.endEventAndPrint("│ ├ growManifold\t\t", true);
+	timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+	if (conf_.all_sort_of_output) saveBoundary(1, 3);
+}
+
 void ManifoldMeshReconstructor::growManifold() {
 	if (manifoldManager_->getBoundarySize() == 0) {
 		std::sort(freeSpaceTets_.begin(), freeSpaceTets_.end(), sortTetByIntersection());
@@ -1019,7 +1064,6 @@ void ManifoldMeshReconstructor::shrinkManifold3(std::set<PointD3> points) {
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 5);
 
-	currentEnclosingVersion_++;
 }
 
 void ManifoldMeshReconstructor::shrinkManifold2(std::set<PointD3> points) {

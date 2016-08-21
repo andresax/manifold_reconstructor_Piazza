@@ -191,25 +191,25 @@ void ReconstructFromSLAMData::updateManifold() {
 
 
 	// Tell ManifoldMeshReconstructor to grow back the manifold
-	logger_.startEvent();
-
-	logger_.startEvent();
-	std::cout << std::endl << "┍ growManifold" << std::endl;
-	manifRec_->growManifold();
-	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
-	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
-
-	logger_.startEvent();
-	manifRec_->growManifoldSev();
-	logger_.endEventAndPrint("├ growManifoldSev\t\t", true);
-	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
-
-	logger_.startEvent();
-	manifRec_->growManifold();
-	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
-	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
-
-	logger_.endEventAndPrint("growManifold\t\t\t", true);
+//	logger_.startEvent();
+//
+//	logger_.startEvent();
+//	std::cout << std::endl << "┍ growManifold" << std::endl;
+//	manifRec_->growManifold();
+//	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
+//	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
+//
+//	logger_.startEvent();
+//	manifRec_->growManifoldSev();
+//	logger_.endEventAndPrint("├ growManifoldSev\t\t", true);
+//	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
+//
+//	logger_.startEvent();
+//	manifRec_->growManifold();
+//	logger_.endEventAndPrint("├ growManifold\t\t\t", true);
+//	manifRec_->timeStatsFile_ << logger_.getLastDelta() << ", ";
+//
+//	logger_.endEventAndPrint("growManifold\t\t\t", true);
 }
 
 void ReconstructFromSLAMData::saveManifold(std::string namePrefix, std::string nameSuffix) {

@@ -35,22 +35,29 @@ public:
 		return boundaryCells_.size();
 	}
 
+	void shrinkManifold3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
+	void shrinkSeveralAtOnce3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
+
+	void shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
+	void shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
+
+	void regionGrowingBatch3(Delaunay3::Cell_handle &startingCell, std::set<PointD3> points);
+	void regionGrowing3(std::set<PointD3> points);
+
+	void growSeveralAtOnce3(std::set<PointD3> points);
+	void growSeveralAtOnce2();
+
 	/*Grow the manifold from the startingcell */
 	void regionGrowingBatch(Delaunay3::Cell_handle &startingCell);
+
 	/*Grow the manifold from the cell including the point in position firstCamPosition*/
 	void regionGrowingBatch(PointD3 firstCamPosition);
+
 	/* Grow the manifold  one tet-at-once incrementally, bootstrapping from the current boundary inside and outside the manifold */
 	void regionGrowing();
 
 	/*Grow the manifold several-tet-at-one in order to handle the genus change It bootstraps from the boundary between inside and outside the manifold*/
 	void growSeveralAtOnce();
-	void growSeveralAtOnce2();
-
-	void shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
-	void shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
-
-	void shrinkManifold3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
-	void shrinkSeveralAtOnce3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion);
 
 	/*shrink the manifold such that all the space inside the sphere with center in camPosition
 	 and ray maxPointToPointDistance+maxPointToCamDistance is matter. In this way, our are
@@ -71,6 +78,7 @@ public:
 
 private:
 
+	void regionGrowingProcedure3(std::set<PointD3> points);
 	void regionGrowingProcedure();
 
 	/******************************************************/
