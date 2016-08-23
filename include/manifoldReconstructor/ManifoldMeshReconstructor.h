@@ -131,7 +131,7 @@ private:
 	bool insertVertex(PointReconstruction &points);
 	/*mark a tetrahedron with a visibility rays, it updates the information stored in the tetrahedron*/
 	void markTetraedron(
-			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::set<Delaunay3::Cell_handle>& path, RayReconstruction* ray, bool incrementCount = true);
+			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, RayReconstruction* ray, bool incrementCount = true);
 
 	void rayTracingFromAllCam();
 
@@ -180,6 +180,7 @@ private:
 
 	void getDegree1Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours);
 	void getDegree2Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours, std::set<Delaunay3::Cell_handle>& d2Neighbours);
+	void getDegree1And2Neighbours(std::vector<Delaunay3::Cell_handle>& path, std::vector<Delaunay3::Cell_handle>& d1Neighbours, std::vector<Delaunay3::Cell_handle>& d2Neighbours);
 
 	int iterationCounter_ = 0;
 
