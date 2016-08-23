@@ -162,14 +162,14 @@ void ManifoldManager::shrinkManifold3(std::set<PointD3> points, const float &max
 			tetNotCarved.clear();
 		}
 	}
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t lastEnclosingPointCache:\t\t" << chronoLastEnclosingPointCache.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t inserting:\t\t\t\t" << chronoInserting.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t enclosing:\t\t\t\t" << chronoEnclosing.getSeconds() << "s\t / \t" << countTotal << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << "s\t / \t" << countInEnclosingVolume << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t shrink:\t\t\t\t" << chronoShrinking.getSeconds() << "s\t / \t" << countShrinked << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t lastEnclosingPointCache:\t\t" << chronoLastEnclosingPointCache.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t inserting:\t\t\t\t" << chronoInserting.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t enclosing:\t\t\t\t" << chronoEnclosing.getSeconds() << " s\t / \t" << countTotal << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << " s\t / \t" << countInEnclosingVolume << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t shrink:\t\t\t\t" << chronoShrinking.getSeconds() << " s\t / \t" << countShrinked << endl;
 	cout << "ManifoldManager::shrinkManifold3:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
 	cout << "ManifoldManager::shrinkManifold3:\t\t\t\t countSuccessfulEnclosingVersionCache:\t\t\t" << countSuccessfulEnclosingVersionCache << "\t / \t" << countTotal << endl;
 	cout << "ManifoldManager::shrinkManifold3:\t\t\t\t countSuccessfulLastEnclosingPointCache:\t\t" << countSuccessfulLastEnclosingPointCache << "\t / \t" << countTotal - countSuccessfulEnclosingVersionCache << endl;
@@ -281,11 +281,11 @@ void ManifoldManager::shrinkSeveralAtOnce3(std::set<PointD3> points, const float
 		}
 	}
 
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t enclosing:\t\t\t\t" << chronoEnclosing.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t addAndCheckManifoldness:\t\t" << chronoAddAndCheckManifoldness.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << "s\t / \t" << functionProfileCounter_isRegular_ << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t enclosing:\t\t\t\t" << chronoEnclosing.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t addAndCheckManifoldness:\t\t" << chronoAddAndCheckManifoldness.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << " s\t / \t" << functionProfileCounter_isRegular_ << endl;
 	cout << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
 
 }
@@ -642,12 +642,12 @@ void ManifoldManager::regionGrowingProcedure3(std::set<PointD3> points) {
 //	if (tetsQueue.size()) cerr << "ManifoldManager::regionGrowingProcedure3: \t\t exiting while queue not empty" << endl;
 	tetsQueue.clear();
 
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t inserting:\t\t\t\t" << chronoInserting.getSeconds() << "s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << "s\t / \t" << countTotal << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t grow:\t\t\t\t\t" << chronoGrowing.getSeconds() << "s\t / \t" << countGrowned << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t inserting:\t\t\t\t" << chronoInserting.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << " s\t / \t" << countTotal << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t grow:\t\t\t\t\t" << chronoGrowing.getSeconds() << " s\t / \t" << countGrowned << endl;
 	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
 	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t number_of_finite_cells:\t\t" << dt_.number_of_finite_cells() << endl;
 
@@ -728,9 +728,9 @@ void ManifoldManager::growSeveralAtOnce3(std::set<PointD3> points) {
 
 	chronoRemoveAndCheckManifoldness.stop();
 
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t queue init:\t\t\t" << chronoQueueInit.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t remove and check manifoldness:\t\t" << chronoRemoveAndCheckManifoldness.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << "s\t / \t" << functionProfileCounter_isRegular_ << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t queue init:\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t remove and check manifoldness:\t\t" << chronoRemoveAndCheckManifoldness.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << " s\t / \t" << functionProfileCounter_isRegular_ << endl;
 	cout << "ManifoldManager::growSeveralAtOnce3:\t\t\t successfully growned:\t\t\t\t\t" << countSuccess << "\t / \t" << countTotal << endl;
 
 }

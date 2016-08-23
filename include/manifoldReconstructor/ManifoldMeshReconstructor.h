@@ -22,6 +22,7 @@
 #include <iostream>
 #include <Ray.hpp>
 #include "FSConstraint.h"
+#include <Chronometer.h>
 
 typedef std::set<FSConstraint, FSConstraint::LtFSConstraint> SetConstraints;
 
@@ -47,7 +48,7 @@ public:
 	ManifoldMeshReconstructor(ManifoldReconstructionConfig conf);
 	virtual ~ManifoldMeshReconstructor();
 
-	void printWhatever();
+//	void printWhatever();
 
 	void printIdxPointsForRayTracing();
 
@@ -175,7 +176,7 @@ private:
 	std::set<RayPath*> getRayPathsFromCamera(int cameraId);
 	std::set<RayPath*> getRayPathsFromPoint(int pointId);
 
-	float weightFunction(RayPath* r);
+//	float weightFunction(RayPath* r);
 
 	void getDegree1Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours);
 	void getDegree2Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours, std::set<Delaunay3::Cell_handle>& d2Neighbours);
@@ -183,7 +184,7 @@ private:
 	int iterationCounter_ = 0;
 
 	Delaunay3 dt_;
-	std::vector<Delaunay3::Cell_handle> freeSpaceTets_;
+//	std::vector<Delaunay3::Cell_handle> freeSpaceTets_;
 	std::set<Delaunay3::Cell_handle> newCells_;
 
 	std::vector<CamReconstruction> cams_;
@@ -236,6 +237,10 @@ private:
 
 	float timerShrinkTime_ = 0.0;
 	float timerShrinkSeveralTime_ = 0.0;
+
+	long rt2_CountNeighboursD1WeightUpdate_ = 0, rt2_CountNeighboursD2WeightUpdate_ = 0;
+	Chronometer rt2_ChronoUseless_, rt2_ChronoFirstCell_, rt2_ChronoCellTraversing_;
+	Chronometer rt2_ChronoNeighboursD1Selection_, rt2_ChronoNeighboursD2Selection_, rt2_ChronoNeighboursD1WeightUpdate_, rt2_ChronoNeighboursD2WeightUpdate_;
 
 	// TODO remove
 	std::vector<Segment> movedPointsSegments_;
