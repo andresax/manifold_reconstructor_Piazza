@@ -119,7 +119,7 @@ void ManifoldManager::shrinkManifold3(std::set<PointD3> points, const float &max
 			else continue;
 
 			chronoTesting.start();
-			if (singleTetTest(currentTet)) {
+			if (singleTetTest2(currentTet)) {
 				chronoTesting.stop();
 
 				if (!currentTet->info().iskeptManifold()) cerr << "ManifoldManager::shrinkManifold3:\t wrong shrink order\t iteration: " << countIterations << endl;
@@ -209,7 +209,6 @@ void ManifoldManager::shrinkSeveralAtOnce3(std::set<PointD3> points, const float
 		std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
 		tetsQueue.insert(localBoundaryCells.begin(), localBoundaryCells.end());
 	}
-
 
 	int countBoundaryInitCells = boundaryCells_.size();
 	int countQueueInitCells = tetsQueue.size();
@@ -595,7 +594,7 @@ void ManifoldManager::regionGrowingProcedure3(std::set<PointD3> points) {
 			currentTet->info().setToBeTested(false);
 
 			chronoTesting.start();
-			if (singleTetTest(currentTet)) {
+			if (singleTetTest2(currentTet)) {
 				chronoTesting.stop();
 
 				countGrowned++;
@@ -951,7 +950,7 @@ bool ManifoldManager::insertInBoundary(Delaunay3::Cell_handle& cellToBeAdded) {
 		}
 
 		std::set<index3> mapIndices;
-		// TODO is it possible that a tetrahedron intersects a grid cube but doesn't have any vertex within it? (shouldn't be a problem, since the adjiacent cubes will be selected too)
+		// TODO is it possible that a tetrahedron intersects a grid cube but doesn't have any vertex within it? (shouldn't be a problem, since the adjacent cubes will be selected too)
 		for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
 			auto v = cellToBeAdded->vertex(vertexIndex);
 
@@ -1720,6 +1719,107 @@ bool ManifoldManager::additionTest(Delaunay3::Cell_handle &cell) {
 		additionManifold = false;
 	}
 	return additionManifold;
+
+}
+
+bool ManifoldManager::singleTetTest2(Delaunay3::Cell_handle& cell) {
+	bool iskeptManif = cell->info().iskeptManifold();
+
+	// Count the number of Facets in the intersection between cell and the current manifold
+	int faceIndexI, faceIndexJ;
+	int numF = 0;
+	for (int faceIndex = 0; faceIndex < 4; ++faceIndex) {
+		if (cell->neighbor(faceIndex)->info().iskeptManifold() != iskeptManif) {
+			numF++;
+			if (numF == 1) faceIndexI = faceIndex;
+			if (numF == 2) faceIndexJ = faceIndex;
+		}
+	}
+
+	// If numF == 0, then the test is true only if both numV and numE are 0.
+	// If either numV or numE are greater than zero, the test is already determined and false.
+	if (numF == 0) {
+
+		// If even one vertex satisfies the condition, the test is false (numV > 0)
+		for (int curVertexId = 0; curVertexId < 4; ++curVertexId) {
+			std::vector<Delaunay3::Cell_handle> incidentCells;
+			dt_.incident_cells(cell->vertex(curVertexId), std::back_inserter(incidentCells));
+
+			for (auto c : incidentCells)
+				if (c->info().iskeptManifold() != iskeptManif) return false; // shortcut
+
+		}
+
+		// If even one edge satisfies the condition, the test is false (numE > 0)
+		for (int curEdgeId1 = 0; curEdgeId1 < 4; ++curEdgeId1) {
+			for (int curEdgeId2 = curEdgeId1 + 1; curEdgeId2 < 4; ++curEdgeId2) {
+				Delaunay3::Edge curEdge(cell, curEdgeId1, curEdgeId2);
+
+				Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(curEdge, cell);
+				Delaunay3::Cell_circulator cellCircInit = dt_.incident_cells(curEdge, cell);
+
+				do {
+					if (cellCirc->info().iskeptManifold() != iskeptManif) return false; // shortcut
+					cellCirc++;
+				} while (cellCirc != cellCircInit);
+
+			}
+		}
+
+		return true;
+
+	} else if (numF == 1) {
+
+		// If numF == 1, then the test is true only if both numV and numE are 3,
+		// but given that the condition is true for one and only one face (called face i),
+		// then the vertex opposite to the face i (that is, vertex i), determines if the test is true.
+		// In fact, the remaining vertices are incident to the cell adjacent to the face that already satisfied the condition,
+		// hence the condition on those vertices is already satisfied.
+
+		std::vector<Delaunay3::Cell_handle> incidentCells;
+		dt_.incident_cells(cell->vertex(faceIndexI), std::back_inserter(incidentCells));
+
+		for (auto c : incidentCells) {
+			if (c->info().iskeptManifold() != iskeptManif) {
+				return false;
+			}
+		}
+
+		// If the condition is true for one and the only one face i,
+		// then the condition must be true for all edges composing the face i and whether or not the condition is true for the vertex opposite to the face i (that is, vertex i),
+		// it is redundant to check for the remaining edges, since the cells incident to the vertex i are also incident to them.
+		// condition false for vertex i implies condition false for remaining edges (i, -)
+		// condition true for vertex i implies the test is already determined (and false).
+
+		return true;
+
+
+	} else if (numF == 2) {
+
+		// If two of the faces are adjacent the cells that make the condition true, then the condition is implied for all vertices and for all but one edge.
+		// The only edge for which the condition needs to be tested is the one connecting the vertices opposite to the faces satisfing the condition.
+		// Calling such faces i and j, said edge is the edge (i, j).
+
+		Delaunay3::Edge edgeIJ(cell, faceIndexI, faceIndexJ);
+		Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(edgeIJ, cell);
+		Delaunay3::Cell_circulator cellCircInit = dt_.incident_cells(edgeIJ, cell);
+
+		do {
+			if (cellCirc->info().iskeptManifold() != iskeptManif) {
+				return false;
+			}
+			cellCirc++;
+		} while (cellCirc != cellCircInit);
+
+		return true;
+
+	} else if (numF >= 3){
+
+		// If all or even just three faces satisfy the condition, then it is implied for all vertices and all edges to satisfy the condition.
+
+		return true;
+
+	}
 
 }
 

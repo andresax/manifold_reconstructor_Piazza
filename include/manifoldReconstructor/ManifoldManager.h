@@ -86,6 +86,7 @@ private:
 	/******************************************************/
 	bool additionTest(Delaunay3::Cell_handle &i);
 	bool subtractionTest(Delaunay3::Cell_handle &i);
+	bool singleTetTest2(Delaunay3::Cell_handle &i);
 	bool singleTetTest(Delaunay3::Cell_handle &i);
 	bool checkManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh);
 	bool removeAndCheckManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh);
