@@ -63,7 +63,12 @@ public:
 	}
 
 	void setLastEnclosingPoint(CGAL::Point_3<CGAL::Epick> lastEnclosingPoint){
+		hasLastEnclosingPoint_ = true;
 		lastEnclosingPoint_ = lastEnclosingPoint;
+	}
+
+	bool hasLastEnclosingPoint(){
+		return hasLastEnclosingPoint_;
 	}
 
 	bool isBoundary() const {
@@ -502,7 +507,7 @@ private:
 
 	long enclosingVersion_ = -1;
 	bool inEnclosingVolume_ = false;
-//	CGAL::Point_3<CGAL::Epick>* lastEnclosingPoint_ = NULL;
+	bool hasLastEnclosingPoint_ = false;
 	CGAL::Point_3<CGAL::Epick> lastEnclosingPoint_;
 
 	int Lw1_count_ = 0;

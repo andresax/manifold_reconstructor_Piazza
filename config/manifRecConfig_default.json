@@ -12,11 +12,11 @@
 	"steinerGridStepLength": 20.0,
 	"steinerGridSideLength": 280.0,
 	
-	"manifold_update_every": 1,
+	"manifold_update_every": 4,
 	"initial_manifold_update_skip": 2,
 	"save_manifold_every": 32,
 	"primary_points_visibility_threshold": 2,
 	
 	"all_sort_of_output": false,
-	"update_points_position": false
+	"update_points_position": true
 }

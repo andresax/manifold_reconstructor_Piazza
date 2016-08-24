@@ -15,7 +15,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-ManifoldManager::ManifoldManager(Delaunay3 &dt, bool inverseConic, float probabTh, ManifoldReconstructionConfig conf) :
+ManifoldManager::ManifoldManager(Delaunay3& dt, bool inverseConic, float probabTh, ManifoldReconstructionConfig conf) :
 		dt_(dt) {
 
 	conf_ = conf;
@@ -30,7 +30,7 @@ ManifoldManager::~ManifoldManager() {
 }
 
 // TODO pass points by reference, avoid copying the hole set
-void ManifoldManager::shrinkManifold3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion) {
+void ManifoldManager::shrinkManifold3(const std::set<PointD3>& points, const float& maxPointToPointDistance, long currentEnclosingVersion) {
 	// Stats
 	int countQueueInitCells, countBoundaryInitCells, countInEnclosingVolume = 0, countShrinked = 0, countTotal = 0, countIterations = 1;
 	int countSuccessfulEnclosingVersionCache = 0, countSuccessfulLastEnclosingPointCache = 0;
@@ -92,7 +92,7 @@ void ManifoldManager::shrinkManifold3(std::set<PointD3> points, const float &max
 				isInEnclosingVolume = currentTet->info().isInEnclosingVolume();
 			} else {
 				chronoLastEnclosingPointCache.start();
-				if (points.count(currentTet->info().getLastEnclosingPoint())) {
+				if (currentTet->info().hasLastEnclosingPoint() && points.count(currentTet->info().getLastEnclosingPoint())) {
 					countSuccessfulLastEnclosingPointCache++;
 					isInEnclosingVolume = true;
 					chronoLastEnclosingPointCache.stop();
@@ -162,7 +162,7 @@ void ManifoldManager::shrinkManifold3(std::set<PointD3> points, const float &max
 			tetNotCarved.clear();
 		}
 	}
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t lastEnclosingPointCache:\t\t" << chronoLastEnclosingPointCache.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t lastEnclosingPointCache:\t\t" << chronoLastEnclosingPointCache.getMicroseconds() << " µs" << endl;
 	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
 	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
 	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
@@ -177,7 +177,7 @@ void ManifoldManager::shrinkManifold3(std::set<PointD3> points, const float &max
 
 }
 
-void ManifoldManager::shrinkSeveralAtOnce3(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion) {
+void ManifoldManager::shrinkSeveralAtOnce3(const std::set<PointD3>& points, const float &maxPointToPointDistance, long currentEnclosingVersion) {
 	functionProfileChronometer_isRegular_.reset();
 	functionProfileCounter_isRegular_ = 0;
 	Chronometer chronoQueueInit, chronoQueuePopping, chronoEnclosing, chronoAddAndCheckManifoldness;
@@ -271,7 +271,7 @@ void ManifoldManager::shrinkSeveralAtOnce3(std::set<PointD3> points, const float
 
 				chronoAddAndCheckManifoldness.start();
 
-				bool success = addAndCheckManifoldness(currentTet, curIdx);
+				bool success = subSeveralAndCheckManifoldness2(currentTet, curIdx);
 
 				chronoAddAndCheckManifoldness.stop();
 
@@ -288,6 +288,572 @@ void ManifoldManager::shrinkSeveralAtOnce3(std::set<PointD3> points, const float
 	cout << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
 
 }
+
+void ManifoldManager::regionGrowingBatch3(Delaunay3::Cell_handle& startingCell, const std::set<PointD3>& points) {
+	addTetAndUpdateBoundary(startingCell);
+	regionGrowingProcedure3(points);
+}
+
+void ManifoldManager::regionGrowing3(const std::set<PointD3>& points) {
+	regionGrowingProcedure3(points);
+}
+
+void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
+	// Stats
+	int countQueueInitCells, countBoundaryInitCells, countGrowned = 0, countTotal = 0, countIterations = 1;
+	Chronometer chronoQueueInit, chronoQueueInserting, chronoQueuePopping, chronoInserting, chronoTesting, chronoGrowing;
+
+	bool fixedPoint = false;
+
+	std::vector<Delaunay3::Cell_handle> tetsQueue;
+	std::vector<Delaunay3::Cell_handle> tetNotCarved;
+	std::set<Delaunay3::Cell_handle> localBoundaryCellsUnion;
+
+	chronoQueueInit.start();
+
+	std::set<index3> mapIndices;
+	for (auto p : points) {
+		// The index of the grid's cube is the integer rounded down for each coordinate
+		int i = std::floor(p.x() / conf_.steinerGridStepLength);
+		int j = std::floor(p.y() / conf_.steinerGridStepLength);
+		int k = std::floor(p.z() / conf_.steinerGridStepLength);
+
+		for (int i_ : std::vector<int> { -2, -1, 0, 1, 2 })
+			for (int j_ : std::vector<int> { -2, -1, 0, 1, 2 })
+				for (int k_ : std::vector<int> { -2, -1, 0, 1, 2 })
+					mapIndices.insert(index3(i + i_, j + j_, k + k_));
+	}
+
+	for (index3 mapIndex : mapIndices) {
+		std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
+		localBoundaryCellsUnion.insert(localBoundaryCells.begin(), localBoundaryCells.end());
+	}
+
+	for (auto boundaryCell : localBoundaryCellsUnion) {
+		for (int neighbourIndex = 0; neighbourIndex < 4; neighbourIndex++) {
+			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(neighbourIndex);
+
+			if (!dt_.is_cell(boundaryCell) || !dt_.is_cell(neighbour)) {
+				std::cerr << "ManifoldManager::regionGrowingProcedure3: \t\t dead cells found in boundary" << std::endl;
+				continue;
+			}
+
+			if (!neighbour->info().iskeptManifold() && !neighbour->info().isToBeTested() && isFreespace(neighbour)) {
+				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
+				tetsQueue.insert(it, neighbour);
+				neighbour->info().setToBeTested(true);
+			}
+		}
+	}
+	chronoQueueInit.stop();
+
+	countBoundaryInitCells = boundaryCells_.size();
+	countQueueInitCells = tetsQueue.size();
+
+//	if (tetsQueue.size() == 0) {
+//		std::cerr << "ManifoldManager::regionGrowingProcedure3: \t\t tetsQueue is empty" << std::endl;
+//	}
+
+	while (!fixedPoint) {
+		fixedPoint = true;
+
+		while (!tetsQueue.empty()) {
+			countTotal++;
+
+			//Single-tet-at-once
+			chronoQueuePopping.start();
+			Delaunay3::Cell_handle currentTet = tetsQueue.back();
+			tetsQueue.pop_back();
+			chronoQueuePopping.stop();
+
+			currentTet->info().setToBeTested(false);
+
+			chronoTesting.start();
+			if (singleTetTest2(currentTet)) {
+				chronoTesting.stop();
+
+				countGrowned++;
+
+				chronoGrowing.start();
+				addTetAndUpdateBoundary(currentTet);
+				chronoGrowing.stop();
+
+				//add the adjacent tets to the queue
+				for (int neighbourIndex = 0; neighbourIndex < 4; neighbourIndex++) {
+					Delaunay3::Cell_handle neighbour = currentTet->neighbor(neighbourIndex);
+
+					if (!neighbour->info().iskeptManifold() && isFreespace(neighbour)) {
+						// TODO use toBeTested instead of search
+						chronoQueueInserting.start();
+						if (find(tetsQueue.begin(), tetsQueue.end(), neighbour) == tetsQueue.end()) {
+							std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
+							tetsQueue.insert(it, neighbour);
+						}
+						chronoQueueInserting.stop();
+
+					}
+				}
+
+			} else {
+				chronoTesting.stop();
+
+				currentTet->info().setKeptManifold(false); // TODO useful?
+
+				chronoInserting.start();
+				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetNotCarved.begin(), tetNotCarved.end(), currentTet, sortTetByIntersection());
+				tetNotCarved.insert(it, currentTet);
+				chronoInserting.stop();
+			}
+		}
+
+		tetsQueue.insert(tetsQueue.begin(), tetNotCarved.begin(), tetNotCarved.end());
+		tetNotCarved.clear();
+
+		countIterations++;
+	}
+
+	// TODO is only 1 iteration enough?
+//	if (tetsQueue.size()) cerr << "ManifoldManager::regionGrowingProcedure3: \t\t exiting while queue not empty" << endl;
+	tetsQueue.clear();
+
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t inserting:\t\t\t\t" << chronoInserting.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << " s\t / \t" << countTotal << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t grow:\t\t\t\t\t" << chronoGrowing.getSeconds() << " s\t / \t" << countGrowned << endl;
+	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
+	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t number_of_finite_cells:\t\t" << dt_.number_of_finite_cells() << endl;
+
+}
+
+void ManifoldManager::growSeveralAtOnce3(const std::set<PointD3>& points) {
+	functionProfileChronometer_isRegular_.reset();
+	functionProfileCounter_isRegular_ = 0;
+	Chronometer chronoQueueInit, chronoRemoveAndCheckManifoldness;
+	int countTotal = 0, countSuccess = 0;
+
+	std::vector<Delaunay3::Cell_handle> tetsQueue;
+	std::set<Delaunay3::Cell_handle> localBoundaryCellsUnion;
+
+	chronoQueueInit.start();
+
+	std::set<index3> mapIndices;
+	for (auto p : points) {
+		// The index of the grid's cube is the integer rounded down for each coordinate
+		int i = std::floor(p.x() / conf_.steinerGridStepLength);
+		int j = std::floor(p.y() / conf_.steinerGridStepLength);
+		int k = std::floor(p.z() / conf_.steinerGridStepLength);
+
+		for (int i_ : std::vector<int> { -2, -1, 0, 1, 2 })
+			for (int j_ : std::vector<int> { -2, -1, 0, 1, 2 })
+				for (int k_ : std::vector<int> { -2, -1, 0, 1, 2 })
+					mapIndices.insert(index3(i + i_, j + j_, k + k_));
+	}
+
+	for (index3 mapIndex : mapIndices) {
+		std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
+		localBoundaryCellsUnion.insert(localBoundaryCells.begin(), localBoundaryCells.end());
+	}
+
+	for (auto boundaryCell : localBoundaryCellsUnion) {
+
+		if (!dt_.is_cell(boundaryCell)) std::cerr << "ManifoldManager::growSeveralAtOnce3: dead cell in boundary" << std::endl;
+
+		for (int neighbourId = 0; neighbourId < 4; ++neighbourId) {
+			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(neighbourId);
+
+			if (!dt_.is_cell(neighbour)) std::cerr << "ManifoldManager::growSeveralAtOnce3: dead cell in boundary" << std::endl;
+
+			if (boundaryCell->info().iskeptManifold() && !neighbour->info().iskeptManifold() && !neighbour->info().isToBeTested() && isFreespace(neighbour)) {
+
+				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
+				tetsQueue.insert(it, neighbour);
+				neighbour->info().setToBeTested(true);
+			}
+		}
+	}
+
+	chronoQueueInit.stop();
+
+	chronoRemoveAndCheckManifoldness.start();
+
+	while (!tetsQueue.empty()) {
+		Delaunay3::Cell_handle currentTet = tetsQueue.back();
+		tetsQueue.pop_back();
+
+		countTotal++;
+
+		if (currentTet->info().isBoundary()) break;
+
+		// TODO before or after aborting the cycle?
+		currentTet->info().setToBeTested(false);
+
+		for (int curIdx = 0; curIdx < 4; ++curIdx) {
+			// TODO check on non boundary vertices first
+			// TODO stop when success?
+			bool success = addSeveralAndCheckManifoldness2(currentTet, curIdx);
+
+			if (success) countSuccess++;
+			if (success) break;
+		}
+	}
+
+	chronoRemoveAndCheckManifoldness.stop();
+
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t queue init:\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t remove and check manifoldness:\t\t" << chronoRemoveAndCheckManifoldness.getSeconds() << " s" << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << " s\t / \t" << functionProfileCounter_isRegular_ << endl;
+	cout << "ManifoldManager::growSeveralAtOnce3:\t\t\t successfully growned:\t\t\t\t\t" << countSuccess << "\t / \t" << countTotal << endl;
+
+}
+
+bool ManifoldManager::addSeveralAndCheckManifoldness2(Delaunay3::Cell_handle& currentTet, int curIdx) {
+	std::vector<Delaunay3::Cell_handle> incidentCells, cellsModified;
+	std::vector<Delaunay3::Vertex_handle> incidentV;
+	Delaunay3::Vertex_handle curV = currentTet->vertex(curIdx);
+	dt_.incident_cells(curV, std::back_inserter(incidentCells));
+	dt_.adjacent_vertices(curV, std::back_inserter(incidentV));
+
+	bool testFailed = false;
+
+	for (auto ic : incidentCells) {
+		if (isFreespace(ic)) {
+			if (!ic->info().iskeptManifold()) {
+				cellsModified.push_back(ic);
+				ic->info().setKeptManifold(true);
+			}
+		}
+	}
+
+	for (auto iv : incidentV) {
+		if (!isRegularProfiled(iv)) {
+			testFailed = true;
+			break;
+		}
+	}
+
+	if (!testFailed && !isRegularProfiled(curV)) {
+		testFailed = true;
+	}
+
+	if (testFailed) {
+
+		for (auto ic : cellsModified)
+			ic->info().setKeptManifold(false);
+
+		return false;
+
+	} else {
+
+		for (auto ic : cellsModified)
+			ic->info().setKeptManifold(false);
+
+		for (auto ic : cellsModified)
+			addTetAndUpdateBoundary2(ic);
+
+	}
+
+	return true;
+}
+
+bool ManifoldManager::subSeveralAndCheckManifoldness2(Delaunay3::Cell_handle& currentTet, int curIdx) {
+
+	std::vector<Delaunay3::Cell_handle> incidentCells, cellsModified;
+	std::vector<Delaunay3::Vertex_handle> incidentV;
+	Delaunay3::Vertex_handle curV = currentTet->vertex(curIdx);
+	dt_.incident_cells(curV, std::back_inserter(incidentCells));
+	dt_.adjacent_vertices(curV, std::back_inserter(incidentV));
+
+	for (auto ic : incidentCells) {
+		if (ic->info().iskeptManifold()) {
+			cellsModified.push_back(ic);
+		}
+		ic->info().setKeptManifold(false);
+	}
+
+	bool testFailed = false;
+
+	for (auto iv : incidentV) {
+//		if (!isRegular(iv)) {
+		if (!isRegularProfiled(iv)) {
+			testFailed = true;
+			break;
+		}
+	}
+
+//	if (!testFailed && !isRegular(curV)) {
+	if (!testFailed && !isRegularProfiled(curV)) {
+		testFailed = true;
+	}
+
+	if (testFailed) {
+
+		for (auto ic : cellsModified)
+			ic->info().setKeptManifold(true);
+
+		return false;
+
+	} else {
+
+		for (auto ic : cellsModified)
+			ic->info().setKeptManifold(true);
+
+		for (auto ic : cellsModified) {
+			std::vector<Delaunay3::Cell_handle> newBoundaryTets;
+			subTetAndUpdateBoundary2(ic, newBoundaryTets);
+		}
+
+	}
+
+	return true;
+}
+
+void ManifoldManager::addTetAndUpdateBoundary2(Delaunay3::Cell_handle& currentTet) {
+
+//add the current tetrahedron in the manifold set and add it to the boundary if needed
+	currentTet->info().setKeptManifold(true);
+	currentTet->info().setShrinked(false);
+
+	std::vector<int> notManifoldNeigh;
+	if (isInBoundary(currentTet, notManifoldNeigh)) {
+		insertInBoundary(currentTet);
+	} else {
+		if (currentTet->info().isBoundary()) {
+			removeFromBoundary(currentTet);
+		}
+		currentTet->info().setBoundary(false);
+	}
+
+	if (notManifoldNeigh.size() == 3) {
+		for (int curV = 0; curV < 4; ++curV) {
+			if (find(notManifoldNeigh.begin(), notManifoldNeigh.end(), curV) == notManifoldNeigh.end()) {
+				currentTet->vertex(curV)->info().setUsed(1);
+			}
+		}
+	} else if (notManifoldNeigh.size() == 4) {
+		for (int curV = 0; curV < 4; ++curV) {
+			currentTet->vertex(notManifoldNeigh[curV])->info().setUsed(1);
+		}
+	}
+
+	if (notManifoldNeigh.size() == 1) {  //when you fill a "hole"
+		currentTet->vertex(notManifoldNeigh[0])->info().setNotUsed(false);
+	} else if (notManifoldNeigh.size() == 0) {
+		for (int curV = 0; curV < 4; ++curV) {
+			currentTet->vertex(curV)->info().setNotUsed(false);
+		}
+	}
+
+//Check if the neigh of the added tetrahedron still belongs to the boundary
+	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
+		Delaunay3::Cell_handle currNeigh = currentTet->neighbor(curNeighId);
+//if needed, remove the neighbor of currentTet from the boundary if no facet belongs  to the manifold
+//note that isBoundary function returns the state flag of the tetrahedron, while
+//isInBoundary() check for the current real state of the tetrahedron inside the triangulation after
+// the new tetrahedron has been added
+		if (currNeigh->info().isBoundary()) {
+			//We nested this if since it is more efficient to test firstly
+			// if the boundary state flag of the tetrahedron is set true
+			if (!isInBoundary(currNeigh)) {
+				removeFromBoundary(currNeigh);
+			}
+		} else {
+			if (isInBoundary(currNeigh)) {
+				insertInBoundary(currNeigh);
+			}
+		}
+	}
+}
+
+/*
+ * 	Remove the current tetrahedron from the manifold set and from the boundary set,
+ * 	and add or remove its neighbours from the boundary set accordingly.
+ */
+void ManifoldManager::subTetAndUpdateBoundary2(Delaunay3::Cell_handle& currentTet, std::vector<Delaunay3::Cell_handle>& newBoundaryTets) {
+	std::vector<int> notManifoldNeigh;
+	isInBoundary(currentTet, notManifoldNeigh);
+
+	removeFromBoundary(currentTet);
+
+	currentTet->info().setKeptManifold(false);
+
+	currentTet->info().setShrinked(true);
+
+	// Check for each neighbour whether it should belong to the boundary set
+	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
+		Delaunay3::Cell_handle currNeigh = currentTet->neighbor(curNeighId);
+
+		// If the neighbour wasn't in the boundary set before, it is now on the only condition of being in the manifold set,
+		// in fact the remaining condition is satisfied. (Namely, it has at least a neighbour outside the manifold set, that is currentTet).
+		if (!currNeigh->info().isBoundary()) {
+
+			if (currNeigh->info().iskeptManifold()) {
+				insertInBoundary(currNeigh);
+				newBoundaryTets.push_back(currNeigh);
+			}
+		} else {
+			if (!currNeigh->info().iskeptManifold()) {
+				cerr << "cell such that iskeptManifold() == false && isBoundary() == true" << endl;
+				removeFromBoundary(currNeigh);
+			}
+		}
+	}
+}
+
+bool ManifoldManager::isInBoundary(Delaunay3::Cell_handle& cellToTest) {
+	std::vector<int> toThrowAway;
+
+	return isInBoundary(cellToTest, toThrowAway);
+}
+
+/*
+ *	Returns true if cellToTest is kept manifold (?) and some neighbour of cellToTest isn't.
+ *	If cellToTest is kept manifold, then neighNotManifold contains the indeces of the neighbours that aren't kept manifold.
+ */
+bool ManifoldManager::isInBoundary(Delaunay3::Cell_handle& cellToTest, std::vector<int>& neighNotManifold) {
+
+	if (!cellToTest->info().iskeptManifold()) {
+		return false;
+	} else {
+		bool neighNotManifoldFound = false;
+
+		for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
+			if (!cellToTest->neighbor(curNeighId)->info().iskeptManifold()) {
+				neighNotManifold.push_back(curNeighId);
+
+				neighNotManifoldFound = true;
+			}
+		}
+		return neighNotManifoldFound;
+	}
+}
+
+/*
+ *	If cellToBeAdded->info().isBoundary() is false, then insert cellToBeAdded in boundaryCells_ (maintaining the order) and set cellToBeAdded->info().isBoundary() to true.
+ */
+bool ManifoldManager::insertInBoundary(Delaunay3::Cell_handle& cellToBeAdded) {
+	// TODO rewrite in a cleaner way
+	if (!cellToBeAdded->info().isBoundary()) {
+		cellToBeAdded->info().setBoundary(true);
+		std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(boundaryCells_.begin(), boundaryCells_.end(), cellToBeAdded, sortTetByIntersection());
+		if (it != boundaryCells_.end()) {
+			if (*it != cellToBeAdded) {
+				boundaryCells_.insert(it, cellToBeAdded);
+			}
+		} else {
+			boundaryCells_.push_back(cellToBeAdded);
+		}
+
+		std::set<index3> mapIndices;
+		// TODO is it possible that a tetrahedron intersects a grid cube but doesn't have any vertex within it? (shouldn't be a problem, since the adjacent cubes will be selected too)
+		for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
+			auto v = cellToBeAdded->vertex(vertexIndex);
+
+			// The index of the grid's cube is the integer rounded down for each coordinate
+			int i = std::floor(v->point().x() / conf_.steinerGridStepLength);
+			int j = std::floor(v->point().y() / conf_.steinerGridStepLength);
+			int k = std::floor(v->point().z() / conf_.steinerGridStepLength);
+			mapIndices.insert(index3(i, j, k));
+		}
+
+		for (index3 mapIndex : mapIndices) {
+			std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
+
+			// TODO is keeping the vector ordered still useful?
+			std::vector<Delaunay3::Cell_handle>::iterator itL = std::lower_bound(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeAdded, sortTetByIntersection());
+			if (itL != localBoundaryCells.end()) {
+				if (*itL != cellToBeAdded) {
+					localBoundaryCells.insert(itL, cellToBeAdded);
+				}
+			} else {
+				localBoundaryCells.push_back(cellToBeAdded);
+			}
+		}
+
+		return true;
+	} else {
+		return false;
+	}
+
+}
+
+/*
+ *	If cellToBeRemoved->info().isBoundary() is set to true, removes cellToBeRemoved from boundaryCells_ and set cellToBeRemoved->info().isBoundary() to false,
+ *	otherwise does nothing.
+ */
+bool ManifoldManager::removeFromBoundary(Delaunay3::Cell_handle& cellToBeRemoved) {
+	if (!cellToBeRemoved->info().isBoundary()) {
+		return false;
+	} else {
+
+		std::vector<Delaunay3::Cell_handle>::iterator it2;
+
+		int num = 0;
+
+		std::vector<Delaunay3::Cell_handle>::iterator itmin = std::lower_bound(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved, sortTetByIntersection());
+		std::vector<Delaunay3::Cell_handle>::iterator itmax = std::upper_bound(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved, sortTetByIntersection());
+		it2 = std::find(itmin, itmax, cellToBeRemoved);
+		if ((*it2) == cellToBeRemoved) {
+			cellToBeRemoved->info().setBoundary(false);
+			boundaryCells_.erase(it2);
+			++num;
+		} else {
+			it2 = std::find(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved);
+			//while (it2 != boundaryCells_.end()) {
+			cellToBeRemoved->info().setBoundary(false);
+			boundaryCells_.erase(it2);
+			++num;
+			//it2 = std::find(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved);
+			// }
+		}
+
+		if (num == 0) {
+			std::cerr << "ManifoldManager::removeFromBoundary::notFound" << std::endl;
+		} else if (num > 1) {
+			std::cout << "ManifoldManager::removeFromBoundary::morethan1" << std::endl;
+		}
+
+		std::set<index3> mapIndices;
+		for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
+			auto v = cellToBeRemoved->vertex(vertexIndex);
+
+			// The index of the grid's cube is the integer rounded down for each coordinate
+			int i = std::floor(v->point().x() / conf_.steinerGridStepLength);
+			int j = std::floor(v->point().y() / conf_.steinerGridStepLength);
+			int k = std::floor(v->point().z() / conf_.steinerGridStepLength);
+			mapIndices.insert(index3(i, j, k));
+		}
+
+		for (index3 mapIndex : mapIndices) {
+			std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
+
+			std::vector<Delaunay3::Cell_handle>::iterator itmin = std::lower_bound(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeRemoved, sortTetByIntersection());
+			std::vector<Delaunay3::Cell_handle>::iterator itmax = std::upper_bound(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeRemoved, sortTetByIntersection());
+			it2 = std::find(itmin, itmax, cellToBeRemoved);
+			if ((*it2) == cellToBeRemoved) {
+				cellToBeRemoved->info().setBoundary(false);
+				localBoundaryCells.erase(it2);
+				++num;
+			} else {
+				it2 = std::find(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeRemoved);
+				//while (it2 != boundaryCells_.end()) {
+				cellToBeRemoved->info().setBoundary(false);
+				localBoundaryCells.erase(it2);
+				++num;
+				//it2 = std::find(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved);
+				// }
+			}
+
+		}
+
+		return true;
+	}
+}
+
+/***
+ *  OLD
+ */
 
 void ManifoldManager::shrinkManifold2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion) {
 	bool fixedPoint = false;
@@ -431,6 +997,63 @@ void ManifoldManager::shrinkManifold2(std::set<PointD3> points, const float &max
 
 }
 
+void ManifoldManager::growSeveralAtOnce2() {
+	functionProfileChronometer_isRegular_.reset();
+	functionProfileCounter_isRegular_ = 0;
+	Chronometer chronoQueueSelection, chronoRemoveAndCheckManifoldness;
+
+	std::vector<Delaunay3::Cell_handle> tetsQueue;
+
+	chronoQueueSelection.start();
+
+	for (auto boundaryCell : boundaryCells_) {
+
+		if (!dt_.is_cell(boundaryCell)) std::cerr << "ManifoldManager::growSeveralAtOnce2: dead cell in boundary" << std::endl;
+
+		for (int neighbourId = 0; neighbourId < 4; ++neighbourId) {
+			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(neighbourId);
+
+			if (!dt_.is_cell(neighbour)) std::cerr << "ManifoldManager::growSeveralAtOnce2: dead cell in boundary" << std::endl;
+
+			if (boundaryCell->info().iskeptManifold() && !neighbour->info().iskeptManifold() && !neighbour->info().isToBeTested() && isFreespace(neighbour)) {
+
+				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
+				tetsQueue.insert(it, neighbour);
+				neighbour->info().setToBeTested(true);
+			}
+		}
+	}
+
+	chronoQueueSelection.stop();
+
+	chronoRemoveAndCheckManifoldness.start();
+
+	while (!tetsQueue.empty()) {
+		Delaunay3::Cell_handle currentTet = tetsQueue.back();
+		tetsQueue.pop_back();
+
+		if (currentTet->info().isBoundary()) break;
+
+		// TODO before or after aborting the cycle?
+		currentTet->info().setToBeTested(false);
+
+		for (int curIdx = 0; curIdx < 4; ++curIdx) {
+			// TODO check on non boundary vertices first
+			// TODO stop when success?
+			bool success = removeAndCheckManifoldness(currentTet, curIdx);
+
+			if (success) break;
+		}
+	}
+
+	chronoRemoveAndCheckManifoldness.stop();
+
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce2:\t\t\t\t queue selection:\t\t\t" << chronoQueueSelection.getSeconds() << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce2:\t\t\t\t remove and check manifoldness:\t\t" << chronoRemoveAndCheckManifoldness.getSeconds() << endl;
+	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce2:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << "s\t / \t" << functionProfileCounter_isRegular_ << endl;
+
+}
+
 void ManifoldManager::shrinkSeveralAtOnce2(std::set<PointD3> points, const float &maxPointToPointDistance, long currentEnclosingVersion) {
 
 	functionProfileChronometer_isRegular_.reset();
@@ -511,283 +1134,6 @@ void ManifoldManager::shrinkSeveralAtOnce2(std::set<PointD3> points, const float
 	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce2:\t\t\t\t addAndCheckManifoldness:\t\t" << chronoAddAndCheckManifoldness.getSeconds() << endl;
 	cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce2:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << "s\t / \t" << functionProfileCounter_isRegular_ << endl;
 	cout << "ManifoldManager::shrinkSeveralAtOnce2:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << boundaryCells_.size() << endl;
-
-}
-
-void ManifoldManager::regionGrowingBatch3(Delaunay3::Cell_handle& startingCell, std::set<PointD3> points) {
-	addTetAndUpdateBoundary(startingCell);
-	regionGrowingProcedure3(points);
-}
-
-void ManifoldManager::regionGrowing3(std::set<PointD3> points) {
-	regionGrowingProcedure3(points);
-}
-
-void ManifoldManager::regionGrowingProcedure3(std::set<PointD3> points) {
-	// Stats
-	int countQueueInitCells, countBoundaryInitCells, countGrowned = 0, countTotal = 0, countIterations = 1;
-	Chronometer chronoQueueInit, chronoQueueInserting, chronoQueuePopping, chronoInserting, chronoTesting, chronoGrowing;
-
-	bool fixedPoint = false;
-
-	std::vector<Delaunay3::Cell_handle> tetsQueue;
-	std::vector<Delaunay3::Cell_handle> tetNotCarved;
-	std::set<Delaunay3::Cell_handle> localBoundaryCellsUnion;
-
-	chronoQueueInit.start();
-
-	std::set<index3> mapIndices;
-	for (auto p : points) {
-		// The index of the grid's cube is the integer rounded down for each coordinate
-		int i = std::floor(p.x() / conf_.steinerGridStepLength);
-		int j = std::floor(p.y() / conf_.steinerGridStepLength);
-		int k = std::floor(p.z() / conf_.steinerGridStepLength);
-
-		for (int i_ : std::vector<int> { -2, -1, 0, 1, 2 })
-			for (int j_ : std::vector<int> { -2, -1, 0, 1, 2 })
-				for (int k_ : std::vector<int> { -2, -1, 0, 1, 2 })
-					mapIndices.insert(index3(i + i_, j + j_, k + k_));
-	}
-
-	for (index3 mapIndex : mapIndices) {
-		std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
-		localBoundaryCellsUnion.insert(localBoundaryCells.begin(), localBoundaryCells.end());
-	}
-
-	for (auto boundaryCell : localBoundaryCellsUnion) {
-		for (int neighbourIndex = 0; neighbourIndex < 4; neighbourIndex++) {
-			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(neighbourIndex);
-
-			if (!dt_.is_cell(boundaryCell) || !dt_.is_cell(neighbour)) {
-				std::cerr << "ManifoldManager::regionGrowingProcedure3: \t\t dead cells found in boundary" << std::endl;
-				continue;
-			}
-
-			if (!neighbour->info().iskeptManifold() && !neighbour->info().isToBeTested() && isFreespace(neighbour)) {
-				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
-				tetsQueue.insert(it, neighbour);
-				neighbour->info().setToBeTested(true);
-			}
-		}
-	}
-	chronoQueueInit.stop();
-
-	countBoundaryInitCells = boundaryCells_.size();
-	countQueueInitCells = tetsQueue.size();
-
-	if (tetsQueue.size() == 0) {
-		std::cerr << "ManifoldManager::regionGrowingProcedure3: \t\t tetsQueue is empty" << std::endl;
-	}
-
-	while (!fixedPoint) {
-		fixedPoint = true;
-
-		while (!tetsQueue.empty()) {
-			countTotal++;
-
-			//Single-tet-at-once
-			chronoQueuePopping.start();
-			Delaunay3::Cell_handle currentTet = tetsQueue.back();
-			tetsQueue.pop_back();
-			chronoQueuePopping.stop();
-
-			currentTet->info().setToBeTested(false);
-
-			chronoTesting.start();
-			if (singleTetTest2(currentTet)) {
-				chronoTesting.stop();
-
-				countGrowned++;
-
-				chronoGrowing.start();
-				addTetAndUpdateBoundary(currentTet);
-				chronoGrowing.stop();
-
-				//add the adjacent tets to the queue
-				for (int neighbourIndex = 0; neighbourIndex < 4; neighbourIndex++) {
-					Delaunay3::Cell_handle neighbour = currentTet->neighbor(neighbourIndex);
-
-					if (!neighbour->info().iskeptManifold() && isFreespace(neighbour)) {
-						// TODO use toBeTested instead of search
-						chronoQueueInserting.start();
-						if (find(tetsQueue.begin(), tetsQueue.end(), neighbour) == tetsQueue.end()) {
-							std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
-							tetsQueue.insert(it, neighbour);
-						}
-						chronoQueueInserting.stop();
-
-					}
-				}
-
-			} else {
-				chronoTesting.stop();
-
-				currentTet->info().setKeptManifold(false); // TODO useful?
-
-				chronoInserting.start();
-				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetNotCarved.begin(), tetNotCarved.end(), currentTet, sortTetByIntersection());
-				tetNotCarved.insert(it, currentTet);
-				chronoInserting.stop();
-			}
-		}
-
-		tetsQueue.insert(tetsQueue.begin(), tetNotCarved.begin(), tetNotCarved.end());
-		tetNotCarved.clear();
-
-		countIterations++;
-	}
-
-	// TODO is only 1 iteration enough?
-//	if (tetsQueue.size()) cerr << "ManifoldManager::regionGrowingProcedure3: \t\t exiting while queue not empty" << endl;
-	tetsQueue.clear();
-
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t inserting:\t\t\t\t" << chronoInserting.getSeconds() << " s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << " s\t / \t" << countTotal << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t grow:\t\t\t\t\t" << chronoGrowing.getSeconds() << " s\t / \t" << countGrowned << endl;
-	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
-	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t number_of_finite_cells:\t\t" << dt_.number_of_finite_cells() << endl;
-
-}
-
-// TODO version 3 is slower, find a way to use 2 when growSev isn't useful (boundary size?)
-void ManifoldManager::growSeveralAtOnce3(std::set<PointD3> points) {
-	functionProfileChronometer_isRegular_.reset();
-	functionProfileCounter_isRegular_ = 0;
-	Chronometer chronoQueueInit, chronoRemoveAndCheckManifoldness;
-	int countTotal = 0, countSuccess = 0;
-
-	std::vector<Delaunay3::Cell_handle> tetsQueue;
-	std::set<Delaunay3::Cell_handle> localBoundaryCellsUnion;
-
-	chronoQueueInit.start();
-
-	std::set<index3> mapIndices;
-	for (auto p : points) {
-		// The index of the grid's cube is the integer rounded down for each coordinate
-		int i = std::floor(p.x() / conf_.steinerGridStepLength);
-		int j = std::floor(p.y() / conf_.steinerGridStepLength);
-		int k = std::floor(p.z() / conf_.steinerGridStepLength);
-
-		for (int i_ : std::vector<int> { -2, -1, 0, 1, 2 })
-			for (int j_ : std::vector<int> { -2, -1, 0, 1, 2 })
-				for (int k_ : std::vector<int> { -2, -1, 0, 1, 2 })
-					mapIndices.insert(index3(i + i_, j + j_, k + k_));
-	}
-
-	for (index3 mapIndex : mapIndices) {
-		std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
-		localBoundaryCellsUnion.insert(localBoundaryCells.begin(), localBoundaryCells.end());
-	}
-
-	for (auto boundaryCell : localBoundaryCellsUnion) {
-
-		if (!dt_.is_cell(boundaryCell)) std::cerr << "ManifoldManager::growSeveralAtOnce3: dead cell in boundary" << std::endl;
-
-		for (int neighbourId = 0; neighbourId < 4; ++neighbourId) {
-			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(neighbourId);
-
-			if (!dt_.is_cell(neighbour)) std::cerr << "ManifoldManager::growSeveralAtOnce3: dead cell in boundary" << std::endl;
-
-			if (boundaryCell->info().iskeptManifold() && !neighbour->info().iskeptManifold() && !neighbour->info().isToBeTested() && isFreespace(neighbour)) {
-
-				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
-				tetsQueue.insert(it, neighbour);
-				neighbour->info().setToBeTested(true);
-			}
-		}
-	}
-
-	chronoQueueInit.stop();
-
-	chronoRemoveAndCheckManifoldness.start();
-
-	while (!tetsQueue.empty()) {
-		Delaunay3::Cell_handle currentTet = tetsQueue.back();
-		tetsQueue.pop_back();
-
-		countTotal++;
-
-		if (currentTet->info().isBoundary()) break;
-
-		// TODO before or after aborting the cycle?
-		currentTet->info().setToBeTested(false);
-
-		for (int curIdx = 0; curIdx < 4; ++curIdx) {
-			// TODO check on non boundary vertices first
-			// TODO stop when success?
-			bool success = removeAndCheckManifoldness(currentTet, curIdx);
-
-			if (success) countSuccess++;
-			if (success) break;
-		}
-	}
-
-	chronoRemoveAndCheckManifoldness.stop();
-
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t queue init:\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t remove and check manifoldness:\t\t" << chronoRemoveAndCheckManifoldness.getSeconds() << " s" << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << " s\t / \t" << functionProfileCounter_isRegular_ << endl;
-	cout << "ManifoldManager::growSeveralAtOnce3:\t\t\t successfully growned:\t\t\t\t\t" << countSuccess << "\t / \t" << countTotal << endl;
-
-}
-
-void ManifoldManager::growSeveralAtOnce2() {
-	functionProfileChronometer_isRegular_.reset();
-	functionProfileCounter_isRegular_ = 0;
-	Chronometer chronoQueueSelection, chronoRemoveAndCheckManifoldness;
-
-	std::vector<Delaunay3::Cell_handle> tetsQueue;
-
-	chronoQueueSelection.start();
-
-	for (auto boundaryCell : boundaryCells_) {
-
-		if (!dt_.is_cell(boundaryCell)) std::cerr << "ManifoldManager::growSeveralAtOnce2: dead cell in boundary" << std::endl;
-
-		for (int neighbourId = 0; neighbourId < 4; ++neighbourId) {
-			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(neighbourId);
-
-			if (!dt_.is_cell(neighbour)) std::cerr << "ManifoldManager::growSeveralAtOnce2: dead cell in boundary" << std::endl;
-
-			if (boundaryCell->info().iskeptManifold() && !neighbour->info().iskeptManifold() && !neighbour->info().isToBeTested() && isFreespace(neighbour)) {
-
-				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
-				tetsQueue.insert(it, neighbour);
-				neighbour->info().setToBeTested(true);
-			}
-		}
-	}
-
-	chronoQueueSelection.stop();
-
-	chronoRemoveAndCheckManifoldness.start();
-
-	while (!tetsQueue.empty()) {
-		Delaunay3::Cell_handle currentTet = tetsQueue.back();
-		tetsQueue.pop_back();
-
-		if (currentTet->info().isBoundary()) break;
-
-		// TODO before or after aborting the cycle?
-		currentTet->info().setToBeTested(false);
-
-		for (int curIdx = 0; curIdx < 4; ++curIdx) {
-			// TODO check on non boundary vertices first
-			// TODO stop when success?
-			bool success = removeAndCheckManifoldness(currentTet, curIdx);
-
-			if (success) break;
-		}
-	}
-
-	chronoRemoveAndCheckManifoldness.stop();
-
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce2:\t\t\t\t queue selection:\t\t\t" << chronoQueueSelection.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce2:\t\t\t\t remove and check manifoldness:\t\t" << chronoRemoveAndCheckManifoldness.getSeconds() << endl;
-	cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce2:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << "s\t / \t" << functionProfileCounter_isRegular_ << endl;
 
 }
 
@@ -903,156 +1249,6 @@ void ManifoldManager::regionGrowingBatch(Delaunay3::Cell_handle &startingCell) {
 
 void ManifoldManager::regionGrowing() {
 	regionGrowingProcedure();
-}
-
-bool ManifoldManager::isInBoundary(Delaunay3::Cell_handle &cellToTest) {
-	std::vector<int> toThrowAway;
-
-	return isInBoundary(cellToTest, toThrowAway);
-}
-
-/*
- *	Returns true if cellToTest is kept manifold (?) and some neighbour of cellToTest isn't.
- *	If cellToTest is kept manifold, then neighNotManifold contains the indeces of the neighbours that aren't kept manifold.
- */
-bool ManifoldManager::isInBoundary(Delaunay3::Cell_handle &cellToTest, std::vector<int> &neighNotManifold) {
-
-	if (!cellToTest->info().iskeptManifold()) {
-		return false;
-	} else {
-		bool neighNotManifoldFound = false;
-
-		for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
-			if (!cellToTest->neighbor(curNeighId)->info().iskeptManifold()) {
-				neighNotManifold.push_back(curNeighId);
-
-				neighNotManifoldFound = true;
-			}
-		}
-		return neighNotManifoldFound;
-	}
-}
-
-/*
- *	If cellToBeAdded->info().isBoundary() is false, then insert cellToBeAdded in boundaryCells_ (maintaining the order) and set cellToBeAdded->info().isBoundary() to true.
- */
-bool ManifoldManager::insertInBoundary(Delaunay3::Cell_handle& cellToBeAdded) {
-	// TODO rewrite in a cleaner way
-	if (!cellToBeAdded->info().isBoundary()) {
-		cellToBeAdded->info().setBoundary(true);
-		std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(boundaryCells_.begin(), boundaryCells_.end(), cellToBeAdded, sortTetByIntersection());
-		if (it != boundaryCells_.end()) {
-			if (*it != cellToBeAdded) {
-				boundaryCells_.insert(it, cellToBeAdded);
-			}
-		} else {
-			boundaryCells_.push_back(cellToBeAdded);
-		}
-
-		std::set<index3> mapIndices;
-		// TODO is it possible that a tetrahedron intersects a grid cube but doesn't have any vertex within it? (shouldn't be a problem, since the adjacent cubes will be selected too)
-		for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
-			auto v = cellToBeAdded->vertex(vertexIndex);
-
-			// The index of the grid's cube is the integer rounded down for each coordinate
-			int i = std::floor(v->point().x() / conf_.steinerGridStepLength);
-			int j = std::floor(v->point().y() / conf_.steinerGridStepLength);
-			int k = std::floor(v->point().z() / conf_.steinerGridStepLength);
-			mapIndices.insert(index3(i, j, k));
-		}
-
-		for (index3 mapIndex : mapIndices) {
-			std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
-
-			// TODO is keeping the vector ordered still useful?
-			std::vector<Delaunay3::Cell_handle>::iterator itL = std::lower_bound(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeAdded, sortTetByIntersection());
-			if (itL != localBoundaryCells.end()) {
-				if (*itL != cellToBeAdded) {
-					localBoundaryCells.insert(itL, cellToBeAdded);
-				}
-			} else {
-				localBoundaryCells.push_back(cellToBeAdded);
-			}
-		}
-
-		return true;
-	} else {
-		return false;
-	}
-
-}
-
-/*
- *	If cellToBeRemoved->info().isBoundary() is set to true, removes cellToBeRemoved from boundaryCells_ and set cellToBeRemoved->info().isBoundary() to false,
- *	otherwise does nothing.
- */
-bool ManifoldManager::removeFromBoundary(Delaunay3::Cell_handle& cellToBeRemoved) {
-	if (!cellToBeRemoved->info().isBoundary()) {
-		return false;
-	} else {
-
-		std::vector<Delaunay3::Cell_handle>::iterator it2;
-
-		int num = 0;
-
-		std::vector<Delaunay3::Cell_handle>::iterator itmin = std::lower_bound(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved, sortTetByIntersection());
-		std::vector<Delaunay3::Cell_handle>::iterator itmax = std::upper_bound(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved, sortTetByIntersection());
-		it2 = std::find(itmin, itmax, cellToBeRemoved);
-		if ((*it2) == cellToBeRemoved) {
-			cellToBeRemoved->info().setBoundary(false);
-			boundaryCells_.erase(it2);
-			++num;
-		} else {
-			it2 = std::find(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved);
-			//while (it2 != boundaryCells_.end()) {
-			cellToBeRemoved->info().setBoundary(false);
-			boundaryCells_.erase(it2);
-			++num;
-			//it2 = std::find(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved);
-			// }
-		}
-
-		if (num == 0) {
-			std::cerr << "ManifoldManager::removeFromBoundary::notFound" << std::endl;
-		} else if (num > 1) {
-			std::cout << "ManifoldManager::removeFromBoundary::morethan1" << std::endl;
-		}
-
-		std::set<index3> mapIndices;
-		for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
-			auto v = cellToBeRemoved->vertex(vertexIndex);
-
-			// The index of the grid's cube is the integer rounded down for each coordinate
-			int i = std::floor(v->point().x() / conf_.steinerGridStepLength);
-			int j = std::floor(v->point().y() / conf_.steinerGridStepLength);
-			int k = std::floor(v->point().z() / conf_.steinerGridStepLength);
-			mapIndices.insert(index3(i, j, k));
-		}
-
-		for (index3 mapIndex : mapIndices) {
-			std::vector<Delaunay3::Cell_handle>& localBoundaryCells = boundaryCellsSpatialMap_[mapIndex];
-
-			std::vector<Delaunay3::Cell_handle>::iterator itmin = std::lower_bound(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeRemoved, sortTetByIntersection());
-			std::vector<Delaunay3::Cell_handle>::iterator itmax = std::upper_bound(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeRemoved, sortTetByIntersection());
-			it2 = std::find(itmin, itmax, cellToBeRemoved);
-			if ((*it2) == cellToBeRemoved) {
-				cellToBeRemoved->info().setBoundary(false);
-				localBoundaryCells.erase(it2);
-				++num;
-			} else {
-				it2 = std::find(localBoundaryCells.begin(), localBoundaryCells.end(), cellToBeRemoved);
-				//while (it2 != boundaryCells_.end()) {
-				cellToBeRemoved->info().setBoundary(false);
-				localBoundaryCells.erase(it2);
-				++num;
-				//it2 = std::find(boundaryCells_.begin(), boundaryCells_.end(), cellToBeRemoved);
-				// }
-			}
-
-		}
-
-		return true;
-	}
 }
 
 void ManifoldManager::addTetAndUpdateBoundary(Delaunay3::Cell_handle &currentTet) {
@@ -1793,7 +1989,6 @@ bool ManifoldManager::singleTetTest2(Delaunay3::Cell_handle& cell) {
 
 		return true;
 
-
 	} else if (numF == 2) {
 
 		// If two of the faces are adjacent the cells that make the condition true, then the condition is implied for all vertices and for all but one edge.
@@ -1813,7 +2008,7 @@ bool ManifoldManager::singleTetTest2(Delaunay3::Cell_handle& cell) {
 
 		return true;
 
-	} else if (numF >= 3){
+	} else if (numF >= 3) {
 
 		// If all or even just three faces satisfy the condition, then it is implied for all vertices and all edges to satisfy the condition.
 

@@ -24,7 +24,7 @@ void Chronometer::stop(){
 	ticking_ = false;
 
 	auto lastDelta = std::chrono::high_resolution_clock::now() - startTime_;
-	elapsed_ += std::chrono::duration_cast<std::chrono::microseconds>(lastDelta).count();
+	elapsed_ += std::chrono::duration_cast<std::chrono::nanoseconds>(lastDelta).count();
 }
 
 void Chronometer::reset(){
@@ -33,7 +33,7 @@ void Chronometer::reset(){
 	elapsed_ = 0;
 }
 
-long long Chronometer::getMicroseconds(){
+long long Chronometer::getNanoseconds(){
 	if(ticking_){
 		stop();
 		start();
@@ -41,7 +41,11 @@ long long Chronometer::getMicroseconds(){
 	return elapsed_;
 }
 
+long long Chronometer::getMicroseconds(){
+	return getNanoseconds() / 1000000;
+}
+
 float Chronometer::getSeconds(){
-	return getMicroseconds() / 1000000.0;
+	return getNanoseconds() / 1000000000.0;
 }
 

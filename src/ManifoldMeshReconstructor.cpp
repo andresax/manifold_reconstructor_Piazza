@@ -226,6 +226,12 @@ void ManifoldMeshReconstructor::getDegree1And2Neighbours(
 	for (int ip = 0; ip < l; ip++) {
 		Delaunay3::Cell_handle p = path[ip];
 
+		// TODO remove
+//		if (!dt_.is_cell(p)) {
+//			cerr << "ManifoldMeshReconstructor::getDegree1And2Neighbours: \t\t dead cell found in ray path" << endl;
+//			continue;
+//		}
+
 		for (int in1 = 0, n1Count = 0; in1 < 4 && n1Count <= 2; in1++) {
 			Delaunay3::Cell_handle n1 = p->neighbor(in1);
 			if (/*(ip - 2 < 0 || path[ip - 2] != n1) && */(ip - 1 < 0 || path[ip - 1] != n1) && (ip + 1 >= l || path[ip + 1] != n1)/* && (ip + 2 >= l || path[ip + 2] != n1)*/) {
@@ -235,7 +241,8 @@ void ManifoldMeshReconstructor::getDegree1And2Neighbours(
 				for (int in2 = 0; in2 < 4; in2++) {
 					Delaunay3::Cell_handle n2 = n1->neighbor(in2);
 
-					if(p != n2 && /*(ip - 2 < 0 || path[ip - 2] != n2) && */(ip - 1 < 0 || path[ip - 1] != n2) && (ip + 1 >= l || path[ip + 1] != n2)/* && (ip + 2 >= l || path[ip + 2] != n2)*/) d2Neighbours.push_back(n2);
+					if (p != n2 && /*(ip - 2 < 0 || path[ip - 2] != n2) && */(ip - 1 < 0 || path[ip - 1] != n2) && (ip + 1 >= l || path[ip + 1] != n2)/* && (ip + 2 >= l || path[ip + 2] != n2)*/)
+						d2Neighbours.push_back(n2);
 				}
 
 			}
@@ -868,17 +875,20 @@ void ManifoldMeshReconstructor::rayUntracing(RayPath* rayPath) {
 	int idxPoint = rayPath->pointId;
 
 	RayReconstruction* ray = NULL;
-//	RayReconstruction* ray = getRay(idxCam, idxPoint);
-//	ray->valid = false;
+
+	// Remove all the dead cells from the path
+	rayPath->path.erase(std::remove_if(rayPath->path.begin(), rayPath->path.end(), [&](Delaunay3::Cell_handle cell) {
+		return !dt_.is_cell(cell);
+	}), rayPath->path.end());
 
 	// for all the cells in the ray's path, do the opposite of rayTracing
 	for (auto cell : rayPath->path) {
 
 		// The path is littered with dead cells, just skip them (the path is going to be cleared anyway)
-		if (!dt_.is_cell(cell)) {
-			cerr << "dead cell found on ray path " << idxCam << ", " << idxPoint << endl;
-			continue;
-		}
+//		if (!dt_.is_cell(cell)) {
+//			cerr << "dead cell found on ray path " << idxCam << ", " << idxPoint << endl;
+//			continue;
+//		}
 
 		cell->info().decrementVoteCount(1);
 		cell->info().decrementVoteCountProb(conf_.w_1);
@@ -894,7 +904,6 @@ void ManifoldMeshReconstructor::rayUntracing(RayPath* rayPath) {
 		std::vector<Delaunay3::Cell_handle> d2Neighbours;
 //		getDegree1Neighbours(rayPath->path, d1Neighbours);
 //		getDegree2Neighbours(rayPath->path, d1Neighbours, d2Neighbours);
-
 
 		rt2_ChronoNeighboursD2Selection_.start();
 		getDegree1And2Neighbours(rayPath->path, d1Neighbours, d2Neighbours);
@@ -1019,17 +1028,16 @@ void ManifoldMeshReconstructor::growManifold3(std::set<PointD3> points) {
 
 		// If the boundary is still empty, initialise all the cells' informations and start growing from the cell with highest vote
 		for (Delaunay3::Finite_cells_iterator itCell = dt_.finite_cells_begin(); itCell != dt_.finite_cells_end(); itCell++) {
-			itCell->info().setKeptManifold(false);
-			for (int curV = 0; curV < 4; ++curV) {
-				itCell->vertex(curV)->info().setUsed(0);
-				itCell->vertex(curV)->info().setNotUsed(true);
-			}
+//			itCell->info().setKeptManifold(false);
+//			for (int curV = 0; curV < 4; ++curV) {
+//				itCell->vertex(curV)->info().setUsed(0);
+//				itCell->vertex(curV)->info().setNotUsed(true);
+//			}
 
 			if (itCell->info().getVoteCountProb() > max) {
 				max = itCell->info().getVoteCountProb();
 				startingCell = itCell;
 			}
-
 		}
 
 		manifoldManager_->regionGrowingBatch3(startingCell, points);
@@ -1469,17 +1477,9 @@ bool ManifoldMeshReconstructor::insertVertex(PointReconstruction& point) {
 //			}), path.end());
 //		}
 	}
-//
-//	//TODO remove
-//	cout << "(pre ) " << endl;
-//	printWhatever();
 
 	// Creates a new vertex by starring a hole. Delete all the cells describing the hole vecConflictCells, creates a new vertex hndlQ, and for each facet on the boundary of the hole f, creates a new cell with hndlQ as vertex.
 	Vertex3D_handle hndlQ = dt_.insert_in_hole(point.position, removedCells.begin(), removedCells.end(), f.first, f.second);
-//
-//	//TODO remove
-//	cout << "(post) " << endl;
-//	printWhatever();
 
 	// Set of the cells that were created to fill the hole, used by rayRetracing to restore the rays
 	std::vector<Delaunay3::Cell_handle> newCellsFromHole;
@@ -1681,8 +1681,6 @@ int ManifoldMeshReconstructor::moveVertex(int idxPoint) {
 			// rayTracing will be computed again when possible
 			raysToBeTraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
 
-//			// Remove all cells from the path (rayTracing will add them back)
-//			rayPath->path.clear();
 		}
 
 		std::set<Delaunay3::Cell_handle> deadCells;

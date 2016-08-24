@@ -21,6 +21,7 @@ public:
 	void stop();
 	void reset();
 
+	long long getNanoseconds();
 	long long getMicroseconds();
 	float getSeconds();
 
