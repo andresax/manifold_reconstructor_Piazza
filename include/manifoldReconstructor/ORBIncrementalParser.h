@@ -44,6 +44,8 @@ private:
 	std::map<int, glm::mat3> intrinsics_;
 	CameraPointsCollection ORB_data_;
 
+	bool insertFakePoints_ = true;
+
 };
 
 #endif /* CAM_PARSERS_ORBINCREMENTALPARSER_H_ */

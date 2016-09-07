@@ -29,7 +29,6 @@ ManifoldManager::~ManifoldManager() {
 	boundaryCellsSpatialMap_.clear();
 }
 
-// TODO pass points by reference, avoid copying the hole set
 void ManifoldManager::shrinkManifold3(const std::set<PointD3>& points, const float& maxPointToPointDistance, long currentEnclosingVersion) {
 	// Stats
 	int countQueueInitCells, countBoundaryInitCells, countInEnclosingVolume = 0, countShrinked = 0, countTotal = 0, countIterations = 1;
@@ -128,7 +127,7 @@ void ManifoldManager::shrinkManifold3(const std::set<PointD3>& points, const flo
 
 				chronoShrinking.start();
 				std::vector<Delaunay3::Cell_handle> newBoundaryTets;
-				subTetAndUpdateBoundary(currentTet, newBoundaryTets);
+				subTetAndUpdateBoundary2(currentTet, newBoundaryTets);
 				chronoShrinking.stop();
 
 				for (auto neighbour : newBoundaryTets) {
@@ -375,7 +374,7 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 				countGrowned++;
 
 				chronoGrowing.start();
-				addTetAndUpdateBoundary(currentTet);
+				addTetAndUpdateBoundary2(currentTet);
 				chronoGrowing.stop();
 
 				//add the adjacent tets to the queue
@@ -625,25 +624,6 @@ void ManifoldManager::addTetAndUpdateBoundary2(Delaunay3::Cell_handle& currentTe
 		currentTet->info().setBoundary(false);
 	}
 
-	if (notManifoldNeigh.size() == 3) {
-		for (int curV = 0; curV < 4; ++curV) {
-			if (find(notManifoldNeigh.begin(), notManifoldNeigh.end(), curV) == notManifoldNeigh.end()) {
-				currentTet->vertex(curV)->info().setUsed(1);
-			}
-		}
-	} else if (notManifoldNeigh.size() == 4) {
-		for (int curV = 0; curV < 4; ++curV) {
-			currentTet->vertex(notManifoldNeigh[curV])->info().setUsed(1);
-		}
-	}
-
-	if (notManifoldNeigh.size() == 1) {  //when you fill a "hole"
-		currentTet->vertex(notManifoldNeigh[0])->info().setNotUsed(false);
-	} else if (notManifoldNeigh.size() == 0) {
-		for (int curV = 0; curV < 4; ++curV) {
-			currentTet->vertex(curV)->info().setNotUsed(false);
-		}
-	}
 
 //Check if the neigh of the added tetrahedron still belongs to the boundary
 	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {

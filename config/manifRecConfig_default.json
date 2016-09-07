@@ -18,5 +18,5 @@
 	"primary_points_visibility_threshold": 2,
 	
 	"all_sort_of_output": false,
-	"update_points_position": true
+	"update_points_position": false
 }

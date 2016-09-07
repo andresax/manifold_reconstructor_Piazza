@@ -130,8 +130,15 @@ private:
 	/*add new point to the Delaunay Triangulation*/
 	bool insertVertex(PointReconstruction &points);
 	/*mark a tetrahedron with a visibility rays, it updates the information stored in the tetrahedron*/
+	void unmarkCell(
+			Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex);
+	void markCell(
+			Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex, std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells);
+	void markTetraedron2(
+			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, bool incrementCount, bool onlyMarkNewCells);
 	void markTetraedron(
-			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, RayReconstruction* ray, bool incrementCount = true);
+			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, RayReconstruction* ray,
+			bool incrementCount = true);
 
 	void rayTracingFromAllCam();
 
@@ -141,16 +148,24 @@ private:
 
 	void rayTracing2(int idxCam, int idxPoint, bool bOnlyMarkNew = false);
 
+	void rayTracing3(int idxCam, int idxPoint);
+
 	/* Inverse operation of rayTracing
 	 * Unlike rayTracing that need to explore the terahedra from neighbour to neighbour, the ray path is known
 	 */
 	void rayUntracing(RayPath* path);
 
+	void rayUntracing2(RayPath* path);
+
 	/* Complementary operation of rayTracing(idxCam, idxPoint, bOnlyMarkNew = true)
 	 * Unlike rayTracing that need to explore the terahedra from neighbour to neighbour and performs its operations only on new cells,
 	 * the set of new cells is known and rayRetracing start to trace the ray only in these cells
 	 */
+	void rayRetracing3(int idxCam, int idxPoint);
+	void rayRetracing2(int idxCam, int idxPoint, std::set<Delaunay3::Cell_handle>& newCells);
 	void rayRetracing(int idxCam, int idxPoint, std::set<Delaunay3::Cell_handle>& newCells);
+
+	void perHoleRayRetracing(std::set<Delaunay3::Cell_handle>& newCells);
 
 	/*Update the weights of the cellsToBeUpdates according to the values in the vecDistanceWeights. This implements the suboptimal policy*/
 	void updateDistanceAndWeights(std::vector<Delaunay3::Cell_handle> &cellsToBeUpdated, const std::vector<DistanceWeight> &vecDistanceWeight);
@@ -180,7 +195,8 @@ private:
 
 	void getDegree1Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours);
 	void getDegree2Neighbours(std::set<Delaunay3::Cell_handle>& path, std::set<Delaunay3::Cell_handle>& d1Neighbours, std::set<Delaunay3::Cell_handle>& d2Neighbours);
-	void getDegree1And2Neighbours(std::vector<Delaunay3::Cell_handle>& path, std::vector<Delaunay3::Cell_handle>& d1Neighbours, std::vector<Delaunay3::Cell_handle>& d2Neighbours);
+	void getDegree1And2Neighbours(
+			std::vector<Delaunay3::Cell_handle>& path, std::vector<Delaunay3::Cell_handle>& d1Neighbours, std::vector<Delaunay3::Cell_handle>& d2Neighbours, bool onlyMarkNewCells);
 
 	int iterationCounter_ = 0;
 

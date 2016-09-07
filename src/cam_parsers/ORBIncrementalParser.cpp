@@ -122,6 +122,30 @@ CameraType* ORBIncrementalParser::nextCamera() {
 			point->position = glm::vec3(x, y, z);
 			// std::cout << "       idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
 
+			// FAKE POINTS
+			if (insertFakePoints_) {
+				long unsigned int fakePointId = 1000000 + jsonObservationObject["pointId"].GetInt();
+				PointType* fakePoint;
+
+				if (ORB_data_.hasPoint(fakePointId)) {
+					fakePoint = ORB_data_.getPoint(fakePointId);
+
+					//std::cout << "UPDATE idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
+
+				} else {
+					fakePoint = new PointType();
+					fakePoint->idPoint = fakePointId;
+					ORB_data_.addPoint(fakePoint);
+				}
+
+				ORB_data_.addVisibility(camera, fakePoint);
+
+//			const rapidjson::Value& jsonCameraCenter = jsonObservationObject["X"];
+				float fakeX = jsonCameraCenter[0].GetFloat(), fakeY = 0.1 + jsonCameraCenter[1].GetFloat(), fakeZ = jsonCameraCenter[2].GetFloat();
+				fakePoint->position = glm::vec3(fakeX, fakeY, fakeZ);
+				// std::cout << "       idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
+			}
+
 			//TODO point's 2D coordinates in frame
 //      const rapidjson::Value& jsonCameraFrameCoordinates = jsonObservationObject["x"];
 //      float u = jsonCameraFrameCoordinates[0].GetFloat(), v = jsonCameraFrameCoordinates[1].GetFloat();
