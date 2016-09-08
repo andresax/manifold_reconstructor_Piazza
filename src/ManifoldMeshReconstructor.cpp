@@ -297,6 +297,9 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	rt2_CountNeighboursD1WeightUpdate_ = 0;
 	rt2_CountNeighboursD2WeightUpdate_ = 0;
 
+	rt2_SuccessfulCachedIndices = 0;
+	rt2_TriedCachedIndices = 0;
+
 	Chronometer chronoCheck;
 	chronoCheck.start();
 	chronoCheck.stop();
@@ -478,10 +481,9 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t useless:\t\t\t" << rt2_ChronoUseless_.getSeconds() << " s" << endl;
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t first cell:\t\t\t" << rt2_ChronoFirstCell_.getSeconds() << " s" << endl;
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t cell traversing:\t\t" << rt2_ChronoCellTraversing_.getSeconds() << " s" << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours d1 selection:\t\t" << rt2_ChronoNeighboursD1Selection_.getSeconds() << " s" << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours d2 selection:\t\t" << rt2_ChronoNeighboursD2Selection_.getSeconds() << " s" << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours d1 w update:\t\t" << rt2_ChronoNeighboursD1WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD1WeightUpdate_ << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours d2 w update:\t\t" << rt2_ChronoNeighboursD2WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD2WeightUpdate_ << endl;
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t index cache hit ratio:\t\t" << (double)rt2_SuccessfulCachedIndices / (double)rt2_TriedCachedIndices << endl;
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours weight update:\t\t" << rt2_ChronoNeighboursD1WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD1WeightUpdate_ << endl;
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours int insert/remove:\t\t" << rt2_ChronoNeighboursD2WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD2WeightUpdate_ << endl;
 
 //	Chronometer ut_ChronoCleanDeadCells;
 //	ut_ChronoCleanDeadCells.start();
@@ -541,7 +543,8 @@ void ManifoldMeshReconstructor::rayTracingFromAllCam() {
 			raysToBeRetraced_.erase(cIndex_pIndex);
 //			rayTracing(cIndex_pIndex.first, cIndex_pIndex.second, false, true);
 //			rayTracing2(cIndex_pIndex.first, cIndex_pIndex.second, false);
-			rayTracing3(cIndex_pIndex.first, cIndex_pIndex.second);
+//			rayTracing3(cIndex_pIndex.first, cIndex_pIndex.second);
+			rayTracing4(cIndex_pIndex.first, cIndex_pIndex.second);
 		}
 		raysToBeTraced_.clear();
 		logger_.endEventAndPrint("│ ├ rayTracing\t\t\t", true);
@@ -561,7 +564,8 @@ void ManifoldMeshReconstructor::rayTracingFromAllCam() {
 		logger_.startEvent();
 		for (auto cIndex_pIndex : raysToBeRetraced_) {
 //			rayRetracing(cIndex_pIndex.first, cIndex_pIndex.second, newCells_);
-			rayRetracing3(cIndex_pIndex.first, cIndex_pIndex.second);
+//			rayRetracing3(cIndex_pIndex.first, cIndex_pIndex.second);
+			rayRetracing4(cIndex_pIndex.first, cIndex_pIndex.second);
 		}
 		raysToBeRetraced_.clear();
 
@@ -877,6 +881,7 @@ void ManifoldMeshReconstructor::rayTracing2(int idxCam, int idxPoint, bool bOnly
 	}
 }
 
+// TODO like rayRetracing3 (4)
 // TODO select the vertices to candidate for removal based on the series of updated votes in the incidents cells
 // (and the converse in add vertex, to candidate for removal the rays when they are truncated by the new vertex)
 void ManifoldMeshReconstructor::rayTracing3(int idxCam, int idxPoint) {
@@ -888,6 +893,7 @@ void ManifoldMeshReconstructor::rayTracing3(int idxCam, int idxPoint) {
 	Segment constraint = Segment(source, target);
 
 	RayPath* rayPath = getRayPath(idxCam, idxPoint);
+	if (rayPath->path.size()) cerr << "ManifoldMeshReconstructor::rayTracing: ray path not empty before rayTracing" << endl;
 
 	rt2_ChronoFirstCell_.start();
 	// Look for the tetrahedron incident to Q intersected by the ray from camera O to point Q
@@ -1186,7 +1192,8 @@ void ManifoldMeshReconstructor::rayRetracing3(int idxCam, int idxPoint) {
 	std::vector<Delaunay3::Cell_handle> incidentCells;
 	dt_.incident_cells(vertexHandle, std::back_inserter(incidentCells));
 
-	if (incidentCells.size() == 0) std::cerr << "ManifoldMeshReconstructor::rayTracing: incident cells to initial vertex not found for ray " << idxCam << ", " << idxPoint << std::endl;
+	if (incidentCells.size() == 0)
+		std::cerr << "ManifoldMeshReconstructor::rayTracing: incident cells to initial vertex not found for ray " << idxCam << ", " << idxPoint << std::endl;
 	if (vertexHandle == NULL) std::cerr << "ManifoldMeshReconstructor::rayTracing: vertexHandle is NULL; ray " << idxCam << ", " << idxPoint << std::endl;
 
 	// For each tetrahedron t, incident to the point p (t s.t. one of its four vertices is p)
@@ -1235,6 +1242,175 @@ void ManifoldMeshReconstructor::rayRetracing3(int idxCam, int idxPoint) {
 
 }
 
+//
+//void ManifoldMeshReconstructor::rayRetracing3(int cameraIndex, int pointIndex) {
+//	std::vector<Delaunay3::Cell_handle> incidentCells;
+//	Delaunay3::Cell_handle previousCell, currentCell, targetCell;
+//	Vertex3D_handle vertexHandle = points_[pointIndex].vertexHandle;
+//	PointD3 source = points_[pointIndex].position;
+//	PointD3 target = cams_[cameraIndex].position;
+//	Segment constraint = Segment(source, target);
+//	bool firstExitFacetFound = false;
+//	long int iterationCount = 0;
+//
+//	RayPath* rayPath = getRayPath(cameraIndex, pointIndex);
+//	rayPath->path.clear();
+//
+//	rt2_ChronoFirstCell_.start();
+//
+//	// incidentCells contains the cells incident to the point's vertex
+//	dt_.incident_cells(vertexHandle, std::back_inserter(incidentCells));
+//
+//	if (incidentCells.size() == 0) std::cerr << "ManifoldMeshReconstructor::rayTracing: no incident cells found for ray " << cameraIndex << ", " << pointIndex << std::endl;
+//	if (vertexHandle == NULL) std::cerr << "ManifoldMeshReconstructor::rayTracing: vertexHandle is NULL for ray " << cameraIndex << ", " << pointIndex << std::endl;
+//
+//	// Locate the target cell
+//	Delaunay3::Locate_type lt;
+//	int li, lj;
+//	targetCell = dt_.locate(target, lt, li, lj);
+//
+//	// If one of the incident cells also contains the camera, the ray ends in that cell. Mark it and return
+//	for (auto i : incidentCells) {
+//		if (i == targetCell) {
+//			markCell(i, cameraIndex, pointIndex, rayPath->path, true);
+//			return;
+//		}
+//	}
+//
+//	// Otherwise there has to be a neighbour cell that intersects with the ray and it is the neighbour opposite to the point's vertex
+//	for (auto i : incidentCells) {
+//
+//		// facetIndex is the index of the facet opposite to the point's vertex
+//		int facetIndex = i->index(vertexHandle);
+//
+//		// If the facet (i, facetIndex) intersects with the ray, the corresponding neighbour is the next cell,
+//		// then mark the first cell and initialise the first two cells (previous and current)
+//		if (CGAL::do_intersect(dt_.triangle(i, facetIndex), constraint)) {
+//			firstExitFacetFound = true;
+//
+//			markCell(i, cameraIndex, pointIndex, rayPath->path, true);
+//
+//			previousCell = i;
+//			currentCell = i->neighbor(facetIndex);
+//
+//			break;
+//		}
+//	}
+//	rt2_ChronoFirstCell_.stop();
+//
+//	if (!firstExitFacetFound) {
+//		std::cerr << "firstExitFacet NOT FOUND for ray " << cameraIndex << ", " << pointIndex << "\tincidentCells.size(): " << incidentCells.size() << std::endl;
+//		return;
+//	}
+//
+//	rt2_ChronoCellTraversing_.start();
+//
+//	// Follow the ray through the triangulation and mark the cells
+//	do {
+//		iterationCount++;
+//		markCell(currentCell, cameraIndex, pointIndex, rayPath->path, true);
+//	} while (nextCellOnRay(currentCell, previousCell, targetCell, constraint) && iterationCount < 10000);
+//
+//	if(iterationCount >= 10000) cerr << "ManifoldMeshReconstructor::rayTracing: max iterations exceeded for ray " << cameraIndex << ", " << pointIndex << endl;
+//
+//	rt2_ChronoCellTraversing_.stop();
+//
+//}
+
+void ManifoldMeshReconstructor::rayRetracing4(int cameraIndex, int pointIndex) {
+	rayTracing4(cameraIndex, pointIndex, true);
+}
+
+void ManifoldMeshReconstructor::rayTracing4(int cameraIndex, int pointIndex, bool retrace) {
+	std::vector<Delaunay3::Cell_handle> incidentCells;
+	Delaunay3::Cell_handle previousCell, currentCell, targetCell;
+	Vertex3D_handle vertexHandle = points_[pointIndex].vertexHandle;
+	Delaunay3::Locate_type lt;
+	int li, lj;
+
+	PointD3 source = points_[pointIndex].position;
+	PointD3 target = cams_[cameraIndex].position;
+	Segment constraint = Segment(source, target);
+
+	bool firstExitFacetFound = false;
+	long int iterationCount = 0;
+
+	RayPath* rayPath = getRayPath(cameraIndex, pointIndex);
+	if (!retrace && rayPath->path.size())
+		cerr << "ManifoldMeshReconstructor::rayTracing: ray path not empty before rayTracing for ray " << cameraIndex << ", " << pointIndex << endl;
+	rayPath->path.clear();
+
+	rt2_ChronoFirstCell_.start();
+
+	// incidentCells contains the cells incident to the point's vertex
+	dt_.incident_cells(vertexHandle, std::back_inserter(incidentCells));
+
+	if (incidentCells.size() == 0) std::cerr << "ManifoldMeshReconstructor::rayTracing: no incident cells found for ray " << cameraIndex << ", " << pointIndex << std::endl;
+	if (vertexHandle == NULL) std::cerr << "ManifoldMeshReconstructor::rayTracing: vertexHandle is NULL for ray " << cameraIndex << ", " << pointIndex << std::endl;
+
+	// Locate the target cell
+	targetCell = dt_.locate(target, lt, li, lj);
+
+	if(lt != Delaunay3::Locate_type::CELL){
+//		cerr << "ManifoldMeshReconstructor::rayTracing: (WORKAROUND) moving camera position because overlapping a vertex for ray " << cameraIndex << ", " << pointIndex << endl;
+		target = PointD3(target.x() + 0.0001*conf_.steinerGridStepLength, target.y() + 0.0001*conf_.steinerGridStepLength, target.z() + 0.0001*conf_.steinerGridStepLength);
+		constraint = Segment(source, target);
+
+		targetCell = dt_.locate(target, lt, li, lj);
+
+		if(lt != Delaunay3::Locate_type::CELL){
+			cerr << "ManifoldMeshReconstructor::rayTracing: (WORKAROUND) moving camera position because overlapping a vertex; didn't work, aborting rayTracing for ray " << cameraIndex << ", " << pointIndex << endl;
+			return;
+		}
+	}
+
+	// If one of the incident cells also contains the camera, the ray ends in that cell. Mark it and return
+	for (auto i : incidentCells) {
+		if (i == targetCell) {
+			markCell(i, cameraIndex, pointIndex, rayPath->path, retrace);
+			return;
+		}
+	}
+
+	// Otherwise there has to be a neighbour cell that intersects with the ray and it is the neighbour opposite to the point's vertex
+	for (auto i : incidentCells) {
+
+		// facetIndex is the index of the facet opposite to the point's vertex
+		int facetIndex = i->index(vertexHandle);
+
+		// If the facet (i, facetIndex) intersects with the ray, the corresponding neighbour is the next cell,
+		// then mark the first cell and initialise the first two cells (previous and current)
+		if (CGAL::do_intersect(dt_.triangle(i, facetIndex), constraint)) {
+			firstExitFacetFound = true;
+
+			markCell(i, cameraIndex, pointIndex, rayPath->path, retrace);
+
+			previousCell = i;
+			currentCell = i->neighbor(facetIndex);
+
+			break;
+		}
+	}
+	rt2_ChronoFirstCell_.stop();
+
+	if (!firstExitFacetFound) {
+		std::cerr << "firstExitFacet NOT FOUND for ray " << cameraIndex << ", " << pointIndex << "\tincidentCells.size(): " << incidentCells.size() << std::endl;
+		return;
+	}
+
+	rt2_ChronoCellTraversing_.start();
+
+	// Follow the ray through the triangulation and mark the cells
+	do {
+		iterationCount++;
+		markCell(currentCell, cameraIndex, pointIndex, rayPath->path, retrace);
+	} while (nextCellOnRay(currentCell, previousCell, targetCell, constraint) && iterationCount < 10000); // TODO no magic
+
+	if (iterationCount >= 10000) cerr << "ManifoldMeshReconstructor::rayTracing: max iterations exceeded for ray " << cameraIndex << ", " << pointIndex << endl;
+
+	rt2_ChronoCellTraversing_.stop();
+
+}
 
 // TODO how much useful is this, again? (wrt retracing all ray)
 void ManifoldMeshReconstructor::perHoleRayRetracing(std::set<Delaunay3::Cell_handle>& newCells) {
@@ -1300,6 +1476,55 @@ bool ManifoldMeshReconstructor::cellTraversalExitTest(
 	else return false;
 }
 
+bool ManifoldMeshReconstructor::nextCellOnRay(
+		Delaunay3::Cell_handle& currentCell, Delaunay3::Cell_handle& previousCell, const Delaunay3::Cell_handle& targetCell, const Segment& constraint) {
+
+	if (currentCell == targetCell) return false;
+
+	int cachedFacetIndex = currentCell->info().getRayTracingLastFacetIndex();
+
+	if (cachedFacetIndex > -1) {
+		Delaunay3::Cell_handle candidateNextCell = currentCell->neighbor(cachedFacetIndex);
+
+		rt2_TriedCachedIndices++;
+
+		// Note: dt_.triangle(currentCell, facetIndex) is the facet common to currentCell and candidateNextCell
+		if (candidateNextCell != previousCell && CGAL::do_intersect(dt_.triangle(currentCell, cachedFacetIndex), constraint)) {
+
+			previousCell = currentCell;
+			currentCell = candidateNextCell;
+
+			rt2_SuccessfulCachedIndices++;
+
+			return true;
+		}
+	}
+
+	// From the current tetrahedron, find the facets that intersects with the ray, excluding the entry facet
+	for (int facetIndex = 0; facetIndex < 4; facetIndex++) {
+
+		// Since the cached facet index has already been checked, don't try again
+		if(cachedFacetIndex == facetIndex) continue;
+
+		Delaunay3::Cell_handle candidateNextCell = currentCell->neighbor(facetIndex);
+
+		// Note: dt_.triangle(currentCell, facetIndex) is the facet common to currentCell and candidateNextCell
+		if (candidateNextCell != previousCell && CGAL::do_intersect(dt_.triangle(currentCell, facetIndex), constraint)) {
+
+			currentCell->info().setRayTracingLastFacetIndex(facetIndex);
+
+			previousCell = currentCell;
+			currentCell = candidateNextCell;
+
+			return true;
+		}
+	}
+
+	cerr << "ManifoldMeshReconstructor::nextCellOnRay: no next cell found" << endl;
+
+	return false;
+}
+
 void ManifoldMeshReconstructor::markTetraedron(
 		Delaunay3::Cell_handle & cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, RayReconstruction* ray, bool incrementCount) {
 
@@ -1356,16 +1581,22 @@ void ManifoldMeshReconstructor::markTetraedron2(
 
 void ManifoldMeshReconstructor::markCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex, std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells) {
 
-	// TODO in case of retracing?
+	// TODO in case of perHoleRayRetracing?
 	path.push_back(c);
 
 	if (!onlyMarkNewCells || c->info().isNew()) {
 
+		rt2_ChronoNeighboursD1WeightUpdate_.start();
 		c->info().incrementVoteCount(1);
 		c->info().incrementVoteCountProb(conf_.w_1);
+		rt2_ChronoNeighboursD1WeightUpdate_.stop();
 
+		rt2_ChronoNeighboursD2WeightUpdate_.start();
 		if (!conf_.enableSuboptimalPolicy) c->info().addIntersection(cameraIndex, pointIndex, conf_.w_1, points_[pointIndex].idVertex, points_, camsPositions_);
+		rt2_ChronoNeighboursD2WeightUpdate_.stop();
 
+
+		rt2_ChronoNeighboursD1WeightUpdate_.start();
 		for (int in1 = 0; in1 < 4; in1++) {
 			Delaunay3::Cell_handle n1 = c->neighbor(in1);
 
@@ -1384,15 +1615,25 @@ void ManifoldMeshReconstructor::markCell(Delaunay3::Cell_handle& c, const int ca
 
 			}
 		}
+
+		rt2_ChronoNeighboursD1WeightUpdate_.stop();
+
 	}
 }
 
 void ManifoldMeshReconstructor::unmarkCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex) {
 
+	rt2_ChronoNeighboursD1WeightUpdate_.start();
 	c->info().decrementVoteCount(1);
 	c->info().decrementVoteCountProb(conf_.w_1);
-	if (!conf_.enableSuboptimalPolicy) c->info().removeIntersection(cameraIndex, pointIndex, points_, camsPositions_);
+	rt2_ChronoNeighboursD1WeightUpdate_.stop();
 
+	rt2_ChronoNeighboursD2WeightUpdate_.start();
+	if (!conf_.enableSuboptimalPolicy) c->info().removeIntersection(cameraIndex, pointIndex, points_, camsPositions_);
+	rt2_ChronoNeighboursD2WeightUpdate_.stop();
+
+
+	rt2_ChronoNeighboursD1WeightUpdate_.start();
 	for (int in1 = 0; in1 < 4; in1++) {
 		Delaunay3::Cell_handle n1 = c->neighbor(in1);
 
@@ -1406,6 +1647,7 @@ void ManifoldMeshReconstructor::unmarkCell(Delaunay3::Cell_handle& c, const int 
 			n2->info().decrementVoteCountProb(conf_.w_3);
 		}
 	}
+	rt2_ChronoNeighboursD1WeightUpdate_.stop();
 }
 
 void ManifoldMeshReconstructor::growManifold3(std::set<PointD3> points) {

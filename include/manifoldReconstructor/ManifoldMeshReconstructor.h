@@ -130,10 +130,8 @@ private:
 	/*add new point to the Delaunay Triangulation*/
 	bool insertVertex(PointReconstruction &points);
 	/*mark a tetrahedron with a visibility rays, it updates the information stored in the tetrahedron*/
-	void unmarkCell(
-			Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex);
-	void markCell(
-			Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex, std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells);
+	void unmarkCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex);
+	void markCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex, std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells);
 	void markTetraedron2(
 			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, bool incrementCount, bool onlyMarkNewCells);
 	void markTetraedron(
@@ -150,6 +148,8 @@ private:
 
 	void rayTracing3(int idxCam, int idxPoint);
 
+	void rayTracing4(int idxCam, int idxPoint, bool retrace = false);
+
 	/* Inverse operation of rayTracing
 	 * Unlike rayTracing that need to explore the terahedra from neighbour to neighbour, the ray path is known
 	 */
@@ -161,6 +161,7 @@ private:
 	 * Unlike rayTracing that need to explore the terahedra from neighbour to neighbour and performs its operations only on new cells,
 	 * the set of new cells is known and rayRetracing start to trace the ray only in these cells
 	 */
+	void rayRetracing4(int idxCam, int idxPoint);
 	void rayRetracing3(int idxCam, int idxPoint);
 	void rayRetracing2(int idxCam, int idxPoint, std::set<Delaunay3::Cell_handle>& newCells);
 	void rayRetracing(int idxCam, int idxPoint, std::set<Delaunay3::Cell_handle>& newCells);
@@ -180,6 +181,10 @@ private:
 	bool cellTraversalExitTest(
 			int & f, int & fOld, const Delaunay3::Cell_handle& tetCur, const Delaunay3::Cell_handle &tetPrev, std::set<Delaunay3::Cell_handle>& visitedTetrahedra,
 			const Segment & constraint);
+
+	bool nextCellOnRay(
+			Delaunay3::Cell_handle& currentCell, Delaunay3::Cell_handle& previousCell, const Delaunay3::Cell_handle& targetCell,
+			const Segment& constraint);
 
 	void addRay(int cameraId, int pointId);
 	RayReconstruction* getRay(int cameraId, int pointId);
@@ -255,7 +260,7 @@ private:
 	float timerShrinkTime_ = 0.0;
 	float timerShrinkSeveralTime_ = 0.0;
 
-	long rt2_CountNeighboursD1WeightUpdate_ = 0, rt2_CountNeighboursD2WeightUpdate_ = 0;
+	long rt2_CountNeighboursD1WeightUpdate_ = 0, rt2_CountNeighboursD2WeightUpdate_ = 0, rt2_SuccessfulCachedIndices = 0, rt2_TriedCachedIndices = 0;
 	Chronometer rt2_ChronoUseless_, rt2_ChronoFirstCell_, rt2_ChronoCellTraversing_;
 	Chronometer rt2_ChronoNeighboursD1Selection_, rt2_ChronoNeighboursD2Selection_, rt2_ChronoNeighboursD1WeightUpdate_, rt2_ChronoNeighboursD2WeightUpdate_;
 

@@ -71,6 +71,14 @@ public:
 		return hasLastEnclosingPoint_;
 	}
 
+	void setRayTracingLastFacetIndex(int i){
+		rayTracingLastFacetIndex_ = i;
+	}
+
+	int getRayTracingLastFacetIndex(){
+		return rayTracingLastFacetIndex_;
+	}
+
 	bool isBoundary() const {
 		return boundary;
 	}
@@ -507,8 +515,12 @@ private:
 
 	long enclosingVersion_ = -1;
 	bool inEnclosingVolume_ = false;
+
 	bool hasLastEnclosingPoint_ = false;
 	CGAL::Point_3<CGAL::Epick> lastEnclosingPoint_;
+
+	// TODO small int?
+	int rayTracingLastFacetIndex_ = -1;
 
 	int Lw1_count_ = 0;
 
