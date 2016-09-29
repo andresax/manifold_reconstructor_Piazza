@@ -1,0 +1,1536 @@
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.017 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	23733
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		143004
+│ ├ growManifold		Done in 0.02601s 
+updateTriangulation		Done in 1.54126s 
+main loop						Done in 1.54171s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 167 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 4e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.002 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.012 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.002 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.011 s	 / 	21838
+ManifoldManager::shrinkManifold3:				 test:					0.108 s	 / 	21838
+ManifoldManager::shrinkManifold3:				 shrink:				0.219 s	 / 	8109
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					1875	 / 	23732
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			13478	 / 	21838
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	8360
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		143004
+│ ├ shrink			Done in 0.423515s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.035 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.030 s	 / 	1565
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					119	 / 	22108
+│ ├ shrinkSeveral		Done in 0.036651s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	131
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	131
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	6
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					42	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			120	 / 	131
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		143004
+│ ├ shrink			Done in 0.012163s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.028 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.025 s	 / 	1080
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					39	 / 	22031
+│ ├ shrinkSeveral		Done in 0.02932s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					39	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			39	 / 	39
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		143004
+│ ├ shrink			Done in 0.010565s 
+├ shrinkManifold		Done in 0.512598s 
+├ Add new vertices		Done in 0.126938s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.217888s 
+│ ├ rayRetracing		Done in 0.29719s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.034 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.134 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.043 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.086 s	 / 	65036
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.196 s	 / 	183079
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.009 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.028 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.010 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.048 s	 / 	11910
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.250 s	 / 	8656
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					153	 / 	22031
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		143766
+│ ├ growManifold		Done in 0.381231s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.016 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	69
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	3
+│ ├ growManifoldSev		Done in 0.020583s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.018 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	23866
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		143766
+│ ├ growManifold		Done in 0.027216s 
+updateTriangulation		Done in 1.58924s 
+main loop						Done in 1.59027s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 168 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 9e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.003 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.013 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.003 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.011 s	 / 	23025
+ManifoldManager::shrinkManifold3:				 test:					0.116 s	 / 	23025
+ManifoldManager::shrinkManifold3:				 shrink:				0.240 s	 / 	8572
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					2008	 / 	23865
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			14176	 / 	23025
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	8849
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		143766
+│ ├ shrink			Done in 0.452018s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.035 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.029 s	 / 	1689
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					145	 / 	22134
+│ ├ shrinkSeveral		Done in 0.035989s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	131
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	131
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	6
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					42	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			120	 / 	131
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		143766
+│ ├ shrink			Done in 0.009201s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.027 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.024 s	 / 	1080
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					39	 / 	22031
+│ ├ shrinkSeveral		Done in 0.027838s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					39	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			39	 / 	39
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		143766
+│ ├ shrink			Done in 0.011332s 
+├ shrinkManifold		Done in 0.536708s 
+├ Add new vertices		Done in 0.089922s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.147217s 
+│ ├ rayRetracing		Done in 0.244184s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.033 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.113 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.018 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.062 s	 / 	60006
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.145 s	 / 	169218
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.009 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.031 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.011 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.050 s	 / 	12598
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.268 s	 / 	9157
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					153	 / 	22031
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		144441
+│ ├ growManifold		Done in 0.405986s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.014 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	69
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	3
+│ ├ growManifoldSev		Done in 0.017985s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.018 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	23995
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		144441
+│ ├ growManifold		Done in 0.027625s 
+updateTriangulation		Done in 1.47189s 
+main loop						Done in 1.47241s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 169 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 7e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.004 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.012 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.003 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.013 s	 / 	24550
+ManifoldManager::shrinkManifold3:				 test:					0.117 s	 / 	24550
+ManifoldManager::shrinkManifold3:				 shrink:				0.238 s	 / 	9062
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					2137	 / 	23994
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			15200	 / 	24550
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	9350
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		144441
+│ ├ shrink			Done in 0.459071s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.045 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.038 s	 / 	1776
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					156	 / 	22145
+│ ├ shrinkSeveral		Done in 0.046318s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.000 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	131
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	131
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	6
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					42	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			120	 / 	131
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		144441
+│ ├ shrink			Done in 0.011188s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.030 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.026 s	 / 	1080
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					39	 / 	22031
+│ ├ shrinkSeveral		Done in 0.031207s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.000 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					39	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			39	 / 	39
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		144441
+│ ├ shrink			Done in 0.011033s 
+├ shrinkManifold		Done in 0.559183s 
+├ Add new vertices		Done in 0.236755s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.163821s 
+│ ├ rayRetracing		Done in 0.466931s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.038 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.165 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.027 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.117 s	 / 	101332
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.259 s	 / 	285061
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.009 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.032 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.011 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.050 s	 / 	13223
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.255 s	 / 	9576
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					153	 / 	22031
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		145098
+│ ├ growManifold		Done in 0.394682s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.014 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	69
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	3
+│ ├ growManifoldSev		Done in 0.017515s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.019 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	24130
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		145098
+│ ├ growManifold		Done in 0.028045s 
+updateTriangulation		Done in 1.86912s 
+main loop						Done in 1.8697s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 170 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 0.008467s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.003 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.013 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.002 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.018 s	 / 	25172
+ManifoldManager::shrinkManifold3:				 test:					0.130 s	 / 	25172
+ManifoldManager::shrinkManifold3:				 shrink:				0.253 s	 / 	9498
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					2272	 / 	24129
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			15403	 / 	25172
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	9769
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		145482
+│ ├ shrink			Done in 0.491885s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.044 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.038 s	 / 	1865
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					139	 / 	22128
+│ ├ shrinkSeveral		Done in 0.045687s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.000 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	131
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	131
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	6
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					42	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			120	 / 	131
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		145482
+│ ├ shrink			Done in 0.011814s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.028 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.025 s	 / 	1080
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					39	 / 	22031
+│ ├ shrinkSeveral		Done in 0.029045s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.000 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					39	 / 	22031
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			39	 / 	39
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		145482
+│ ├ shrink			Done in 0.008061s 
+├ shrinkManifold		Done in 0.586864s 
+├ Add new vertices		Done in 0.124995s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.184978s 
+│ ├ rayRetracing		Done in 0.361242s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.035 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.154 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.026 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.095 s	 / 	81490
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.215 s	 / 	231490
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.012 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.041 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.012 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.058 s	 / 	13864
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.288 s	 / 	10098
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					153	 / 	22031
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		146102
+│ ├ growManifold		Done in 0.450935s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.016 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	69
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	3
+│ ├ growManifoldSev		Done in 0.019478s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.019 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	24200
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		146102
+│ ├ growManifold		Done in 0.028584s 
+updateTriangulation		Done in 1.76978s 
+main loop						Done in 1.77036s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 171 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 1.1e-05s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.004 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.015 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.003 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.017 s	 / 	26566
+ManifoldManager::shrinkManifold3:				 test:					0.144 s	 / 	26565
+ManifoldManager::shrinkManifold3:				 shrink:				0.271 s	 / 	10032
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					2342	 / 	24199
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			16255	 / 	26566
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	10311
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		146102
+│ ├ shrink			Done in 0.531412s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.042 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.036 s	 / 	1804
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					135	 / 	22136
+│ ├ shrinkSeveral		Done in 0.043314s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.000 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	131
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	131
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	6
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					42	 / 	22043
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			120	 / 	131
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		146102
+│ ├ shrink			Done in 0.013256s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.026 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.023 s	 / 	1080
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					39	 / 	22043
+│ ├ shrinkSeveral		Done in 0.027006s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					39	 / 	22043
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			39	 / 	39
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		146102
+│ ├ shrink			Done in 0.011199s 
+├ shrinkManifold		Done in 0.626538s 
+├ Add new vertices		Done in 0.116535s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.179529s 
+│ ├ rayRetracing		Done in 0.317621s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.035 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.143 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.021 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.083 s	 / 	78392
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.194 s	 / 	222060
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.010 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.045 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.017 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.071 s	 / 	14701
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.336 s	 / 	10724
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					161	 / 	22043
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		146760
+│ ├ growManifold		Done in 0.524386s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.016 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	69
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	3
+│ ├ growManifoldSev		Done in 0.019658s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.020 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	24238
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		146760
+│ ├ growManifold		Done in 0.037851s 
+updateTriangulation		Done in 1.82391s 
+main loop						Done in 1.82468s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 172 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 2.1e-05s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.003 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.018 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.004 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.023 s	 / 	27888
+ManifoldManager::shrinkManifold3:				 test:					0.149 s	 / 	27885
+ManifoldManager::shrinkManifold3:				 shrink:				0.297 s	 / 	10632
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					2380	 / 	24237
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			17003	 / 	27888
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	10885
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		146760
+│ ├ shrink			Done in 0.57637s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.034 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.029 s	 / 	1706
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					137	 / 	22110
+│ ├ shrinkSeveral		Done in 0.035123s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	131
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	131
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	6
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					42	 / 	22015
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			120	 / 	131
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		146760
+│ ├ shrink			Done in 0.009877s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.027 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.023 s	 / 	1080
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					39	 / 	22015
+│ ├ shrinkSeveral		Done in 0.027889s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					39	 / 	22015
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			39	 / 	39
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		146760
+│ ├ shrink			Done in 0.009585s 
+├ shrinkManifold		Done in 0.659225s 
+├ Add new vertices		Done in 0.14644s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.34345s 
+│ ├ rayRetracing		Done in 0.460017s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.044 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.205 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.033 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.154 s	 / 	107858
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.338 s	 / 	302345
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.009 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.047 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.040 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.066 s	 / 	15508
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.340 s	 / 	11282
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					146	 / 	22015
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		147600
+│ ├ growManifold		Done in 0.558524s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.016 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.001 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	44
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					2	 / 	3
+│ ├ growManifoldSev		Done in 0.028326s 
+ManifoldManager::regionGrowingProcedure3: 		 tetsQueue is emptyManifoldManager::regionGrowingProcedure3:			 queue init:				0.024 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:
+			 test:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					0	 / 	24406
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		147600
+│ ├ growManifold		Done in 0.037604s 
+updateTriangulation		Done in 2.23993s 
+main loop						Done in 2.24079s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 173 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 7e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.003 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.029 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.006 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.002 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.023 s	 / 	28725
+ManifoldManager::shrinkManifold3:				 test:					0.211 s	 / 	28662
+ManifoldManager::shrinkManifold3:				 shrink:				0.365 s	 / 	10846
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					2549	 / 	24406
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			17574	 / 	28725
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11151
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		147600
+│ ├ shrink			Done in 0.735451s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.058 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.049 s	 / 	2213
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					270	 / 	22162
+│ ├ shrinkSeveral		Done in 0.059481s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	189
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	144
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	17
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					79	 / 	21971
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			165	 / 	189
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	24
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		147600
+│ ├ shrink			Done in 0.019421s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.023 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.021 s	 / 	916
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					72	 / 	21968
+│ ├ shrinkSeveral		Done in 0.024534s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	72
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	29
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					72	 / 	21968
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			72	 / 	72
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		147600
+│ ├ shrink			Done in 0.01194s 
+├ shrinkManifold		Done in 0.851315s 
+├ Add new vertices		Done in 0.187745s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.367786s 
+│ ├ rayRetracing		Done in 0.440549s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.047 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.222 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.032 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.148 s	 / 	99114
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.328 s	 / 	277772
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.009 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.056 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.017 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.073 s	 / 	15981
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.352 s	 / 	11621
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					111	 / 	21968
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		148258
+│ ├ growManifold		Done in 0.552644s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.016 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	85
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					2	 / 	4
+│ ├ growManifoldSev		Done in 0.019732s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.022 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	24540
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		148258
+│ ├ growManifold		Done in 0.03603s 
+updateTriangulation		Done in 2.45832s 
+main loop						Done in 2.45893s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 174 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 5e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.003 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.019 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.004 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.002 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.029 s	 / 	27056
+ManifoldManager::shrinkManifold3:				 test:					0.144 s	 / 	26779
+ManifoldManager::shrinkManifold3:				 shrink:				0.298 s	 / 	10551
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					2682	 / 	24539
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			15985	 / 	27056
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	11071
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		148258
+│ ├ shrink			Done in 0.579722s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.046 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.039 s	 / 	2293
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					520	 / 	22377
+│ ├ shrinkSeveral		Done in 0.048092s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.001 s	 / 	340
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	62
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	11
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					293	 / 	22150
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			303	 / 	340
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	37
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		148258
+│ ├ shrink			Done in 0.013749s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.013 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.012 s	 / 	654
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					295	 / 	22152
+│ ├ shrinkSeveral		Done in 0.014815s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	295
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	17
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					295	 / 	22152
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			295	 / 	295
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		148258
+│ ├ shrink			Done in 0.011208s 
+├ shrinkManifold		Done in 0.667944s 
+├ Add new vertices		Done in 0.216379s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.308602s 
+│ ├ rayRetracing		Done in 0.442644s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.052 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.208 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.031 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.131 s	 / 	101682
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.297 s	 / 	285912
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.010 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.046 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.016 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.064 s	 / 	15739
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.313 s	 / 	11384
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					95	 / 	22152
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		149159
+│ ├ growManifold		Done in 0.492952s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.017 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	85
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					2	 / 	4
+│ ├ growManifoldSev		Done in 0.020926s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.022 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	38
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					6	 / 	24724
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		149159
+│ ├ growManifold		Done in 0.034593s 
+updateTriangulation		Done in 2.18676s 
+main loop						Done in 2.18728s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 175 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 1e-05s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.004 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.011 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.003 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.003 s	 / 	18426
+ManifoldManager::shrinkManifold3:				 test:					0.106 s	 / 	18426
+ManifoldManager::shrinkManifold3:				 shrink:				0.198 s	 / 	6963
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					1644	 / 	24723
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			11144	 / 	18426
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	7282
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		149159
+│ ├ shrink			Done in 0.38281s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.053 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.043 s	 / 	1924
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					210	 / 	23398
+│ ├ shrinkSeveral		Done in 0.054189s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	106
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	106
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	14
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					28	 / 	23206
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			89	 / 	106
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	17
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		149159
+│ ├ shrink			Done in 0.013185s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.011 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.009 s	 / 	370
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					21	 / 	23201
+│ ├ shrinkSeveral		Done in 0.011836s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	64
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	64
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	2
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					20	 / 	23200
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			60	 / 	64
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	4
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		149159
+│ ├ shrink			Done in 0.009295s 
+├ shrinkManifold		Done in 0.471683s 
+├ Add new vertices		Done in 0.174623s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.265927s 
+│ ├ rayRetracing		Done in 0.454157s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.049 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.197 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.031 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.126 s	 / 	98736
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.287 s	 / 	277799
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.010 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.021 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.008 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.043 s	 / 	10951
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.213 s	 / 	7974
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					128	 / 	23201
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		149968
+│ ├ growManifold		Done in 0.329064s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.014 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.001 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.000 s	 / 	16
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	2
+│ ├ growManifoldSev		Done in 0.01712s 
+ManifoldManager::regionGrowingProcedure3: 		 tetsQueue is emptyManifoldManager::regionGrowingProcedure3:			 queue init:				0.018 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					0	 / 	24848
+
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		149968
+│ ├ growManifold		Done in 0.026568s 
+updateTriangulation		Done in 1.74265s 
+main loop						Done in 1.74387s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 176 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 8e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.004 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.011 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.003 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.002 s	 / 	21361
+ManifoldManager::shrinkManifold3:				 test:					0.114 s	 / 	21361
+ManifoldManager::shrinkManifold3:				 shrink:				0.202 s	 / 	7676
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					1761	 / 	24848
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			13378	 / 	21361
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	7983
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		149968
+│ ├ shrink			Done in 0.402733s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.050 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.041 s	 / 	1766
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					208	 / 	23394
+│ ├ shrinkSeveral		Done in 0.051456s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	106
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	106
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	14
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					28	 / 	23203
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			88	 / 	106
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	18
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		149968
+│ ├ shrink			Done in 0.012695s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.012 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.010 s	 / 	370
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					21	 / 	23198
+│ ├ shrinkSeveral		Done in 0.01307s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	64
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	64
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	2
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					20	 / 	23197
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			60	 / 	64
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	4
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		149968
+│ ├ shrink			Done in 0.009293s 
+├ shrinkManifold		Done in 0.489715s 
+├ Add new vertices		Done in 0.226331s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.248932s 
+│ ├ rayRetracing		Done in 0.469787s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.050 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.188 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.031 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.129 s	 / 	101488
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.290 s	 / 	286887
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.011 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.028 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.009 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.050 s	 / 	11936
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.233 s	 / 	8715
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					122	 / 	23198
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		150995
+│ ├ growManifold		Done in 0.366392s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.014 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.001 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	50
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					2	 / 	3
+│ ├ growManifoldSev		Done in 0.017316s 
+ManifoldManager::regionGrowingProcedure3: 		 tetsQueue is emptyManifoldManager::regionGrowingProcedure3:			 queue init:				0.019 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					0	 / 	25017
+
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		150995
+│ ├ growManifold		Done in 0.027672s 
+updateTriangulation		Done in 1.8484s 
+main loop						Done in 1.84911s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 177 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 7e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.004 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.013 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.003 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.002 s	 / 	24031
+ManifoldManager::shrinkManifold3:				 test:					0.130 s	 / 	24031
+ManifoldManager::shrinkManifold3:				 shrink:				0.227 s	 / 	7999
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					1930	 / 	25017
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			15433	 / 	24031
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	8598
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		150995
+│ ├ shrink			Done in 0.447821s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.063 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.049 s	 / 	2826
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					500	 / 	23686
+│ ├ shrinkSeveral		Done in 0.064662s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	186
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	186
+ManifoldManager::shrinkManifold3:				 shrink:				0.001 s	 / 	55
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					67	 / 	23240
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			149	 / 	186
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	37
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		150995
+│ ├ shrink			Done in 0.011127s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.010 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.009 s	 / 	370
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					21	 / 	23196
+│ ├ shrinkSeveral		Done in 0.011473s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	64
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	64
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	2
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					20	 / 	23195
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			60	 / 	64
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	4
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		150995
+│ ├ shrink			Done in 0.015094s 
+├ shrinkManifold		Done in 0.55054s 
+├ Add new vertices		Done in 0.192595s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.171382s 
+│ ├ rayRetracing		Done in 0.55629s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.057 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.188 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.032 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.127 s	 / 	94306
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.293 s	 / 	266667
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.010 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.031 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.011 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.054 s	 / 	12986
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.268 s	 / 	9439
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					125	 / 	23196
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		151886
+│ ├ growManifold		Done in 0.413366s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.014 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.000 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.000 s	 / 	16
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	2
+│ ├ growManifoldSev		Done in 0.016351s 
+ManifoldManager::regionGrowingProcedure3: 		 tetsQueue is empty
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.019 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					0	 / 	25128
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		151886
+│ ├ growManifold		Done in 0.027151s 
+updateTriangulation		Done in 1.92988s 
+main loop						Done in 1.93054s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 178 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 6e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.001 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.006 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.019 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.004 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.001 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.027 s	 / 	29795
+ManifoldManager::shrinkManifold3:				 test:					0.150 s	 / 	29048
+ManifoldManager::shrinkManifold3:				 shrink:				0.318 s	 / 	11440
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					3271	 / 	25128
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			17407	 / 	29795
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	12388
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		151886
+│ ├ shrink			Done in 0.611335s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.053 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.045 s	 / 	1989
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					948	 / 	22805
+│ ├ shrinkSeveral		Done in 0.056209s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	864
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	116
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	28
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					789	 / 	22646
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			834	 / 	864
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	30
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		151886
+│ ├ shrink			Done in 0.013934s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.013 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.012 s	 / 	568
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					772	 / 	22629
+│ ├ shrinkSeveral		Done in 0.015442s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	787
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	39
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	1
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					767	 / 	22624
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			785	 / 	787
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	2
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		151886
+│ ├ shrink			Done in 0.016841s 
+├ shrinkManifold		Done in 0.714184s 
+├ Add new vertices		Done in 0.143103s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.145123s 
+│ ├ rayRetracing		Done in 0.30237s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.047 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.132 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.018 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.065 s	 / 	60372
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.160 s	 / 	171852
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.013 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.054 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.019 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.070 s	 / 	16844
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.352 s	 / 	12211
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					87	 / 	22624
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		152696
+│ ├ growManifold		Done in 0.555459s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.019 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.000 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.000 s	 / 	16
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	2
+│ ├ growManifoldSev		Done in 0.021881s 
+ManifoldManager::regionGrowingProcedure3: 		 tetsQueue is empty
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.024 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					0	 / 	25256
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		152696
+│ ├ growManifold		Done in 0.036721s 
+updateTriangulation		Done in 1.92343s 
+main loop						Done in 1.92493s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 179 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 0.004764s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.008 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.023 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.004 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.002 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.024 s	 / 	35117
+ManifoldManager::shrinkManifold3:				 test:					0.203 s	 / 	34772
+ManifoldManager::shrinkManifold3:				 shrink:				0.384 s	 / 	13539
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					3399	 / 	25256
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			20965	 / 	35117
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	14152
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		152936
+│ ├ shrink			Done in 0.74997s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.062 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.052 s	 / 	2576
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					613	 / 	22470
+│ ├ shrinkSeveral		Done in 0.064011s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.001 s	 / 	415
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	67
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	12
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					361	 / 	22218
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			368	 / 	415
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	47
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		152936
+│ ├ shrink			Done in 0.014492s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.012 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.011 s	 / 	471
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					361	 / 	22218
+│ ├ shrinkSeveral		Done in 0.013553s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	361
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	13
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					361	 / 	22218
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			361	 / 	361
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		152936
+│ ├ shrink			Done in 0.008857s 
+├ shrinkManifold		Done in 0.851239s 
+├ Add new vertices		Done in 0.079037s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.15252s 
+│ ├ rayRetracing		Done in 0.236098s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.041 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.105 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.016 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.057 s	 / 	49024
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.144 s	 / 	139490
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.011 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.077 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.026 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.088 s	 / 	19941
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.421 s	 / 	14409
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					108	 / 	22218
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		153692
+│ ├ growManifold		Done in 0.676776s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.022 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.001 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.000 s	 / 	22
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					1	 / 	3
+│ ├ growManifoldSev		Done in 0.025133s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.025 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	1
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					1	 / 	25370
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		153692
+│ ├ growManifold		Done in 0.038019s 
+updateTriangulation		Done in 2.07073s 
+main loop						Done in 2.07231s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 180 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 4e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.004 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.024 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.005 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.002 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.030 s	 / 	37802
+ManifoldManager::shrinkManifold3:				 test:					0.195 s	 / 	37584
+ManifoldManager::shrinkManifold3:				 shrink:				0.413 s	 / 	14632
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					3513	 / 	25370
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			22716	 / 	37802
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	15086
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		153692
+│ ├ shrink			Done in 0.778351s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.074 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.063 s	 / 	2838
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					451	 / 	22311
+│ ├ shrinkSeveral		Done in 0.076043s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.001 s	 / 	314
+ManifoldManager::shrinkManifold3:				 test:					0.002 s	 / 	100
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	4
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					259	 / 	22119
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			278	 / 	314
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	36
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		153692
+│ ├ shrink			Done in 0.015985s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.035 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.031 s	 / 	1384
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					262	 / 	22122
+│ ├ shrinkSeveral		Done in 0.036626s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	262
+ManifoldManager::shrinkManifold3:				 test:					0.000 s	 / 	48
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					262	 / 	22122
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			262	 / 	262
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		153692
+│ ├ shrink			Done in 0.011947s 
+├ shrinkManifold		Done in 0.919316s 
+├ Add new vertices		Done in 0.113042s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.16644s 
+│ ├ rayRetracing		Done in 0.306208s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.045 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.126 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.020 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.068 s	 / 	62946
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.187 s	 / 	177715
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.011 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.108 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.032 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.110 s	 / 	21833
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.531 s	 / 	15761
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					125	 / 	22122
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		154543
+│ ├ growManifold		Done in 0.850221s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.022 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.001 s	 / 	85
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					2	 / 	4
+│ ├ growManifoldSev		Done in 0.027201s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.026 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	36
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					3	 / 	25465
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		154543
+│ ├ growManifold		Done in 0.040051s 
+updateTriangulation		Done in 2.42533s 
+main loop						Done in 2.42577s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 181 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 5e-06s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.004 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.030 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.009 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.005 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.032 s	 / 	41489
+ManifoldManager::shrinkManifold3:				 test:					0.227 s	 / 	41339
+ManifoldManager::shrinkManifold3:				 shrink:				0.477 s	 / 	15731
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					3607	 / 	25464
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			25292	 / 	41489
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	16197
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		154543
+│ ├ shrink			Done in 0.899934s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.091 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.078 s	 / 	3470
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					416	 / 	22323
+│ ├ shrinkSeveral		Done in 0.092639s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	335
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	200
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	11
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					194	 / 	22098
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			308	 / 	335
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	27
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		154543
+│ ├ shrink			Done in 0.017889s 
+ManifoldManager::shrinkSeveralAtOnce3:				 queue init:				0.001 s
+ManifoldManager::shrinkSeveralAtOnce3:				 queue popping:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 enclosing:				0.000 s
+ManifoldManager::shrinkSeveralAtOnce3:				 addAndCheckManifoldness:		0.046 s
+ManifoldManager::shrinkSeveralAtOnce3:				 isRegular:				0.040 s	 / 	1765
+ManifoldManager::shrinkSeveralAtOnce3:				 countQueueInitCells:					198	 / 	22102
+│ ├ shrinkSeveral		Done in 0.047342s 
+ManifoldManager::shrinkManifold3:				 lastEnclosingPointCache:		0.000 s
+ManifoldManager::shrinkManifold3:				 queue init:				0.001 s
+ManifoldManager::shrinkManifold3:				 queue inserting:			0.000 s
+ManifoldManager::shrinkManifold3:				 queue popping:				0.000 s
+ManifoldManager::shrinkManifold3:				 inserting:				0.000 s
+ManifoldManager::shrinkManifold3:				 enclosing:				0.000 s	 / 	198
+ManifoldManager::shrinkManifold3:				 test:					0.001 s	 / 	63
+ManifoldManager::shrinkManifold3:				 shrink:				0.000 s	 / 	0
+ManifoldManager::shrinkManifold3:				 countQueueInitCells:					198	 / 	22102
+ManifoldManager::shrinkManifold3:				 countSuccessfulEnclosingVersionCache:			198	 / 	198
+ManifoldManager::shrinkManifold3:				 countSuccessfulLastEnclosingPointCache:		0	 / 	0
+ManifoldManager::shrinkManifold3:				 number_of_finite_cells:		154543
+│ ├ shrink			Done in 0.017768s 
+├ shrinkManifold		Done in 1.07595s 
+├ Add new vertices		Done in 0.093691s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.139676s 
+│ ├ rayRetracing		Done in 0.219168s 
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.036 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.101 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.016 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.056 s	 / 	52990
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.128 s	 / 	151182
+
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.011 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.102 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.034 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.097 s	 / 	22860
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.502 s	 / 	16549
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					123	 / 	22102
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		155398
+│ ├ growManifold		Done in 0.805445s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.022 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.002 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.002 s	 / 	85
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					2	 / 	4
+│ ├ growManifoldSev		Done in 0.028228s 
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.026 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	36
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.001 s	 / 	28
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					4	 / 	25619
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		155398
+│ ├ growManifold		Done in 0.040856s 
+updateTriangulation		Done in 2.40569s 
+main loop						Done in 2.4061s 
+
+
+ReconstructFromSLAMData::updateManifold iteration 181 / 180
+┍ updateTriangulation
+├ updateSteinerGrid		Done in 3e-06s 
+├ shrinkManifold		Skipped
+├ Add new vertices		Skipped
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Skipped
+│ ├ rayRetracing		Skipped
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 useless:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 first cell:			0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 cell traversing:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 selection:		0.000 s
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d1 w update:		0.000 s	 / 	0
+ManifoldMeshReconstructor::updateTriangulation:			 rt2	 neighbours d2 w update:		0.000 s	 / 	0
+
+ManifoldManager::regionGrowingProcedure3: 		 tetsQueue is emptyManifoldManager::regionGrowingProcedure3:			 queue init:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					0	 / 	25618
+
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		155398
+│ ├ growManifold		Done in 0.00805s 
+ManifoldManager::growSeveralAtOnce3:				 queue init:			0.000 s
+ManifoldManager::growSeveralAtOnce3:				 remove and check manifoldness:		0.000 s
+ManifoldManager::growSeveralAtOnce3:				 isRegular:				0.000 s	 / 	0
+ManifoldManager::growSeveralAtOnce3:			 successfully growned:					0	 / 	0
+│ ├ growManifoldSev		Done in 0.000258s 
+ManifoldManager::regionGrowingProcedure3: 		 tetsQueue is empty
+ManifoldManager::regionGrowingProcedure3:			 queue init:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue inserting:			0.000 s
+ManifoldManager::regionGrowingProcedure3:			 queue popping:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 inserting:				0.000 s
+ManifoldManager::regionGrowingProcedure3:			 test:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 grow:					0.000 s	 / 	0
+ManifoldManager::regionGrowingProcedure3:			 countQueueInitCells:					0	 / 	25618
+ManifoldManager::regionGrowingProcedure3:			 number_of_finite_cells:		155398
+│ ├ growManifold		Done in 0.010939s 
+updateTriangulation		Done in 0.020262s 
+saving output/manifold_final.off
+save manifold			Done in 0.776377s 
+main						Done in 295.982s 
+

@@ -1,0 +1,39 @@
+#!/usr/bin/gnuplot
+reset
+
+set xlabel "num_cameras"
+#set xrange [0:70] 
+#set yrange [0:7] 
+
+#set term png
+#set output "time_stats_graph.png"
+
+set datafile separator ","
+
+set key autotitle columnhead
+set key reverse Left outside
+set grid
+set style data linespoints
+
+plot input_file using 1:2, \
+"" using 1:4, \
+"" using 1:5, \
+"" using 1:6, \
+"" using 1:7, \
+"" using 1:8, \
+"" using 1:9, \
+"" using 1:10, \
+"" using 1:11, \
+"" using 1:12, \
+"" using 1:13, \
+"" using 1:14, \
+"" using 1:15, \
+"" using 1:16, \
+"" using 1:17, \
+"" using 1:18, \
+"" using 1:19, \
+"" using 1:20, \
+"" using 1:21
+#
+
+pause -1

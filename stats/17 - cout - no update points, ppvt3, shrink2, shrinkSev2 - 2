@@ -1,0 +1,1893 @@
+max_iterations not set
+
+input set to: /home/enrico/workspace-cpp/ORB_SLAM2_Enri2077/KeyFrameAndPointsTrajectory_stereo_kitti.json
+config set to: config/manifRecConfig_default.json
+max_iterations set to: 0
+inverseConicEnabled: 1
+maxDistanceCamFeature: 40
+probOrVoteThreshold: 20
+enableSuboptimalPolicy: 0
+suboptimalMethod: 0
+w_1: 10
+w_2: 2
+w_3: 1
+steinerGridStepLength: 50
+steinerGridSideLength: 280
+manifold_update_every: 4
+initial_manifold_update_skip: 2
+save_manifold_every: 32
+primary_points_visibility_threshold: 3
+all_sort_of_output: 0
+update_points_position: 0
+
+start parsing /home/enrico/workspace-cpp/ORB_SLAM2_Enri2077/KeyFrameAndPointsTrajectory_stereo_kitti.json
+Parsing				Done in 1.43659s 
+orb: 181 cams
+
+Done in 2.8e-05s 
+Done in 2.1e-05s 
+Done in 0.0014s 
+
+ReconstructFromSLAMData::updateManifold iteration 4 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100	←	x	→	100
+		-100	←	y	→	100
+		-50	←	z	→	100
+├ initSteinerGrid		Done in 0.013024s 
+			 s:	0	 / 	0	 c:	288	 i:	1
+│ ├ shrink			Done in 0.000228s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.000s	 / 	0
+│ ├ shrinkSeveral		Done in 0.000204s 
+			 s:	0	 / 	0	 c:	288	 i:	1
+│ ├ shrink			Done in 0.000142s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.000s	 / 	0
+│ ├ shrinkSeveral		Done in 0.000195s 
+			 s:	0	 / 	0	 c:	288	 i:	1
+│ ├ shrink			Done in 0.000143s 
+├ shrinkManifold		Done in 0.001232s 
+├ Add new vertices		Done in 0.02291s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.318507s 
+│ ├ rayRetracing		Skipped
+updateTriangulation		Done in 0.365882s 
+
+┍ growManifold
+├ growManifold			Done in 0.039981s 
+├ growManifoldSev		Done in 0.114834s 
+├ growManifold			Done in 0.001987s 
+growManifold			Done in 0.157195s 
+Done in 0.524167s 
+Done in 0.000874s 
+Done in 0.000676s 
+Done in 0.000814s 
+
+ReconstructFromSLAMData::updateManifold iteration 8 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	100.000
+├ updateSteinerGrid		Done in 0.000223s 
+			 s:	1281	 / 	3194	 c:	2133	 i:	10
+│ ├ shrink			Done in 0.064754s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.032
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.029s	 / 	2134
+│ ├ shrinkSeveral		Done in 0.032045s 
+			 s:	3	 / 	3	 c:	2133	 i:	1
+│ ├ shrink			Done in 0.000375s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.000s	 / 	0
+│ ├ shrinkSeveral		Done in 0.000208s 
+			 s:	0	 / 	0	 c:	2133	 i:	1
+│ ├ shrink			Done in 0.000284s 
+├ shrinkManifold		Done in 0.098032s 
+├ Add new vertices		Done in 0.193288s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.657608s 
+│ ├ rayRetracing		Done in 0.508333s 
+updateTriangulation		Done in 1.47049s 
+
+┍ growManifold
+├ growManifold			Done in 0.086774s 
+├ growManifoldSev		Done in 0.298281s 
+├ growManifold			Done in 0.005611s 
+growManifold			Done in 0.391263s 
+Done in 1.86247s 
+Done in 0.000696s 
+Done in 0.000723s 
+Done in 0.000588s 
+
+ReconstructFromSLAMData::updateManifold iteration 12 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	150.000
+├ updateSteinerGrid		Done in 0.004792s 
+			 s:	2284	 / 	6442	 c:	3530	 i:	13
+│ ├ shrink			Done in 0.185071s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.077
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.070s	 / 	5207
+│ ├ shrinkSeveral		Done in 0.076998s 
+			 s:	3	 / 	3	 c:	3530	 i:	1
+│ ├ shrink			Done in 0.000628s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.000s	 / 	0
+│ ├ shrinkSeveral		Done in 0.000188s 
+			 s:	0	 / 	0	 c:	3530	 i:	1
+│ ├ shrink			Done in 0.000351s 
+├ shrinkManifold		Done in 0.263586s 
+├ Add new vertices		Done in 0.207621s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.317522s 
+│ ├ rayRetracing		Done in 0.547071s 
+updateTriangulation		Done in 1.35962s 
+
+┍ growManifold
+├ growManifold			Done in 0.112363s 
+├ growManifoldSev		Done in 0.356001s 
+├ growManifold			Done in 0.006704s 
+growManifold			Done in 0.475432s 
+Done in 1.83606s 
+Done in 0.000744s 
+Done in 0.000567s 
+Done in 0.000726s 
+
+ReconstructFromSLAMData::updateManifold iteration 16 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	150.000
+├ updateSteinerGrid		Done in 0.000218s 
+			 s:	3124	 / 	8860	 c:	4658	 i:	14
+│ ├ shrink			Done in 0.179045s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.086
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.078s	 / 	5514
+│ ├ shrinkSeveral		Done in 0.086075s 
+			 s:	7	 / 	7	 c:	4658	 i:	1
+│ ├ shrink			Done in 0.000565s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.000s	 / 	0
+│ ├ shrinkSeveral		Done in 0.000181s 
+			 s:	0	 / 	0	 c:	4658	 i:	1
+│ ├ shrink			Done in 0.000419s 
+├ shrinkManifold		Done in 0.266623s 
+├ Add new vertices		Done in 0.093123s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.358102s 
+│ ├ rayRetracing		Done in 0.372893s 
+updateTriangulation		Done in 1.11423s 
+
+┍ growManifold
+├ growManifold			Done in 0.151892s 
+├ growManifoldSev		Done in 0.477448s 
+├ growManifold			Done in 0.00816s 
+growManifold			Done in 0.637831s 
+Done in 1.75299s 
+Done in 0.001584s 
+Done in 0.000858s 
+Done in 0.000891s 
+
+ReconstructFromSLAMData::updateManifold iteration 20 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	150.000
+├ updateSteinerGrid		Done in 0.000227s 
+			 s:	3844	 / 	11917	 c:	5668	 i:	16
+│ ├ shrink			Done in 0.244488s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.095
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.085s	 / 	6019
+│ ├ shrinkSeveral		Done in 0.095178s 
+			 s:	64	 / 	236	 c:	5668	 i:	5
+│ ├ shrink			Done in 0.003955s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.012
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.011s	 / 	833
+│ ├ shrinkSeveral		Done in 0.012751s 
+			 s:	8	 / 	16	 c:	5668	 i:	1
+│ ├ shrink			Done in 0.000738s 
+├ shrinkManifold		Done in 0.357441s 
+├ Add new vertices		Done in 0.103864s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.448749s 
+│ ├ rayRetracing		Done in 0.365568s 
+updateTriangulation		Done in 1.3075s 
+
+┍ growManifold
+├ growManifold			Done in 0.161712s 
+├ growManifoldSev		Done in 0.562921s 
+├ growManifold			Done in 0.009472s 
+growManifold			Done in 0.734479s 
+Done in 2.04335s 
+Done in 0.000815s 
+Done in 0.000935s 
+Done in 0.000822s 
+
+ReconstructFromSLAMData::updateManifold iteration 24 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	150.000
+├ updateSteinerGrid		Done in 0.000216s 
+			 s:	4714	 / 	13885	 c:	6834	 i:	16
+│ ├ shrink			Done in 0.294816s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.129
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.116s	 / 	7110
+│ ├ shrinkSeveral		Done in 0.129616s 
+			 s:	60	 / 	257	 c:	6834	 i:	5
+│ ├ shrink			Done in 0.005048s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.038
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.035s	 / 	2176
+│ ├ shrinkSeveral		Done in 0.038894s 
+			 s:	0	 / 	0	 c:	6834	 i:	1
+│ ├ shrink			Done in 0.000956s 
+├ shrinkManifold		Done in 0.469728s 
+├ Add new vertices		Done in 0.172352s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.400998s 
+│ ├ rayRetracing		Done in 0.555192s 
+updateTriangulation		Done in 1.63955s 
+
+┍ growManifold
+├ growManifold			Done in 0.254004s 
+├ growManifoldSev		Done in 0.714773s 
+├ growManifold			Done in 0.011551s 
+growManifold			Done in 0.980659s 
+Done in 2.62141s 
+Done in 0.001128s 
+Done in 0.000935s 
+Done in 0.000974s 
+
+ReconstructFromSLAMData::updateManifold iteration 28 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	150.000
+├ updateSteinerGrid		Done in 0.000227s 
+			 s:	5505	 / 	17651	 c:	8021	 i:	15
+│ ├ shrink			Done in 0.384258s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.255
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.229s	 / 	13057
+│ ├ shrinkSeveral		Done in 0.25631s 
+			 s:	223	 / 	883	 c:	8021	 i:	7
+│ ├ shrink			Done in 0.018017s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.041
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.038s	 / 	2578
+│ ├ shrinkSeveral		Done in 0.041714s 
+			 s:	6	 / 	9	 c:	8021	 i:	1
+│ ├ shrink			Done in 0.000806s 
+├ shrinkManifold		Done in 0.701472s 
+├ Add new vertices		Done in 0.223066s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.457401s 
+│ ├ rayRetracing		Done in 0.716257s 
+updateTriangulation		Done in 2.15166s 
+
+┍ growManifold
+├ growManifold			Done in 0.291225s 
+├ growManifoldSev		Done in 0.834046s 
+├ growManifold			Done in 0.013429s 
+growManifold			Done in 1.13902s 
+Done in 3.29217s 
+Done in 0.001207s 
+Done in 0.001149s 
+Done in 0.00133s 
+
+ReconstructFromSLAMData::updateManifold iteration 32 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.001722s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 5
+			 s:	6522	 / 	19020	 c:	9404	 i:	14
+│ ├ shrink			Done in 0.46057s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.262
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.234s	 / 	14011
+│ ├ shrinkSeveral		Done in 0.262948s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	197	 / 	849	 c:	9404	 i:	7
+│ ├ shrink			Done in 0.016005s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.043
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.039s	 / 	3042
+│ ├ shrinkSeveral		Done in 0.04381s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	22	 / 	29	 c:	9404	 i:	2
+│ ├ shrink			Done in 0.001801s 
+├ shrinkManifold		Done in 0.785547s 
+├ Add new vertices		Done in 0.271796s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.675833s 
+│ ├ rayRetracing		Done in 0.774409s 
+updateTriangulation		Done in 2.58139s 
+
+┍ growManifold
+├ growManifold			Done in 0.327221s 
+├ growManifoldSev		Done in 0.912561s 
+├ growManifold			Done in 0.015094s 
+growManifold			Done in 1.25521s 
+saving output/manifold_current.off
+save manifold			Done in 0.044684s 
+Done in 3.8843s 
+Done in 0.001415s 
+Done in 0.001921s 
+Done in 0.001713s 
+
+ReconstructFromSLAMData::updateManifold iteration 36 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000232s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	7826	 / 	23440	 c:	11084	 i:	15
+│ ├ shrink			Done in 0.602971s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.334
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.302s	 / 	16018
+│ ├ shrinkSeveral		Done in 0.335176s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	244	 / 	1171	 c:	11084	 i:	6
+│ ├ shrink			Done in 0.023817s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.111
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.101s	 / 	5741
+│ ├ shrinkSeveral		Done in 0.111332s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	15	 / 	34	 c:	11084	 i:	1
+│ ├ shrink			Done in 0.002286s 
+├ shrinkManifold		Done in 1.07595s 
+├ Add new vertices		Done in 0.38921s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.986089s 
+│ ├ rayRetracing		Done in 1.02784s 
+updateTriangulation		Done in 3.57656s 
+
+┍ growManifold
+├ growManifold			Done in 0.385935s 
+├ growManifoldSev		Done in 1.31562s 
+├ growManifold			Done in 0.020643s 
+growManifold			Done in 1.72252s 
+Done in 5.30148s 
+Done in 0.001202s 
+Done in 0.001011s 
+Done in 0.001528s 
+
+ReconstructFromSLAMData::updateManifold iteration 40 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.00021s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	8926	 / 	27039	 c:	12806	 i:	14
+│ ├ shrink			Done in 0.695002s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.426
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.383s	 / 	20187
+│ ├ shrinkSeveral		Done in 0.427856s 
+			 s:	360	 / 	1537	 c:	12806	 i:	6
+│ ├ shrink			Done in 0.03454s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.137
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.124s	 / 	6768
+│ ├ shrinkSeveral		Done in 0.137859s 
+			 s:	24	 / 	47	 c:	12806	 i:	1
+│ ├ shrink			Done in 0.002154s 
+├ shrinkManifold		Done in 1.29778s 
+├ Add new vertices		Done in 0.393182s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.818179s 
+│ ├ rayRetracing		Done in 1.53004s 
+updateTriangulation		Done in 4.15961s 
+
+┍ growManifold
+├ growManifold			Done in 0.450128s 
+├ growManifoldSev		Done in 1.66994s 
+├ growManifold			Done in 0.032837s 
+growManifold			Done in 2.15326s 
+Done in 6.31542s 
+Done in 0.001272s 
+Done in 0.001204s 
+Done in 0.001164s 
+
+ReconstructFromSLAMData::updateManifold iteration 44 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000218s 
+			 s:	10368	 / 	32345	 c:	14550	 i:	16
+│ ├ shrink			Done in 0.805262s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.426
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.386s	 / 	21077
+│ ├ shrinkSeveral		Done in 0.42825s 
+			 s:	261	 / 	920	 c:	14550	 i:	6
+│ ├ shrink			Done in 0.018554s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.047
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.042s	 / 	2685
+│ ├ shrinkSeveral		Done in 0.047598s 
+			 s:	16	 / 	25	 c:	14550	 i:	1
+│ ├ shrink			Done in 0.001615s 
+├ shrinkManifold		Done in 1.30164s 
+├ Add new vertices		Done in 0.261314s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.492003s 
+│ ├ rayRetracing		Done in 1.51285s 
+updateTriangulation		Done in 3.70683s 
+
+┍ growManifold
+├ growManifold			Done in 0.625548s 
+├ growManifoldSev		Done in 1.49554s 
+├ growManifold			Done in 0.031659s 
+growManifold			Done in 2.15305s 
+Done in 5.86164s 
+Done in 0.000852s 
+Done in 0.000659s 
+Done in 0.000912s 
+
+ReconstructFromSLAMData::updateManifold iteration 48 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.00023s 
+			 s:	11142	 / 	38679	 c:	16232	 i:	18
+│ ├ shrink			Done in 1.04504s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.604
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.542s	 / 	29783
+│ ├ shrinkSeveral		Done in 0.606945s 
+			 s:	536	 / 	2933	 c:	16232	 i:	7
+│ ├ shrink			Done in 0.058305s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.233
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.210s	 / 	11357
+│ ├ shrinkSeveral		Done in 0.234188s 
+			 s:	49	 / 	125	 c:	16232	 i:	1
+│ ├ shrink			Done in 0.004103s 
+├ shrinkManifold		Done in 1.94893s 
+├ Add new vertices		Done in 0.118478s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.248928s 
+│ ├ rayRetracing		Done in 0.490232s 
+updateTriangulation		Done in 2.9515s 
+
+┍ growManifold
+├ growManifold			Done in 0.582509s 
+├ growManifoldSev		Done in 2.51731s 
+├ growManifold			Done in 0.059031s 
+growManifold			Done in 3.1594s 
+Done in 6.11281s 
+Done in 0.000924s 
+Done in 0.000729s 
+Done in 0.000842s 
+
+ReconstructFromSLAMData::updateManifold iteration 52 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	100.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.001213s 
+			 s:	12364	 / 	37540	 c:	17819	 i:	15
+│ ├ shrink			Done in 1.72712s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 1.271
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 1.153s	 / 	31049
+│ ├ shrinkSeveral		Done in 1.27319s 
+			 s:	362	 / 	1441	 c:	17819	 i:	7
+│ ├ shrink			Done in 0.065951s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.142
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.122s	 / 	4679
+│ ├ shrinkSeveral		Done in 0.152132s 
+			 s:	15	 / 	27	 c:	17819	 i:	1
+│ ├ shrink			Done in 0.002079s 
+├ shrinkManifold		Done in 3.22128s 
+├ Add new vertices		Done in 0.14401s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.305977s 
+│ ├ rayRetracing		Done in 0.369642s 
+updateTriangulation		Done in 4.21889s 
+
+┍ growManifold
+├ growManifold			Done in 0.6933s 
+├ growManifoldSev		Done in 2.83258s 
+├ growManifold			Done in 0.036791s 
+growManifold			Done in 3.56973s 
+Done in 7.79003s 
+Done in 0.000938s 
+Done in 0.000884s 
+Done in 0.000787s 
+
+ReconstructFromSLAMData::updateManifold iteration 56 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.00145s 
+			 s:	13454	 / 	39900	 c:	19014	 i:	16
+│ ├ shrink			Done in 1.23006s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.579
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.517s	 / 	23473
+│ ├ shrinkSeveral		Done in 0.592321s 
+			 s:	362	 / 	1723	 c:	19014	 i:	7
+│ ├ shrink			Done in 0.051969s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.238
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.220s	 / 	8438
+│ ├ shrinkSeveral		Done in 0.238462s 
+			 s:	13	 / 	20	 c:	19014	 i:	1
+│ ├ shrink			Done in 0.001543s 
+├ shrinkManifold		Done in 2.11503s 
+├ Add new vertices		Done in 0.071632s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.268494s 
+│ ├ rayRetracing		Done in 0.25797s 
+updateTriangulation		Done in 2.88011s 
+
+┍ growManifold
+├ growManifold			Done in 0.723054s 
+├ growManifoldSev		Done in 2.05544s 
+├ growManifold			Done in 0.035905s 
+growManifold			Done in 2.81474s 
+Done in 5.69597s 
+Done in 0.001015s 
+Done in 0.00096s 
+Done in 0.000786s 
+
+ReconstructFromSLAMData::updateManifold iteration 60 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000222s 
+			 s:	13878	 / 	48020	 c:	20072	 i:	19
+│ ├ shrink			Done in 1.34319s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.680
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.612s	 / 	36293
+│ ├ shrinkSeveral		Done in 0.683185s 
+			 s:	501	 / 	2884	 c:	20072	 i:	8
+│ ├ shrink			Done in 0.054744s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.211
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.191s	 / 	11440
+│ ├ shrinkSeveral		Done in 0.212392s 
+			 s:	45	 / 	62	 c:	20072	 i:	1
+│ ├ shrink			Done in 0.002747s 
+├ shrinkManifold		Done in 2.29662s 
+├ Add new vertices		Done in 0.218396s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.333467s 
+│ ├ rayRetracing		Done in 0.42439s 
+updateTriangulation		Done in 3.45452s 
+
+┍ growManifold
+├ growManifold			Done in 0.772187s 
+├ growManifoldSev		Done in 2.80515s 
+├ growManifold			Done in 0.048133s 
+growManifold			Done in 3.62583s 
+Done in 7.08182s 
+Done in 0.000795s 
+Done in 0.006887s 
+Done in 0.000818s 
+
+ReconstructFromSLAMData::updateManifold iteration 64 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000228s 
+			 s:	15319	 / 	42519	 c:	21559	 i:	14
+│ ├ shrink			Done in 1.30977s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.578
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.523s	 / 	27182
+│ ├ shrinkSeveral		Done in 0.580037s 
+			 s:	292	 / 	1117	 c:	21559	 i:	5
+│ ├ shrink			Done in 0.022758s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.000
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.112
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.102s	 / 	6561
+│ ├ shrinkSeveral		Done in 0.112393s 
+			 s:	7	 / 	11	 c:	21559	 i:	1
+│ ├ shrink			Done in 0.002639s 
+├ shrinkManifold		Done in 2.02796s 
+├ Add new vertices		Done in 0.201837s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.529175s 
+│ ├ rayRetracing		Done in 0.627037s 
+updateTriangulation		Done in 3.58063s 
+
+┍ growManifold
+├ growManifold			Done in 0.859533s 
+├ growManifoldSev		Done in 2.26432s 
+├ growManifold			Done in 0.041807s 
+growManifold			Done in 3.16599s 
+saving output/manifold_current.off
+save manifold			Done in 0.095019s 
+Done in 6.84303s 
+Done in 0.001382s 
+Done in 0.00094s 
+Done in 0.000849s 
+
+ReconstructFromSLAMData::updateManifold iteration 68 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000218s 
+			 s:	15771	 / 	51399	 c:	22780	 i:	17
+│ ├ shrink			Done in 1.44785s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.002
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.811
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.732s	 / 	42074
+│ ├ shrinkSeveral		Done in 0.81652s 
+			 s:	515	 / 	2773	 c:	22780	 i:	7
+│ ├ shrink			Done in 0.055398s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.002
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.240
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.218s	 / 	11480
+│ ├ shrinkSeveral		Done in 0.242693s 
+			 s:	23	 / 	108	 c:	22780	 i:	1
+│ ├ shrink			Done in 0.004725s 
+├ shrinkManifold		Done in 2.56751s 
+├ Add new vertices		Done in 0.214708s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.52868s 
+│ ├ rayRetracing		Done in 0.527329s 
+updateTriangulation		Done in 4.0508s 
+
+┍ growManifold
+├ growManifold			Done in 0.884423s 
+├ growManifoldSev		Done in 2.91194s 
+├ growManifold			Done in 0.051057s 
+growManifold			Done in 3.84778s 
+Done in 7.90032s 
+Done in 0.001043s 
+Done in 0.00131s 
+Done in 0.001737s 
+
+ReconstructFromSLAMData::updateManifold iteration 72 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000223s 
+			 s:	16510	 / 	50974	 c:	23995	 i:	17
+│ ├ shrink			Done in 1.45079s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.009
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.674
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.609s	 / 	36070
+│ ├ shrinkSeveral		Done in 0.685637s 
+			 s:	348	 / 	1639	 c:	23995	 i:	5
+│ ├ shrink			Done in 0.039844s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.009
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.129
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.116s	 / 	6699
+│ ├ shrinkSeveral		Done in 0.139092s 
+			 s:	53	 / 	382	 c:	23995	 i:	3
+│ ├ shrink			Done in 0.016955s 
+├ shrinkManifold		Done in 2.33266s 
+├ Add new vertices		Done in 0.339669s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.409069s 
+│ ├ rayRetracing		Done in 0.843473s 
+updateTriangulation		Done in 4.1589s 
+
+┍ growManifold
+├ growManifold			Done in 0.930662s 
+├ growManifoldSev		Done in 2.45216s 
+├ growManifold			Done in 0.047549s 
+growManifold			Done in 3.43071s 
+Done in 7.59066s 
+Done in 0.00075s 
+Done in 0.000871s 
+Done in 0.000899s 
+
+ReconstructFromSLAMData::updateManifold iteration 76 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000238s 
+			 s:	15682	 / 	51606	 c:	25177	 i:	18
+│ ├ shrink			Done in 1.57082s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.033
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.655
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.590s	 / 	33268
+│ ├ shrinkSeveral		Done in 0.690472s 
+			 s:	484	 / 	3116	 c:	25177	 i:	7
+│ ├ shrink			Done in 0.09037s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.032
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.198
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.179s	 / 	9798
+│ ├ shrinkSeveral		Done in 0.231971s 
+			 s:	53	 / 	724	 c:	25177	 i:	2
+│ ├ shrink			Done in 0.036666s 
+├ shrinkManifold		Done in 2.62065s 
+├ Add new vertices		Done in 0.236184s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.368806s 
+│ ├ rayRetracing		Done in 0.93615s 
+updateTriangulation		Done in 4.41336s 
+
+┍ growManifold
+├ growManifold			Done in 0.859048s 
+├ growManifoldSev		Done in 2.94564s 
+├ growManifold			Done in 0.047771s 
+growManifold			Done in 3.85281s 
+Done in 8.2672s 
+Done in 0.00079s 
+Done in 0.000781s 
+Done in 0.000766s 
+
+ReconstructFromSLAMData::updateManifold iteration 80 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000243s 
+			 s:	16155	 / 	56779	 c:	26703	 i:	22
+│ ├ shrink			Done in 1.70051s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.035
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.661
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.597s	 / 	34610
+│ ├ shrinkSeveral		Done in 0.698508s 
+			 s:	347	 / 	2564	 c:	26703	 i:	7
+│ ├ shrink			Done in 0.073109s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.035
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.149
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.134s	 / 	7416
+│ ├ shrinkSeveral		Done in 0.185698s 
+			 s:	24	 / 	804	 c:	26703	 i:	1
+│ ├ shrink			Done in 0.037071s 
+├ shrinkManifold		Done in 2.69524s 
+├ Add new vertices		Done in 0.083609s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.243896s 
+│ ├ rayRetracing		Done in 0.531061s 
+updateTriangulation		Done in 3.81611s 
+
+┍ growManifold
+├ growManifold			Done in 0.920403s 
+├ growManifoldSev		Done in 2.79074s 
+├ growManifold			Done in 0.048387s 
+growManifold			Done in 3.75986s 
+Done in 7.57747s 
+Done in 0.001059s 
+Done in 0.001225s 
+Done in 0.001279s 
+
+ReconstructFromSLAMData::updateManifold iteration 84 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	200.000
+├ updateSteinerGrid		Done in 0.000228s 
+			 s:	16523	 / 	53477	 c:	28008	 i:	19
+│ ├ shrink			Done in 1.51366s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.042
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.556
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.498s	 / 	29711
+│ ├ shrinkSeveral		Done in 0.600838s 
+			 s:	435	 / 	2932	 c:	28008	 i:	6
+│ ├ shrink			Done in 0.082971s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.042
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.153
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.137s	 / 	7859
+│ ├ shrinkSeveral		Done in 0.19691s 
+			 s:	60	 / 	979	 c:	28008	 i:	2
+│ ├ shrink			Done in 0.046213s 
+├ shrinkManifold		Done in 2.44095s 
+├ Add new vertices		Done in 0.078644s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.319946s 
+│ ├ rayRetracing		Done in 0.172799s 
+updateTriangulation		Done in 3.29838s 
+
+┍ growManifold
+├ growManifold			Done in 0.94745s 
+├ growManifoldSev		Done in 3.33265s 
+├ growManifold			Done in 0.056349s 
+growManifold			Done in 4.33678s 
+Done in 7.63728s 
+Done in 0.00118s 
+Done in 0.001443s 
+Done in 0.001882s 
+
+ReconstructFromSLAMData::updateManifold iteration 88 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	250.000
+├ updateSteinerGrid		Done in 0.001534s 
+			 s:	16164	 / 	53637	 c:	29483	 i:	22
+│ ├ shrink			Done in 1.52528s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.053
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.432
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.389s	 / 	23623
+│ ├ shrinkSeveral		Done in 0.487644s 
+			 s:	269	 / 	2557	 c:	29483	 i:	6
+│ ├ shrink			Done in 0.090457s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.055
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.096
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.085s	 / 	4945
+│ ├ shrinkSeveral		Done in 0.151697s 
+			 s:	25	 / 	1308	 c:	29483	 i:	2
+│ ├ shrink			Done in 0.058674s 
+├ shrinkManifold		Done in 2.31415s 
+├ Add new vertices		Done in 0.122357s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.387457s 
+│ ├ rayRetracing		Done in 0.308451s 
+updateTriangulation		Done in 3.43548s 
+
+┍ growManifold
+├ growManifold			Done in 0.937287s 
+├ growManifoldSev		Done in 3.40146s 
+├ growManifold			Done in 0.061975s 
+growManifold			Done in 4.40105s 
+Done in 7.83771s 
+Done in 0.001138s 
+Done in 0.001709s 
+Done in 0.001453s 
+
+ReconstructFromSLAMData::updateManifold iteration 92 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	250.000
+├ updateSteinerGrid		Done in 0.000233s 
+			 s:	15888	 / 	49149	 c:	30815	 i:	21
+│ ├ shrink			Done in 1.46195s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.092
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.382
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.346s	 / 	20554
+│ ├ shrinkSeveral		Done in 0.476115s 
+			 s:	183	 / 	2367	 c:	30815	 i:	7
+│ ├ shrink			Done in 0.119359s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.096
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.061
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.055s	 / 	2989
+│ ├ shrinkSeveral		Done in 0.157712s 
+			 s:	2	 / 	1572	 c:	30815	 i:	2
+│ ├ shrink			Done in 0.1012s 
+├ shrinkManifold		Done in 2.31672s 
+├ Add new vertices		Done in 0.196399s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.636768s 
+│ ├ rayRetracing		Done in 0.47725s 
+updateTriangulation		Done in 3.96043s 
+
+┍ growManifold
+├ growManifold			Done in 0.96645s 
+├ growManifoldSev		Done in 3.05578s 
+├ growManifold			Done in 0.060799s 
+growManifold			Done in 4.08337s 
+Done in 8.04505s 
+Done in 0.001024s 
+Done in 0.001057s 
+Done in 0.002176s 
+
+ReconstructFromSLAMData::updateManifold iteration 96 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	250.000
+├ updateSteinerGrid		Done in 0.000231s 
+			 s:	14409	 / 	46551	 c:	32521	 i:	21
+│ ├ shrink			Done in 1.38547s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.109
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.423
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.381s	 / 	19698
+│ ├ shrinkSeveral		Done in 0.534519s 
+			 s:	336	 / 	4269	 c:	32521	 i:	13
+│ ├ shrink			Done in 0.173549s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.111
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.086
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.076s	 / 	3868
+│ ├ shrinkSeveral		Done in 0.19804s 
+			 s:	47	 / 	2190	 c:	32521	 i:	5
+│ ├ shrink			Done in 0.126217s 
+├ shrinkManifold		Done in 2.41815s 
+├ Add new vertices		Done in 0.263689s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.704725s 
+│ ├ rayRetracing		Done in 0.842421s 
+updateTriangulation		Done in 4.59337s 
+
+┍ growManifold
+├ growManifold			Done in 0.889433s 
+├ growManifoldSev		Done in 3.14503s 
+├ growManifold			Done in 0.060117s 
+growManifold			Done in 4.09492s 
+saving output/manifold_current.off
+save manifold			Done in 0.151907s 
+Done in 8.84222s 
+Done in 0.001868s 
+Done in 0.001491s 
+Done in 0.001536s 
+
+ReconstructFromSLAMData::updateManifold iteration 100 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	250.000
+├ updateSteinerGrid		Done in 0.00022s 
+			 s:	15235	 / 	46476	 c:	34104	 i:	21
+│ ├ shrink			Done in 1.37388s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.098
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.388
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.353s	 / 	20627
+│ ├ shrinkSeveral		Done in 0.488435s 
+			 s:	118	 / 	2778	 c:	34104	 i:	9
+│ ├ shrink			Done in 0.122775s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.100
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.059
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.053s	 / 	2757
+│ ├ shrinkSeveral		Done in 0.160838s 
+			 s:	13	 / 	2046	 c:	34104	 i:	3
+│ ├ shrink			Done in 0.102243s 
+├ shrinkManifold		Done in 2.24853s 
+├ Add new vertices		Done in 0.345194s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.516877s 
+│ ├ rayRetracing		Done in 1.07502s 
+updateTriangulation		Done in 4.56871s 
+
+┍ growManifold
+├ growManifold			Done in 0.907043s 
+├ growManifoldSev		Done in 3.21223s 
+├ growManifold			Done in 0.074043s 
+growManifold			Done in 4.1937s 
+Done in 8.76363s 
+Done in 0.001204s 
+Done in 0.000963s 
+Done in 0.00077s 
+
+ReconstructFromSLAMData::updateManifold iteration 104 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	250.000
+├ updateSteinerGrid		Done in 0.00023s 
+			 s:	14357	 / 	45025	 c:	35458	 i:	22
+│ ├ shrink			Done in 1.3068s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.107
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.346
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.314s	 / 	17437
+│ ├ shrinkSeveral		Done in 0.455932s 
+			 s:	177	 / 	3428	 c:	35458	 i:	7
+│ ├ shrink			Done in 0.140501s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.111
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.083
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.074s	 / 	4121
+│ ├ shrinkSeveral		Done in 0.195748s 
+			 s:	17	 / 	2445	 c:	35458	 i:	2
+│ ├ shrink			Done in 0.112503s 
+├ shrinkManifold		Done in 2.21184s 
+├ Add new vertices		Done in 0.238279s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.463887s 
+│ ├ rayRetracing		Done in 0.910566s 
+updateTriangulation		Done in 4.23213s 
+
+┍ growManifold
+├ growManifold			Done in 0.85532s 
+├ growManifoldSev		Done in 3.38349s 
+├ growManifold			Done in 0.064312s 
+growManifold			Done in 4.30344s 
+Done in 8.53656s 
+Done in 0.001073s 
+Done in 0.001352s 
+Done in 0.001651s 
+
+ReconstructFromSLAMData::updateManifold iteration 108 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	300.000
+├ updateSteinerGrid		Done in 0.00161s 
+			 s:	13418	 / 	43012	 c:	36872	 i:	21
+│ ├ shrink			Done in 1.32737s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.150
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.370
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.335s	 / 	19080
+│ ├ shrinkSeveral		Done in 0.523479s 
+			 s:	173	 / 	3822	 c:	36872	 i:	7
+│ ├ shrink			Done in 0.181292s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.154
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.087
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.077s	 / 	3876
+│ ├ shrinkSeveral		Done in 0.243551s 
+			 s:	10	 / 	2942	 c:	36872	 i:	2
+│ ├ shrink			Done in 0.161436s 
+├ shrinkManifold		Done in 2.43749s 
+├ Add new vertices		Done in 0.178004s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.554546s 
+│ ├ rayRetracing		Done in 0.654687s 
+updateTriangulation		Done in 4.25605s 
+
+┍ growManifold
+├ growManifold			Done in 0.809767s 
+├ growManifoldSev		Done in 3.42615s 
+├ growManifold			Done in 0.07317s 
+growManifold			Done in 4.30942s 
+Done in 8.56677s 
+Done in 0.00102s 
+Done in 0.001057s 
+Done in 0.000995s 
+
+ReconstructFromSLAMData::updateManifold iteration 112 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	300.000
+├ updateSteinerGrid		Done in 0.000218s 
+			 s:	11316	 / 	36444	 c:	38350	 i:	20
+│ ├ shrink			Done in 1.16044s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.182
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.327
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.294s	 / 	17025
+│ ├ shrinkSeveral		Done in 0.511871s 
+			 s:	190	 / 	4420	 c:	38350	 i:	5
+│ ├ shrink			Done in 0.215098s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.188
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.091
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.081s	 / 	4397
+│ ├ shrinkSeveral		Done in 0.281791s 
+			 s:	4	 / 	3568	 c:	38350	 i:	1
+│ ├ shrink			Done in 0.186458s 
+├ shrinkManifold		Done in 2.35601s 
+├ Add new vertices		Done in 0.210376s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.658758s 
+│ ├ rayRetracing		Done in 0.77496s 
+updateTriangulation		Done in 4.45646s 
+
+┍ growManifold
+├ growManifold			Done in 0.710277s 
+├ growManifoldSev		Done in 3.47219s 
+├ growManifold			Done in 0.070048s 
+growManifold			Done in 4.25285s 
+Done in 8.71102s 
+Done in 0.000956s 
+Done in 0.001404s 
+Done in 0.000936s 
+
+ReconstructFromSLAMData::updateManifold iteration 116 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	300.000
+├ updateSteinerGrid		Done in 0.000217s 
+			 s:	9319	 / 	27906	 c:	39755	 i:	16
+│ ├ shrink			Done in 0.775884s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.136
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.250
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.228s	 / 	13216
+│ ├ shrinkSeveral		Done in 0.390018s 
+			 s:	111	 / 	4291	 c:	39755	 i:	4
+│ ├ shrink			Done in 0.147127s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.138
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.053
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.048s	 / 	2908
+│ ├ shrinkSeveral		Done in 0.193754s 
+			 s:	8	 / 	3883	 c:	39755	 i:	2
+│ ├ shrink			Done in 0.142404s 
+├ shrinkManifold		Done in 1.64955s 
+├ Add new vertices		Done in 0.163131s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.307889s 
+│ ├ rayRetracing		Done in 0.680506s 
+updateTriangulation		Done in 3.2761s 
+
+┍ growManifold
+├ growManifold			Done in 0.556875s 
+├ growManifoldSev		Done in 3.49481s 
+├ growManifold			Done in 0.072407s 
+growManifold			Done in 4.12442s 
+Done in 7.40174s 
+Done in 0.000624s 
+Done in 0.000938s 
+Done in 0.002s 
+
+ReconstructFromSLAMData::updateManifold iteration 120 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	300.000
+├ updateSteinerGrid		Done in 0.00023s 
+			 s:	9458	 / 	27071	 c:	40750	 i:	12
+│ ├ shrink			Done in 0.830215s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.193
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.241
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.216s	 / 	14672
+│ ├ shrinkSeveral		Done in 0.437481s 
+			 s:	99	 / 	4502	 c:	40750	 i:	4
+│ ├ shrink			Done in 0.204044s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.197
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.053
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.045s	 / 	2895
+│ ├ shrinkSeveral		Done in 0.253741s 
+			 s:	30	 / 	4107	 c:	40750	 i:	2
+│ ├ shrink			Done in 0.197319s 
+├ shrinkManifold		Done in 1.92314s 
+├ Add new vertices		Done in 0.108822s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.396553s 
+│ ├ rayRetracing		Done in 0.545412s 
+updateTriangulation		Done in 3.46978s 
+
+┍ growManifold
+├ growManifold			Done in 0.582824s 
+├ growManifoldSev		Done in 3.79459s 
+├ growManifold			Done in 0.076386s 
+growManifold			Done in 4.45414s 
+Done in 7.92554s 
+Done in 0.001184s 
+Done in 0.001753s 
+Done in 0.001717s 
+
+ReconstructFromSLAMData::updateManifold iteration 124 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	300.000
+├ updateSteinerGrid		Done in 0.000218s 
+			 s:	9345	 / 	28746	 c:	42114	 i:	14
+│ ├ shrink			Done in 0.940679s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.273
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.314
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.285s	 / 	15991
+│ ├ shrinkSeveral		Done in 0.590201s 
+			 s:	78	 / 	4813	 c:	42114	 i:	4
+│ ├ shrink			Done in 0.299686s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.275
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.089
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.080s	 / 	4294
+│ ├ shrinkSeveral		Done in 0.366881s 
+			 s:	2	 / 	4342	 c:	42114	 i:	1
+│ ├ shrink			Done in 0.283521s 
+├ shrinkManifold		Done in 2.48134s 
+├ Add new vertices		Done in 0.209157s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.720506s 
+│ ├ rayRetracing		Done in 0.600666s 
+updateTriangulation		Done in 4.54129s 
+
+┍ growManifold
+├ growManifold			Done in 0.614228s 
+├ growManifoldSev		Done in 3.73807s 
+├ growManifold			Done in 0.077951s 
+growManifold			Done in 4.43058s 
+Done in 8.98298s 
+Done in 0.001298s 
+Done in 0.002719s 
+Done in 0.001046s 
+
+ReconstructFromSLAMData::updateManifold iteration 128 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.001997s 
+			 s:	9975	 / 	29192	 c:	43925	 i:	12
+│ ├ shrink			Done in 0.925389s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.229
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.308
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.277s	 / 	18822
+│ ├ shrinkSeveral		Done in 0.542109s 
+			 s:	188	 / 	5154	 c:	43925	 i:	4
+│ ├ shrink			Done in 0.31017s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.233
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.084
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.075s	 / 	5616
+│ ├ shrinkSeveral		Done in 0.321074s 
+			 s:	12	 / 	4473	 c:	43925	 i:	2
+│ ├ shrink			Done in 0.237263s 
+├ shrinkManifold		Done in 2.33646s 
+├ Add new vertices		Done in 0.32673s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.536477s 
+│ ├ rayRetracing		Done in 0.918452s 
+updateTriangulation		Done in 4.68174s 
+
+┍ growManifold
+├ growManifold			Done in 0.659868s 
+├ growManifoldSev		Done in 3.80145s 
+├ growManifold			Done in 0.086625s 
+growManifold			Done in 4.5483s 
+saving output/manifold_current.off
+save manifold			Done in 0.203658s 
+Done in 9.43504s 
+Done in 0.001625s 
+Done in 0.00105s 
+Done in 0.001179s 
+
+ReconstructFromSLAMData::updateManifold iteration 132 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000217s 
+			 s:	9864	 / 	31120	 c:	45433	 i:	14
+│ ├ shrink			Done in 0.998404s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.226
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.335
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.302s	 / 	17306
+│ ├ shrinkSeveral		Done in 0.564767s 
+			 s:	168	 / 	5337	 c:	45433	 i:	5
+│ ├ shrink			Done in 0.258322s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.230
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.073
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.066s	 / 	4491
+│ ├ shrinkSeveral		Done in 0.30559s 
+			 s:	7	 / 	4695	 c:	45433	 i:	2
+│ ├ shrink			Done in 0.229724s 
+├ shrinkManifold		Done in 2.35715s 
+├ Add new vertices		Done in 0.212109s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.472534s 
+│ ├ rayRetracing		Done in 0.791174s 
+updateTriangulation		Done in 4.41731s 
+
+┍ growManifold
+├ growManifold			Done in 0.644113s 
+├ growManifoldSev		Done in 3.932s 
+├ growManifold			Done in 0.090687s 
+growManifold			Done in 4.6672s 
+Done in 9.08592s 
+Done in 0.001538s 
+Done in 0.001792s 
+Done in 0.001726s 
+
+ReconstructFromSLAMData::updateManifold iteration 136 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000218s 
+			 s:	9786	 / 	31962	 c:	46793	 i:	14
+│ ├ shrink			Done in 1.20833s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.353
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.411
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.368s	 / 	20566
+│ ├ shrinkSeveral		Done in 0.768471s 
+			 s:	259	 / 	5920	 c:	46793	 i:	5
+│ ├ shrink			Done in 0.444544s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.354
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.102
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.091s	 / 	5589
+│ ├ shrinkSeveral		Done in 0.460402s 
+			 s:	29	 / 	4909	 c:	46793	 i:	2
+│ ├ shrink			Done in 0.361575s 
+├ shrinkManifold		Done in 3.2437s 
+├ Add new vertices		Done in 0.202889s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 1.06619s 
+│ ├ rayRetracing		Done in 0.788466s 
+updateTriangulation		Done in 5.94949s 
+
+┍ growManifold
+├ growManifold			Done in 0.759587s 
+├ growManifoldSev		Done in 4.41473s 
+├ growManifold			Done in 0.092681s 
+growManifold			Done in 5.26733s 
+Done in 11.2189s 
+Done in 0.001533s 
+Done in 0.001982s 
+Done in 0.000884s 
+
+ReconstructFromSLAMData::updateManifold iteration 140 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000215s 
+			 s:	10638	 / 	35454	 c:	48783	 i:	15
+│ ├ shrink			Done in 1.21142s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.264
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.396
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.354s	 / 	21759
+│ ├ shrinkSeveral		Done in 0.663932s 
+			 s:	340	 / 	6471	 c:	48783	 i:	8
+│ ├ shrink			Done in 0.31225s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.266
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.081
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.072s	 / 	5127
+│ ├ shrinkSeveral		Done in 0.350239s 
+			 s:	23	 / 	5018	 c:	48783	 i:	3
+│ ├ shrink			Done in 0.271365s 
+├ shrinkManifold		Done in 2.80954s 
+├ Add new vertices		Done in 0.371771s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.639271s 
+│ ├ rayRetracing		Done in 1.50087s 
+updateTriangulation		Done in 5.99112s 
+
+┍ growManifold
+├ growManifold			Done in 0.788954s 
+├ growManifoldSev		Done in 4.50137s 
+├ growManifold			Done in 0.10762s 
+growManifold			Done in 5.39834s 
+Done in 11.3905s 
+Done in 0.001347s 
+Done in 0.002286s 
+Done in 0.001357s 
+
+ReconstructFromSLAMData::updateManifold iteration 144 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000247s 
+			 s:	11734	 / 	40806	 c:	50305	 i:	16
+│ ├ shrink			Done in 1.49273s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.360
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.563
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.500s	 / 	27237
+│ ├ shrinkSeveral		Done in 0.928768s 
+			 s:	525	 / 	7741	 c:	50305	 i:	7
+│ ├ shrink			Done in 0.424815s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.362
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.237
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.212s	 / 	12684
+│ ├ shrinkSeveral		Done in 0.603233s 
+			 s:	51	 / 	5089	 c:	50305	 i:	2
+│ ├ shrink			Done in 0.376285s 
+├ shrinkManifold		Done in 3.8264s 
+├ Add new vertices		Done in 0.229001s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.342932s 
+│ ├ rayRetracing		Done in 1.18389s 
+updateTriangulation		Done in 6.26663s 
+
+┍ growManifold
+├ growManifold			Done in 0.854283s 
+├ growManifoldSev		Done in 4.79772s 
+├ growManifold			Done in 0.10462s 
+growManifold			Done in 5.75707s 
+Done in 12.0251s 
+Done in 0.00181s 
+Done in 0.001176s 
+Done in 0.001127s 
+
+ReconstructFromSLAMData::updateManifold iteration 148 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.00023s 
+			 s:	13201	 / 	43989	 c:	52268	 i:	15
+│ ├ shrink			Done in 1.55157s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.222
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.601
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.536s	 / 	30129
+│ ├ shrinkSeveral		Done in 0.828409s 
+			 s:	618	 / 	8828	 c:	52268	 i:	11
+│ ├ shrink			Done in 0.338483s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.223
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.191
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.172s	 / 	11489
+│ ├ shrinkSeveral		Done in 0.426283s 
+			 s:	26	 / 	4999	 c:	52268	 i:	2
+│ ├ shrink			Done in 0.232656s 
+├ shrinkManifold		Done in 3.37796s 
+├ Add new vertices		Done in 0.106291s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.395148s 
+│ ├ rayRetracing		Done in 0.291728s 
+updateTriangulation		Done in 4.87517s 
+
+┍ growManifold
+├ growManifold			Done in 0.939294s 
+├ growManifoldSev		Done in 4.84617s 
+├ growManifold			Done in 0.100527s 
+growManifold			Done in 5.88631s 
+Done in 10.7627s 
+Done in 0.001102s 
+Done in 0.002191s 
+Done in 0.000918s 
+
+ReconstructFromSLAMData::updateManifold iteration 152 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000226s 
+			 s:	13384	 / 	44966	 c:	53483	 i:	17
+│ ├ shrink			Done in 1.38824s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.207
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.556
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.497s	 / 	29271
+│ ├ shrinkSeveral		Done in 0.768621s 
+			 s:	517	 / 	8101	 c:	53483	 i:	10
+│ ├ shrink			Done in 0.273064s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.209
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.150
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.135s	 / 	8702
+│ ├ shrinkSeveral		Done in 0.362226s 
+			 s:	32	 / 	5160	 c:	53483	 i:	1
+│ ├ shrink			Done in 0.215168s 
+├ shrinkManifold		Done in 3.00765s 
+├ Add new vertices		Done in 0.232919s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.371229s 
+│ ├ rayRetracing		Done in 0.469623s 
+updateTriangulation		Done in 4.804s 
+
+┍ growManifold
+├ growManifold			Done in 0.886662s 
+├ growManifoldSev		Done in 5.38194s 
+├ growManifold			Done in 0.108857s 
+growManifold			Done in 6.37781s 
+Done in 11.1828s 
+Done in 0.000892s 
+Done in 0.000885s 
+Done in 0.000769s 
+
+ReconstructFromSLAMData::updateManifold iteration 156 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000271s 
+			 s:	13620	 / 	47023	 c:	54616	 i:	19
+│ ├ shrink			Done in 1.49911s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.216
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.543
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.486s	 / 	27503
+│ ├ shrinkSeveral		Done in 0.764622s 
+			 s:	490	 / 	7806	 c:	54616	 i:	9
+│ ├ shrink			Done in 0.282402s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.218
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.154
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.138s	 / 	8654
+│ ├ shrinkSeveral		Done in 0.376208s 
+			 s:	55	 / 	5321	 c:	54616	 i:	3
+│ ├ shrink			Done in 0.224389s 
+├ shrinkManifold		Done in 3.14707s 
+├ Add new vertices		Done in 0.288555s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.297621s 
+│ ├ rayRetracing		Done in 0.654268s 
+updateTriangulation		Done in 5.13433s 
+
+┍ growManifold
+├ growManifold			Done in 0.909512s 
+├ growManifoldSev		Done in 5.17166s 
+├ growManifold			Done in 0.114542s 
+growManifold			Done in 6.19605s 
+Done in 11.332s 
+Done in 0.001568s 
+Done in 0.001196s 
+Done in 0.00086s 
+
+ReconstructFromSLAMData::updateManifold iteration 160 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000228s 
+			 s:	14111	 / 	44465	 c:	55779	 i:	17
+│ ├ shrink			Done in 1.42665s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.170
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.494
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.445s	 / 	24933
+│ ├ shrinkSeveral		Done in 0.668868s 
+			 s:	369	 / 	7386	 c:	55779	 i:	9
+│ ├ shrink			Done in 0.23692s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.172
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.148
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.134s	 / 	8099
+│ ├ shrinkSeveral		Done in 0.324151s 
+			 s:	14	 / 	5386	 c:	55779	 i:	2
+│ ├ shrink			Done in 0.177694s 
+├ shrinkManifold		Done in 2.83463s 
+├ Add new vertices		Done in 0.210453s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.395665s 
+│ ├ rayRetracing		Done in 0.624763s 
+updateTriangulation		Done in 4.83738s 
+
+┍ growManifold
+├ growManifold			Done in 0.939065s 
+├ growManifoldSev		Done in 4.81812s 
+├ growManifold			Done in 0.108918s 
+growManifold			Done in 5.86645s 
+saving output/manifold_current.off
+save manifold			Done in 0.24609s 
+Done in 10.9512s 
+Done in 0.000968s 
+Done in 0.000862s 
+Done in 0.000896s 
+
+ReconstructFromSLAMData::updateManifold iteration 164 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000221s 
+			 s:	13929	 / 	52498	 c:	56676	 i:	25
+│ ├ shrink			Done in 1.73933s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.201
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.531
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.475s	 / 	26146
+│ ├ shrinkSeveral		Done in 0.737296s 
+			 s:	505	 / 	8657	 c:	56676	 i:	10
+│ ├ shrink			Done in 0.285551s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.202
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.191
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.172s	 / 	10180
+│ ├ shrinkSeveral		Done in 0.396412s 
+			 s:	36	 / 	5665	 c:	56676	 i:	3
+│ ├ shrink			Done in 0.216007s 
+├ shrinkManifold		Done in 3.37492s 
+├ Add new vertices		Done in 0.230217s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.388884s 
+│ ├ rayRetracing		Done in 0.629629s 
+updateTriangulation		Done in 5.41449s 
+
+┍ growManifold
+├ growManifold			Done in 0.965048s 
+├ growManifoldSev		Done in 5.14733s 
+├ growManifold			Done in 0.119297s 
+growManifold			Done in 6.23203s 
+Done in 11.6482s 
+Done in 0.000914s 
+Done in 0.000913s 
+Done in 0.001057s 
+
+ReconstructFromSLAMData::updateManifold iteration 168 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000228s 
+			 s:	13983	 / 	49216	 c:	57678	 i:	19
+│ ├ shrink			Done in 1.76164s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.271
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.580
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.518s	 / 	29626
+│ ├ shrinkSeveral		Done in 0.856542s 
+			 s:	589	 / 	9140	 c:	57678	 i:	10
+│ ├ shrink			Done in 0.366803s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.269
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.203
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.182s	 / 	10938
+│ ├ shrinkSeveral		Done in 0.476092s 
+			 s:	47	 / 	5799	 c:	57678	 i:	2
+│ ├ shrink			Done in 0.280408s 
+├ shrinkManifold		Done in 3.74184s 
+├ Add new vertices		Done in 0.237677s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.405793s 
+│ ├ rayRetracing		Done in 0.655342s 
+updateTriangulation		Done in 5.86337s 
+
+┍ growManifold
+├ growManifold			Done in 0.99041s 
+├ growManifoldSev		Done in 5.36336s 
+├ growManifold			Done in 0.124502s 
+growManifold			Done in 6.47862s 
+Done in 12.3435s 
+Done in 0.001217s 
+Done in 0.001677s 
+Done in 0.001735s 
+
+ReconstructFromSLAMData::updateManifold iteration 172 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-100.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.00022s 
+			 s:	14299	 / 	44792	 c:	59047	 i:	15
+│ ├ shrink			Done in 1.77805s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.337
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.540
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.485s	 / 	27990
+│ ├ shrinkSeveral		Done in 0.882946s 
+			 s:	456	 / 	8476	 c:	59047	 i:	10
+│ ├ shrink			Done in 0.41414s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.336
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.130
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.117s	 / 	6803
+│ ├ shrinkSeveral		Done in 0.46931s 
+			 s:	10	 / 	5832	 c:	59047	 i:	1
+│ ├ shrink			Done in 0.341778s 
+├ shrinkManifold		Done in 3.88658s 
+├ Add new vertices		Done in 0.417947s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.673644s 
+│ ├ rayRetracing		Done in 1.07849s 
+updateTriangulation		Done in 6.92237s 
+
+┍ growManifold
+├ growManifold			Done in 1.00427s 
+├ growManifoldSev		Done in 5.73027s 
+├ growManifold			Done in 0.156721s 
+growManifold			Done in 6.89161s 
+Done in 13.8157s 
+Done in 0.001828s 
+Done in 0.002893s 
+Done in 0.002211s 
+
+ReconstructFromSLAMData::updateManifold iteration 176 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-150.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.003587s 
+			 s:	13112	 / 	46546	 c:	60866	 i:	18
+│ ├ shrink			Done in 1.99673s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.383
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.543
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.484s	 / 	26115
+│ ├ shrinkSeveral		Done in 0.931872s 
+			 s:	397	 / 	10095	 c:	60866	 i:	9
+│ ├ shrink			Done in 0.537936s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.380
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.253
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.226s	 / 	11997
+│ ├ shrinkSeveral		Done in 0.637501s 
+			 s:	178	 / 	8205	 c:	60866	 i:	9
+│ ├ shrink			Done in 0.460635s 
+├ shrinkManifold		Done in 4.56506s 
+├ Add new vertices		Done in 0.373542s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.852138s 
+│ ├ rayRetracing		Done in 1.31489s 
+updateTriangulation		Done in 8.02101s 
+
+┍ growManifold
+├ growManifold			Done in 0.972076s 
+├ growManifoldSev		Done in 5.44025s 
+├ growManifold			Done in 0.160775s 
+growManifold			Done in 6.57348s 
+Done in 14.5972s 
+Done in 0.002481s 
+Done in 0.001134s 
+Done in 0.002182s 
+
+ReconstructFromSLAMData::updateManifold iteration 180 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-150.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000242s 
+			 s:	13015	 / 	52469	 c:	62527	 i:	28
+│ ├ shrink			Done in 2.26194s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.430
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.463
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.414s	 / 	22914
+│ ├ shrinkSeveral		Done in 0.899088s 
+			 s:	392	 / 	9369	 c:	62527	 i:	9
+│ ├ shrink			Done in 0.496501s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.430
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.170
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.153s	 / 	9271
+│ ├ shrinkSeveral		Done in 0.604722s 
+			 s:	47	 / 	6858	 c:	62527	 i:	2
+│ ├ shrink			Done in 0.440861s 
+├ shrinkManifold		Done in 4.70351s 
+├ Add new vertices		Done in 0.446708s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.413815s 
+│ ├ rayRetracing		Done in 1.38616s 
+updateTriangulation		Done in 7.89695s 
+
+┍ growManifold
+├ growManifold			Done in 0.981824s 
+├ growManifoldSev		Done in 6.37835s 
+├ growManifold			Done in 0.149934s 
+growManifold			Done in 7.51048s 
+Done in 15.409s 
+Done in 0.00108s 
+
+ReconstructFromSLAMData::updateManifold iteration 181 / 180
+┍ updateTriangulation
+	ManifoldMeshReconstructor::updateSteinerPointGridAndBound: New bounds: 
+		-150.000	←	x	→	150.000
+		-100.000	←	y	→	100.000
+		-50.000	←	z	→	350.000
+├ updateSteinerGrid		Done in 0.000199s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 7
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 7
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 7
+			 s:	15282	 / 	61833	 c:	64286	 i:	26
+│ ├ shrink			Done in 1.84059s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.078
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.606
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.540s	 / 	29711
+│ ├ shrinkSeveral		Done in 0.689443s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	779	 / 	10068	 c:	64286	 i:	9
+│ ├ shrink			Done in 0.181999s 
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer enclosing:			 0.077
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer addAndCheckManifoldness:	 0.208
+ManifoldManager::shrinkSeveralAtOnce2:		 functionProfileTimer isRegular:			 0.188s	 / 	9952
+│ ├ shrinkSeveral		Done in 0.289365s 
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+ManifoldManager::shrinkManifold:	 wrong shrink order	 iteration: 1
+			 s:	44	 / 	6584	 c:	64286	 i:	2
+│ ├ shrink			Done in 0.086516s 
+├ shrinkManifold		Done in 3.08824s 
+├ Add new vertices		Done in 0.120272s 
+├ Move vertices			Skipped
+├ Move Cameras			Skipped
+│ ├ rayUntracing		Skipped
+│ ├ rayTracing			Done in 0.081507s 
+│ ├ rayRetracing		Done in 0.851198s 
+updateTriangulation		Done in 5.0956s 
+
+┍ growManifold
+├ growManifold			Done in 1.07874s 
+├ growManifoldSev		Done in 6.07165s 
+├ growManifold			Done in 0.14067s 
+growManifold			Done in 7.29143s 
+saving output/manifold_final.off
+save manifold			Done in 0.286113s 
+main						Done in 371.09s 
+
