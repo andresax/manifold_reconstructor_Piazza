@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 #else
 	std::cout << "start parsing " << argv[1] << std::endl;
 	log.startEvent();
-	ORBIncrementalParser op(argv[1]);
+	ORBIncrementalParser op(argv[1], confManif);
 	log.endEventAndPrint("Parsing\t\t\t\t", true);
 
 	std::cout << "orb: " << op.numCameras() << " cams" << std::endl << std::endl;

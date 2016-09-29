@@ -91,6 +91,11 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document["all_sort_of_output"].IsBool()) throw JsonAccessException("");
 		c.all_sort_of_output = document["all_sort_of_output"].GetBool();
 
+		if (document.HasMember("fake_points_multiplier")){
+			if (!document["fake_points_multiplier"].IsInt()) throw JsonAccessException("");
+			c.fake_points_multiplier = document["fake_points_multiplier"].GetInt();
+		}else c.fake_points_multiplier = 0;
+
 		if (!document.HasMember("update_points_position")) throw JsonAccessException("");
 		if (!document["update_points_position"].IsBool()) throw JsonAccessException("");
 		c.update_points_position = document["update_points_position"].GetBool();

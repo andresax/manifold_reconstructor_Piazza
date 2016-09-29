@@ -7,8 +7,9 @@
 #define COMMA <<", "<<
 #define SPACE <<" "<<
 
-ORBIncrementalParser::ORBIncrementalParser(std::string path) {
+ORBIncrementalParser::ORBIncrementalParser(std::string path, ManifoldReconstructionConfig conf) {
 	fileStream_.open(path.c_str());
+	conf_ = conf;
 
 	std::string str((std::istreambuf_iterator<char>(fileStream_)), std::istreambuf_iterator<char>());
 	document_.Parse(str.c_str());
@@ -123,15 +124,12 @@ CameraType* ORBIncrementalParser::nextCamera() {
 			// std::cout << "       idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
 
 			// FAKE POINTS
-			if (insertFakePoints_) {
-				long unsigned int fakePointId = 1000000 + jsonObservationObject["pointId"].GetInt();
+			for(int fIndex = 0; fIndex < conf_.fake_points_multiplier; fIndex++) {
+				long unsigned int fakePointId = (1+fIndex)*1000000 + jsonObservationObject["pointId"].GetInt();
 				PointType* fakePoint;
 
 				if (ORB_data_.hasPoint(fakePointId)) {
 					fakePoint = ORB_data_.getPoint(fakePointId);
-
-					//std::cout << "UPDATE idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
-
 				} else {
 					fakePoint = new PointType();
 					fakePoint->idPoint = fakePointId;
@@ -140,10 +138,9 @@ CameraType* ORBIncrementalParser::nextCamera() {
 
 				ORB_data_.addVisibility(camera, fakePoint);
 
-//			const rapidjson::Value& jsonCameraCenter = jsonObservationObject["X"];
-				float fakeX = jsonCameraCenter[0].GetFloat(), fakeY = 0.1 + jsonCameraCenter[1].GetFloat(), fakeZ = jsonCameraCenter[2].GetFloat();
+//				const rapidjson::Value& jsonCameraCenter = jsonObservationObject["X"];
+				float fakeX = (1+fIndex)*0.1 + jsonCameraCenter[0].GetFloat(), fakeY = jsonCameraCenter[1].GetFloat(), fakeZ = jsonCameraCenter[2].GetFloat();
 				fakePoint->position = glm::vec3(fakeX, fakeY, fakeZ);
-				// std::cout << "       idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
 			}
 
 			//TODO point's 2D coordinates in frame

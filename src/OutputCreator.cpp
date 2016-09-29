@@ -784,6 +784,52 @@ void OutputCreator::writeTetrahedraToOFF(std::string pathPrefix, std::vector<int
 	outputFile.close();
 }
 
+
+void OutputCreator::writeTetrahedraToOFF(std::string pathPrefix, std::vector<int> ids, std::set<Delaunay3::Cell_handle, sortTetByIntersectionAndDefaultLess> & cells) {
+	// Refuse to create a file with without tetrahedra
+	std::ostringstream outputFileName;
+	outputFileName << pathPrefix;
+	for (auto id : ids)
+		outputFileName << "_" << id;
+	outputFileName << ".off";
+
+	int s = cells.size();
+	if (s == 0) {
+		std::cerr << "OutputCreator::writeTetrahedraAndRayToOFF: no tetrahedra to write in output for: " << outputFileName << std::endl;
+		return;
+	}
+
+	std::ofstream outputFile;
+	outputFile.open(outputFileName.str().c_str());
+
+	if (!outputFile.is_open()) {
+		std::cerr << "OutputCreator::writeTetrahedraToOFF: Unable to open file: " << outputFileName.str() << std::endl;
+		return;
+	}
+
+	std::vector<PointD3> vertices;
+	int triangleNum = 4 * cells.size();
+
+	for (auto cell : cells) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++) {
+				vertices.push_back(dt_.triangle(cell, i).vertex(j));
+			}
+		}
+	}
+
+	outputFile << "OFF" << std::endl;
+	outputFile << vertices.size() << " " << triangleNum << " 0" << std::endl;
+
+	for (auto v : vertices)
+		outputFile << static_cast<float>(v.x()) << " " << static_cast<float>(v.y()) << " " << static_cast<float>(v.z()) << std::endl;
+
+	for (int t = 0; t < triangleNum; t++)
+		outputFile << "3 " << 3 * t + 0 << " " << 3 * t + 1 << " " << 3 * t + 2 << std::endl;
+
+	outputFile.close();
+}
+
 void OutputCreator::writeTetrahedraAndRayToOFF(std::string prefixPath, int cameraIndex, int pointIndex, std::vector<Delaunay3::Cell_handle> & cells, Segment constraint) {
 // Refuse to create a file with without tetrahedra
 	int s = cells.size();

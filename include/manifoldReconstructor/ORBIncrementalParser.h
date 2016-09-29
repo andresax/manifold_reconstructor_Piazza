@@ -9,10 +9,11 @@
 #include <rapidjson/document.h>
 #include <CameraPointsCollection.h>
 #include <types_reconstructor.hpp>
+#include <types_config.hpp>
 
 class ORBIncrementalParser {
 public:
-	ORBIncrementalParser(std::string path);
+	ORBIncrementalParser(std::string path, ManifoldReconstructionConfig conf);
 	virtual ~ORBIncrementalParser();
 
 	int numCameras();
@@ -43,6 +44,7 @@ private:
 	std::string basePath_;
 	std::map<int, glm::mat3> intrinsics_;
 	CameraPointsCollection ORB_data_;
+	ManifoldReconstructionConfig conf_;
 
 	bool insertFakePoints_ = true;
 

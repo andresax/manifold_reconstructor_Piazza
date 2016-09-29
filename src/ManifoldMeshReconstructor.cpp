@@ -32,8 +32,8 @@ ManifoldMeshReconstructor::ManifoldMeshReconstructor(ManifoldReconstructionConfi
 	sgCurrentMinX_ = sgCurrentMinY_ = sgCurrentMinZ_ = 0.0;
 	sgCurrentMaxX_ = sgCurrentMaxY_ = sgCurrentMaxZ_ = conf_.steinerGridStepLength;
 
-	timeStatsFile_.open("output/stats/timeStats.csv");
-	timeStatsFile_ << "cameras number, updateSteinerGrid, shrinkManifold, shrinkSingle, shrinkSeveral, Add new vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, growManifold, growManifoldSev, growManifold, Overall" << endl;
+	timeStatsFile_.open("stats/timeStats.csv");
+	timeStatsFile_ << "cameras number, updateSteinerGrid, shrinkManifold, shrinkSingle, shrinkSeveral, Add new vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, growManifold, growManifoldSev, growManifold, InsertInBoundary, RemoveFromBoundary, addedPoints, movedPoints, Overall" << endl;
 }
 
 ManifoldMeshReconstructor::~ManifoldMeshReconstructor() {
@@ -294,6 +294,9 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	rt2_ChronoNeighboursD1WeightUpdate_.reset();
 	rt2_ChronoNeighboursD2WeightUpdate_.reset();
 
+	manifoldManager_->chronoInsertInBoundary_.reset();
+	manifoldManager_->chronoRemoveFromBoundary_.reset();
+
 	rt2_CountNeighboursD1WeightUpdate_ = 0;
 	rt2_CountNeighboursD2WeightUpdate_ = 0;
 
@@ -303,7 +306,9 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	Chronometer chronoCheck;
 	chronoCheck.start();
 	chronoCheck.stop();
-	cout << "ManifoldMeshReconstructor::updateTriangulation: \t\t\t\t\t " << chronoCheck.getNanoseconds() << " ns" << endl;
+	cout << "ManifoldMeshReconstructor::updateTriangulation: \t\t min chrono time\t\t" << chronoCheck.getNanoseconds() << " ns" << endl;
+
+	int addedPointsStat = 0, movedPointsStat = 0, updatedCamerasStat = updatedCamerasIdx_.size();
 
 	if (dt_.number_of_vertices() == 0) {
 		logger_.startEvent();
@@ -414,6 +419,7 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 						 * 	some cells are removed from the triangulation and replaced by some others.
 						 */
 						if (insertVertex(newPoint)) {
+							addedPointsStat++;
 							newPoint.vertexHandle->info().setLastCam(updatedCameraIndex);
 							newPoint.vertexHandle->info().setFirstCam(updatedCameraIndex);
 						}
@@ -449,6 +455,8 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 			bool moved;
 			moved = moveVertex(id);
 
+			if(moved) movedPointsStat++;
+
 			if (conf_.all_sort_of_output) if (moved) movedPointsSegments_.push_back(s);
 
 		}
@@ -478,6 +486,24 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 	rayTracingFromAllCam();
 
+
+//	printWhatever();
+//	outputM_->writeAllVerticesToOFF("output/triangulation_vertices/all_vertices", std::vector<int> { });
+	growManifold3(enclosingVolumePoints);
+
+	timeStatsFile_ << manifoldManager_->chronoInsertInBoundary_.getSeconds() << ", ";
+	timeStatsFile_ << manifoldManager_->chronoRemoveFromBoundary_.getSeconds() << ", ";
+
+	timeStatsFile_ << (float)addedPointsStat/100/updatedCamerasStat << ", ";
+	timeStatsFile_ << (float)movedPointsStat/100/updatedCamerasStat << ", ";
+
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t updated cameras:\t\t\t" << updatedCamerasStat << endl;
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t added points:\t\t\t" << addedPointsStat << endl;
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t moved points:\t\t\t" << movedPointsStat << endl;
+
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t insertInBoundary_:\t\t\t" << manifoldManager_->chronoInsertInBoundary_.getSeconds() << " s" << endl;
+	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t removeFromBoundary_:\t\t\t" << manifoldManager_->chronoRemoveFromBoundary_.getSeconds() << " s" << endl;
+
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t useless:\t\t\t" << rt2_ChronoUseless_.getSeconds() << " s" << endl;
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t first cell:\t\t\t" << rt2_ChronoFirstCell_.getSeconds() << " s" << endl;
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t cell traversing:\t\t" << rt2_ChronoCellTraversing_.getSeconds() << " s" << endl;
@@ -485,22 +511,8 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours weight update:\t\t" << rt2_ChronoNeighboursD1WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD1WeightUpdate_ << endl;
 	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours int insert/remove:\t\t" << rt2_ChronoNeighboursD2WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD2WeightUpdate_ << endl;
 
-//	Chronometer ut_ChronoCleanDeadCells;
-//	ut_ChronoCleanDeadCells.start();
-//	// TODO erase duplicated cells or use a set
-//	freeSpaceTets_.erase(std::remove_if(freeSpaceTets_.begin(), freeSpaceTets_.end(), [&](Delaunay3::Cell_handle cell) {
-//		bool b = !dt_.is_cell(cell) || cell->info().getIntersections().size() == 0;
-//		if(b) cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t freeSpace contains dead or empty cell" << endl;
-//		return b;
-//	}), freeSpaceTets_.end());
-//	ut_ChronoCleanDeadCells.stop();
-//	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t clean dead cells:\t\t" << ut_ChronoCleanDeadCells.getSeconds() << " s" << endl;
-
 	cout << endl;
 
-//	printWhatever();
-//	outputM_->writeAllVerticesToOFF("output/triangulation_vertices/all_vertices", std::vector<int> { });
-	growManifold3(enclosingVolumePoints);
 
 	iterationCounter_++;
 }
@@ -1703,25 +1715,25 @@ void ManifoldMeshReconstructor::growManifold3(std::set<PointD3> points) {
 }
 
 void ManifoldMeshReconstructor::growManifold() {
-	if (manifoldManager_->getBoundarySize() == 0) {
-//		std::sort(freeSpaceTets_.begin(), freeSpaceTets_.end(), sortTetByIntersection());
-		for (Delaunay3::Finite_cells_iterator itCell = dt_.finite_cells_begin(); itCell != dt_.finite_cells_end(); itCell++) {
-			itCell->info().setKeptManifold(false);
-			for (int curV = 0; curV < 4; ++curV) {
-				itCell->vertex(curV)->info().setUsed(0);
-				itCell->vertex(curV)->info().setNotUsed(true);
-			}
-		}
-//		if (freeSpaceTets_.size()) {
-//			Delaunay3::Cell_handle startingCell = freeSpaceTets_[freeSpaceTets_.size() - 1];
-//			manifoldManager_->regionGrowingBatch(startingCell);
-//		} else {
-//			cerr << "freeSpaceTets_ is empty; Can't grow" << endl;
-//
+//	if (manifoldManager_->getBoundarySize() == 0) {
+////		std::sort(freeSpaceTets_.begin(), freeSpaceTets_.end(), sortTetByIntersection());
+//		for (Delaunay3::Finite_cells_iterator itCell = dt_.finite_cells_begin(); itCell != dt_.finite_cells_end(); itCell++) {
+//			itCell->info().setKeptManifold(false);
+//			for (int curV = 0; curV < 4; ++curV) {
+//				itCell->vertex(curV)->info().setUsed(0);
+//				itCell->vertex(curV)->info().setNotUsed(true);
+//			}
 //		}
-	} else {
-		manifoldManager_->regionGrowing();
-	}
+////		if (freeSpaceTets_.size()) {
+////			Delaunay3::Cell_handle startingCell = freeSpaceTets_[freeSpaceTets_.size() - 1];
+////			manifoldManager_->regionGrowingBatch(startingCell);
+////		} else {
+////			cerr << "freeSpaceTets_ is empty; Can't grow" << endl;
+////
+////		}
+//	} else {
+//		manifoldManager_->regionGrowing();
+//	}
 
 }
 
@@ -1748,7 +1760,7 @@ void ManifoldMeshReconstructor::growManifold(int camIdx) {
 }
 
 void ManifoldMeshReconstructor::growManifoldSev() {
-	manifoldManager_->growSeveralAtOnce2();
+//	manifoldManager_->growSeveralAtOnce2();
 }
 
 void ManifoldMeshReconstructor::saveManifold(const std::string filename) {
@@ -1773,7 +1785,7 @@ void ManifoldMeshReconstructor::saveBoundary(int i, int j) {
 
 //	outputM_->writeBoundaryOFF(filename, manifoldManager_->getBoundaryCells());
 
-	std::vector<Delaunay3::Cell_handle> b = manifoldManager_->getBoundaryCells();
+	std::set<Delaunay3::Cell_handle, sortTetByIntersectionAndDefaultLess> b = manifoldManager_->getBoundaryCells();
 	if (b.size()) outputM_->writeTetrahedraToOFF("output/boundary/boundary", std::vector<int> { iterationCounter_, i, j }, b);
 }
 
@@ -1832,88 +1844,88 @@ void ManifoldMeshReconstructor::shrinkManifold3(std::set<PointD3> points) {
 }
 
 void ManifoldMeshReconstructor::shrinkManifold2(std::set<PointD3> points) {
-
-	if (conf_.all_sort_of_output) saveBoundary(0, 0);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(0, 1);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkSeveralAtOnce2(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
-	timerShrinkSeveralTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(0, 2);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(0, 3);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkSeveralAtOnce2(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
-	timerShrinkSeveralTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(0, 4);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(0, 5);
-
-	currentEnclosingVersion_++;
+//
+//	if (conf_.all_sort_of_output) saveBoundary(0, 0);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
+//	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+//	timerShrinkTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(0, 1);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkSeveralAtOnce2(points, l_, currentEnclosingVersion_);
+//	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
+//	timerShrinkSeveralTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(0, 2);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
+//	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+//	timerShrinkTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(0, 3);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkSeveralAtOnce2(points, l_, currentEnclosingVersion_);
+//	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
+//	timerShrinkSeveralTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(0, 4);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkManifold2(points, l_, currentEnclosingVersion_);
+//	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+//	timerShrinkTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(0, 5);
+//
+//	currentEnclosingVersion_++;
 }
 
 void ManifoldMeshReconstructor::shrinkManifold(const PointD3 &camCenter, int updatedCameraIndex) {
-	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 0);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkManifold(camCenter, l_, conf_.maxDistanceCamFeature);
-//  saveManifold("tempa2.off");
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 1);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkSeveralAtOnce(camCenter, l_, conf_.maxDistanceCamFeature);
-//  saveManifold("tempb2.off");
-	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
-	timerShrinkSeveralTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 2);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkManifold(camCenter, l_, conf_.maxDistanceCamFeature);
-//  saveManifold("tempc2.off");
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 3);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkSeveralAtOnce(camCenter, l_, conf_.maxDistanceCamFeature);
-//  saveManifold("tempb2.off");
-	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
-	timerShrinkSeveralTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 4);
-
-	logger_.startEvent();
-	manifoldManager_->shrinkManifold(camCenter, l_, conf_.maxDistanceCamFeature);
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
-
-	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 5);
+//	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 0);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkManifold(camCenter, l_, conf_.maxDistanceCamFeature);
+////  saveManifold("tempa2.off");
+//	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+//	timerShrinkTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 1);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkSeveralAtOnce(camCenter, l_, conf_.maxDistanceCamFeature);
+////  saveManifold("tempb2.off");
+//	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
+//	timerShrinkSeveralTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 2);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkManifold(camCenter, l_, conf_.maxDistanceCamFeature);
+////  saveManifold("tempc2.off");
+//	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+//	timerShrinkTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 3);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkSeveralAtOnce(camCenter, l_, conf_.maxDistanceCamFeature);
+////  saveManifold("tempb2.off");
+//	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
+//	timerShrinkSeveralTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 4);
+//
+//	logger_.startEvent();
+//	manifoldManager_->shrinkManifold(camCenter, l_, conf_.maxDistanceCamFeature);
+//	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
+//	timerShrinkTime_ += logger_.getLastDelta();
+//
+//	if (conf_.all_sort_of_output) saveBoundary(updatedCameraIndex, 5);
 
 }
 

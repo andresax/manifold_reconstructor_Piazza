@@ -18,5 +18,6 @@
 	"primary_points_visibility_threshold": 2,
 	
 	"all_sort_of_output": false,
+	"fake_points_multiplier": 3,
 	"update_points_position": false
 }
