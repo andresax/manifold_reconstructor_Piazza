@@ -21,15 +21,6 @@ public:
 	ManifoldManager(Delaunay3& dt, bool inverseConic_, float probabTh_, ManifoldReconstructionConfig conf);
 	virtual ~ManifoldManager();
 
-	/*Tell on which delaunay triangulation the class instatiation will apply the grow/shrink algorithms*/
-	void setDt(Delaunay3& dt) {
-		dt_ = dt;
-	}
-
-	void setInverseConic(bool inverseConic) {
-		inverseConic_ = inverseConic;
-	}
-
 	size_t getBoundarySize() {
 		long long int bSize = 0;
 		for (auto i_lbc : boundaryCellsSpatialMap_) {
@@ -80,10 +71,10 @@ private:
 	/******************************************************/
 	/**************Manifold check functions****************/
 	/******************************************************/
-	bool additionTest(Delaunay3::Cell_handle& i);
-	bool subtractionTest(Delaunay3::Cell_handle& i);
+//	bool additionTest(Delaunay3::Cell_handle& i);
+//	bool subtractionTest(Delaunay3::Cell_handle& i);
 	bool singleTetTest2(Delaunay3::Cell_handle& i);
-	bool checkManifoldness(Delaunay3::Cell_handle& cellToTest1, int idxNeigh);
+//	bool checkManifoldness(Delaunay3::Cell_handle& cellToTest1, int idxNeigh);
 	bool addSeveralAndCheckManifoldness2(Delaunay3::Cell_handle& cellToTest1, int idxNeigh);
 	bool subSeveralAndCheckManifoldness2(Delaunay3::Cell_handle& cellToTest1, int idxNeigh);
 	bool isRegular(Delaunay3::Vertex_handle& v);

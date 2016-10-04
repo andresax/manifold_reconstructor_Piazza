@@ -8,7 +8,7 @@
 #include <glm.hpp>
 #include <string>
 #include <types_reconstructor.hpp>
-#include <SfMData.h>
+//#include <SfMData.h>
 
 namespace utilities {
 /*compute the Euclidean distance among differen tpes of points*/
@@ -60,7 +60,7 @@ void printMatrix(std::string message, glm::vec4 vector);
 void saveVisibilityPly(const std::vector<glm::vec3> &camCenters, const std::vector<glm::vec3> & points,
     const std::vector<std::vector<int> >& visibility,const std::string &name = "visibility", bool pointsVisibleFromCamN = true);
 
-void saveVisibilityPly(const SfMData &sfm_data,const std::string &name = "visibility");
+//void saveVisibilityPly(const SfMData &sfm_data,const std::string &name = "visibility");
 
 /*computes rotation around X axis*/
 glm::mat3 rotX(float alpha);

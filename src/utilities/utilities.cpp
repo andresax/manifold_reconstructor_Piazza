@@ -239,20 +239,20 @@ void readLineAndStore(std::ifstream &configFile, std::string &value) {
   }
 }
 
-void saveVisibilityPly(const SfMData& sfm_data,const std::string &name) {
-
-  std::vector<glm::vec3> camCenters;
-  std::vector<glm::vec3> points;
-  for (auto c : sfm_data.camerasList_) {
-    camCenters.push_back(c.center);
-  }
-
-  for (auto p : sfm_data.points_) {
-    points.push_back(p);
-  }
-
-  utilities::saveVisibilityPly(camCenters, points, sfm_data.pointsVisibleFromCamN_, name);
-}
+//void saveVisibilityPly(const SfMData& sfm_data,const std::string &name) {
+//
+//  std::vector<glm::vec3> camCenters;
+//  std::vector<glm::vec3> points;
+//  for (auto c : sfm_data.camerasList_) {
+//    camCenters.push_back(c.center);
+//  }
+//
+//  for (auto p : sfm_data.points_) {
+//    points.push_back(p);
+//  }
+//
+//  utilities::saveVisibilityPly(camCenters, points, sfm_data.pointsVisibleFromCamN_, name);
+//}
 
 void saveVisibilityPly(const std::vector<glm::vec3> &camCenters, const std::vector<glm::vec3> & points, const std::vector<std::vector<int> >& visibility,
     const std::string &name, bool pointsVisibleFromCamN) {

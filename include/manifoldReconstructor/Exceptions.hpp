@@ -8,6 +8,7 @@
 #ifndef EXCEPTIONS_HPP_
 #define EXCEPTIONS_HPP_
 
+#include <stdexcept>
 
 struct JsonParseException : public std::runtime_error
 {

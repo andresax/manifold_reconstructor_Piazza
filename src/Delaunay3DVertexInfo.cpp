@@ -8,8 +8,8 @@
 #include <Delaunay3DVertexInfo.h>
 
 Delaunay3DVertexInfo::Delaunay3DVertexInfo() {
-  used_ = 0;
-  notUsed_ = true;
+//  used_ = 0;
+//  notUsed_ = true;
   lastCam_ = -1;
 
 }

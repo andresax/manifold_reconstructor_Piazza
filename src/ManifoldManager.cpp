@@ -614,7 +614,7 @@ void ManifoldManager::addTetAndUpdateBoundary2(Delaunay3::Cell_handle& currentTe
 
 //add the current tetrahedron in the manifold set and add it to the boundary if needed
 	currentTet->info().setKeptManifold(true);
-	currentTet->info().setShrinked(false);
+//	currentTet->info().setShrinked(false);
 
 	std::vector<int> notManifoldNeigh;
 	if (isInBoundary(currentTet, notManifoldNeigh)) {
@@ -660,7 +660,7 @@ void ManifoldManager::subTetAndUpdateBoundary2(Delaunay3::Cell_handle& currentTe
 
 	currentTet->info().setKeptManifold(false);
 
-	currentTet->info().setShrinked(true);
+//	currentTet->info().setShrinked(true);
 
 	// Check for each neighbour whether it should belong to the boundary set
 	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
@@ -846,19 +846,19 @@ bool ManifoldManager::removeFromBoundary(Delaunay3::Cell_handle& cellToBeRemoved
 	}
 }
 
-bool ManifoldManager::checkManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh) {
-	Delaunay3::Vertex_handle v = cellToTest1->vertex(idxNeigh);
-	Delaunay3::Cell_handle curTetNeigh = cellToTest1->neighbor(idxNeigh);
-
-	if (!isRegular(v)) return false;
-
-	for (int curNei = 0; curNei < 4; ++curNei) {
-		Delaunay3::Vertex_handle vC = curTetNeigh->vertex(curNei);
-
-		if (!isRegular(vC)) return false;
-	}
-	return true;
-}
+//bool ManifoldManager::checkManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh) {
+//	Delaunay3::Vertex_handle v = cellToTest1->vertex(idxNeigh);
+//	Delaunay3::Cell_handle curTetNeigh = cellToTest1->neighbor(idxNeigh);
+//
+//	if (!isRegular(v)) return false;
+//
+//	for (int curNei = 0; curNei < 4; ++curNei) {
+//		Delaunay3::Vertex_handle vC = curTetNeigh->vertex(curNei);
+//
+//		if (!isRegular(vC)) return false;
+//	}
+//	return true;
+//}
 
 bool ManifoldManager::isRegularProfiled(Delaunay3::Vertex_handle &v) {
 	functionProfileCounter_isRegular_++;
@@ -1017,63 +1017,63 @@ bool ManifoldManager::isFreespace(Delaunay3::Cell_handle &cell) {
 	return value;
 }
 
-bool ManifoldManager::additionTest(Delaunay3::Cell_handle &cell) {
-
-	bool additionManifold;
-
-	int numV = 0;
-	int numFound = 0;
-
-	for (int curVertexId = 0; curVertexId < 4; ++curVertexId) {
-
-		if (cell->vertex(curVertexId)->info().isUsed() > 0) {
-			numFound++;
-		}
-
-	}
-	numV = numFound;
-	int numE = 0;
-	for (int curEdgeId1 = 0; curEdgeId1 < 4; ++curEdgeId1) {
-		for (int curEdgeId2 = curEdgeId1 + 1; curEdgeId2 < 4; ++curEdgeId2) {
-			bool intersectionFound = false;
-			Delaunay3::Edge curEdge(cell, curEdgeId1, curEdgeId2);
-
-			Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(curEdge, cell);
-			Delaunay3::Cell_circulator cellCircInit = dt_.incident_cells(curEdge, cell);
-
-			do {
-				if (cellCirc->info().iskeptManifold()) {
-					intersectionFound = true;
-				}
-				cellCirc++;
-			} while (cellCirc != cellCircInit);
-
-			if (intersectionFound) {
-				numE++;
-			}
-		}
-	}
-
-	int numF = 0;
-	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
-		bool intersectionFound = false;
-
-		if (cell->neighbor(curNeighId)->info().iskeptManifold()) {
-			intersectionFound = true;
-		}
-		if (intersectionFound) {
-			numF++;
-		}
-	}
-
-	if ((numV == 0 && numE == 0 && numF == 0) || (numV == 3 && numE == 3 && numF == 1) || (numV == 4 && numE == 5 && numF == 2) || (numV == 4 && numE == 6 && numF == 3) || (numV == 4 && numE == 6 && numF == 4)) {
-		additionManifold = true;
-	} else {
-		additionManifold = false;
-	}
-	return additionManifold;
-
-}
+//bool ManifoldManager::additionTest(Delaunay3::Cell_handle &cell) {
+//
+//	bool additionManifold;
+//
+//	int numV = 0;
+//	int numFound = 0;
+//
+//	for (int curVertexId = 0; curVertexId < 4; ++curVertexId) {
+//
+//		if (cell->vertex(curVertexId)->info().isUsed() > 0) {
+//			numFound++;
+//		}
+//
+//	}
+//	numV = numFound;
+//	int numE = 0;
+//	for (int curEdgeId1 = 0; curEdgeId1 < 4; ++curEdgeId1) {
+//		for (int curEdgeId2 = curEdgeId1 + 1; curEdgeId2 < 4; ++curEdgeId2) {
+//			bool intersectionFound = false;
+//			Delaunay3::Edge curEdge(cell, curEdgeId1, curEdgeId2);
+//
+//			Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(curEdge, cell);
+//			Delaunay3::Cell_circulator cellCircInit = dt_.incident_cells(curEdge, cell);
+//
+//			do {
+//				if (cellCirc->info().iskeptManifold()) {
+//					intersectionFound = true;
+//				}
+//				cellCirc++;
+//			} while (cellCirc != cellCircInit);
+//
+//			if (intersectionFound) {
+//				numE++;
+//			}
+//		}
+//	}
+//
+//	int numF = 0;
+//	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
+//		bool intersectionFound = false;
+//
+//		if (cell->neighbor(curNeighId)->info().iskeptManifold()) {
+//			intersectionFound = true;
+//		}
+//		if (intersectionFound) {
+//			numF++;
+//		}
+//	}
+//
+//	if ((numV == 0 && numE == 0 && numF == 0) || (numV == 3 && numE == 3 && numF == 1) || (numV == 4 && numE == 5 && numF == 2) || (numV == 4 && numE == 6 && numF == 3) || (numV == 4 && numE == 6 && numF == 4)) {
+//		additionManifold = true;
+//	} else {
+//		additionManifold = false;
+//	}
+//	return additionManifold;
+//
+//}
 
 bool ManifoldManager::singleTetTest2(Delaunay3::Cell_handle& cell) {
 	bool iskeptManif = cell->info().iskeptManifold();
@@ -1174,59 +1174,59 @@ bool ManifoldManager::singleTetTest2(Delaunay3::Cell_handle& cell) {
 	}
 
 }
-
-bool ManifoldManager::subtractionTest(Delaunay3::Cell_handle &i) {
-
-	bool subtractionManifold;
-
-	int numV = 0;
-	int numFound = 0;
-	bool iskeptManif = i->info().iskeptManifold();
-
-	for (int curVertexId = 0; curVertexId < 4; ++curVertexId) {
-
-		if (i->vertex(curVertexId)->info().isNotUsed()) {
-			numFound++;
-		}
-	}
-	numV = numFound;
-
-	int numE = 0;
-	for (int curEdgeId1 = 0; curEdgeId1 < 4; ++curEdgeId1) {
-		for (int curEdgeId2 = curEdgeId1 + 1; curEdgeId2 < 4; ++curEdgeId2) {
-			bool intersectionFound = false;
-			Delaunay3::Edge curEdge(i, curEdgeId1, curEdgeId2);
-
-			Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(curEdge, i);
-			Delaunay3::Cell_circulator cellCircInit = dt_.incident_cells(curEdge, i);
-
-			do {
-				if (cellCirc->info().iskeptManifold() != iskeptManif) {
-					intersectionFound = true;
-				}
-				cellCirc++;
-			} while (cellCirc != cellCircInit && intersectionFound == false);
-
-			if (intersectionFound) {
-				numE++;
-			}
-		}
-	}
-
-	/*COUNT NUM Facets in the intersection between tet cell and the current manifold*/
-	int numF = 0;
-	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
-		bool intersectionFound = false;
-
-		if (i->neighbor(curNeighId)->info().iskeptManifold() != iskeptManif) {
-			numF++;
-		}
-	}
-	if ((numV == 0 && numE == 0 && numF == 0) || (numV == 3 && numE == 3 && numF == 1) || (numV == 4 && numE == 5 && numF == 2) || (numV == 4 && numE == 6 && numF == 3) || (numV == 4 && numE == 6 && numF == 4)) {
-		subtractionManifold = true;
-	} else {
-		subtractionManifold = false;
-	}
-	return subtractionManifold;
-
-}
+//
+//bool ManifoldManager::subtractionTest(Delaunay3::Cell_handle &i) {
+//
+//	bool subtractionManifold;
+//
+//	int numV = 0;
+//	int numFound = 0;
+//	bool iskeptManif = i->info().iskeptManifold();
+//
+//	for (int curVertexId = 0; curVertexId < 4; ++curVertexId) {
+//
+//		if (i->vertex(curVertexId)->info().isNotUsed()) {
+//			numFound++;
+//		}
+//	}
+//	numV = numFound;
+//
+//	int numE = 0;
+//	for (int curEdgeId1 = 0; curEdgeId1 < 4; ++curEdgeId1) {
+//		for (int curEdgeId2 = curEdgeId1 + 1; curEdgeId2 < 4; ++curEdgeId2) {
+//			bool intersectionFound = false;
+//			Delaunay3::Edge curEdge(i, curEdgeId1, curEdgeId2);
+//
+//			Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(curEdge, i);
+//			Delaunay3::Cell_circulator cellCircInit = dt_.incident_cells(curEdge, i);
+//
+//			do {
+//				if (cellCirc->info().iskeptManifold() != iskeptManif) {
+//					intersectionFound = true;
+//				}
+//				cellCirc++;
+//			} while (cellCirc != cellCircInit && intersectionFound == false);
+//
+//			if (intersectionFound) {
+//				numE++;
+//			}
+//		}
+//	}
+//
+//	/*COUNT NUM Facets in the intersection between tet cell and the current manifold*/
+//	int numF = 0;
+//	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
+//		bool intersectionFound = false;
+//
+//		if (i->neighbor(curNeighId)->info().iskeptManifold() != iskeptManif) {
+//			numF++;
+//		}
+//	}
+//	if ((numV == 0 && numE == 0 && numF == 0) || (numV == 3 && numE == 3 && numF == 1) || (numV == 4 && numE == 5 && numF == 2) || (numV == 4 && numE == 6 && numF == 3) || (numV == 4 && numE == 6 && numF == 4)) {
+//		subtractionManifold = true;
+//	} else {
+//		subtractionManifold = false;
+//	}
+//	return subtractionManifold;
+//
+//}

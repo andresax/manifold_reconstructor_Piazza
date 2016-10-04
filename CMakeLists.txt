@@ -31,10 +31,22 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fpermissive")
 # ------------------------ BUILD -------------------------------
 
 file(GLOB_RECURSE meshRec_SOURCE 
-                  src/*.cpp
-                  src/cam_parsers/*.cpp
+                  src/Delaunay3DCellInfo.cpp
+                  src/Delaunay3DVertexInfo.cpp
+                  src/ManifoldManager.cpp
+                  src/ManifoldMeshReconstructor.cpp
+                  src/OutputCreator.cpp
                   src/utilities/*.cpp
-                  test/*.cpp
+                  src/cam_parsers/ORBIncrementalParser.cpp
+                  src/cam_parsers/ConfigParser.cpp
+                  test/ReconstructFromSLAMData.cpp
+                  test/CameraPointsCollection.cpp
+                  test/Main.cpp
+
+#                  src/*.cpp
+#                  src/cam_parsers/*.cpp
+#                  src/utilities/*.cpp
+#                  test/*.cpp
                   )
 
 add_executable(manifoldReconstructor ${meshRec_SOURCE})

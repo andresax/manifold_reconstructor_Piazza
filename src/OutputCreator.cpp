@@ -633,79 +633,79 @@ void OutputCreator::writeFreespaceOFF(const std::string filename) {
 	outfile.close();
 }
 
-void OutputCreator::writeUsedVOFF(const std::string filename) {
+//void OutputCreator::writeUsedVOFF(const std::string filename) {
+//
+//	std::ofstream outfile;
+//
+//	std::vector<PointD3> points;
+//	std::vector<PointD3> tris;
+//
+//	for (auto it = dt_.vertices_begin(); it != dt_.vertices_end(); it++) {
+//		if (it->info().isUsed()) points.push_back(it->point());
+//	}
+//
+//// Open file
+//	outfile.open(filename.c_str());
+//	if (!outfile.is_open()) {
+//		std::cerr << "Unable to open file: " << filename << std::endl;
+//		return;
+//	}
+//
+//	int numTr = tris.size();
+//
+//	outfile << "OFF" << std::endl;
+//	outfile << points.size() << " " << numTr << " 0" << std::endl;
+//
+//// Write out lines one by one.
+//	for (auto itPoints : points)
+//		outfile << static_cast<float>(itPoints.x()) << " " << static_cast<float>(itPoints.y()) << " " << static_cast<float>(itPoints.z()) << " " << std::endl;
+//	for (auto itTris : tris) {
+//		int idxTr0 = static_cast<int>(round(itTris.x()));
+//		int idxTr1 = static_cast<int>(round(itTris.y()));
+//		int idxTr2 = static_cast<int>(round(itTris.z()));
+//
+//		outfile << "3 " << idxTr0 << " " << idxTr1 << " " << idxTr2 << std::endl;
+//	}
+//// Close the file and return
+//	outfile.close();
+//}
 
-	std::ofstream outfile;
-
-	std::vector<PointD3> points;
-	std::vector<PointD3> tris;
-
-	for (auto it = dt_.vertices_begin(); it != dt_.vertices_end(); it++) {
-		if (it->info().isUsed()) points.push_back(it->point());
-	}
-
-// Open file
-	outfile.open(filename.c_str());
-	if (!outfile.is_open()) {
-		std::cerr << "Unable to open file: " << filename << std::endl;
-		return;
-	}
-
-	int numTr = tris.size();
-
-	outfile << "OFF" << std::endl;
-	outfile << points.size() << " " << numTr << " 0" << std::endl;
-
-// Write out lines one by one.
-	for (auto itPoints : points)
-		outfile << static_cast<float>(itPoints.x()) << " " << static_cast<float>(itPoints.y()) << " " << static_cast<float>(itPoints.z()) << " " << std::endl;
-	for (auto itTris : tris) {
-		int idxTr0 = static_cast<int>(round(itTris.x()));
-		int idxTr1 = static_cast<int>(round(itTris.y()));
-		int idxTr2 = static_cast<int>(round(itTris.z()));
-
-		outfile << "3 " << idxTr0 << " " << idxTr1 << " " << idxTr2 << std::endl;
-	}
-// Close the file and return
-	outfile.close();
-}
-
-void OutputCreator::writeNotUsedVOFF(const std::string filename) {
-
-	std::ofstream outfile;
-
-	std::vector<PointD3> points;
-	std::vector<PointD3> tris;
-
-	for (auto it = dt_.vertices_begin(); it != dt_.vertices_end(); it++) {
-		if (it->info().isNotUsed()) points.push_back(it->point());
-	}
-
-// Open file
-	outfile.open(filename.c_str());
-	if (!outfile.is_open()) {
-		std::cerr << "Unable to open file: " << filename << std::endl;
-		return;
-	}
-
-	int numTr = tris.size();
-
-	outfile << "OFF" << std::endl;
-	outfile << points.size() << " " << numTr << " 0" << std::endl;
-
-// Write out lines one by one.
-	for (auto itPoints : points)
-		outfile << static_cast<float>(itPoints.x()) << " " << static_cast<float>(itPoints.y()) << " " << static_cast<float>(itPoints.z()) << " " << std::endl;
-	for (auto itTris : tris) {
-		int idxTr0 = static_cast<int>(round(itTris.x()));
-		int idxTr1 = static_cast<int>(round(itTris.y()));
-		int idxTr2 = static_cast<int>(round(itTris.z()));
-
-		outfile << "3 " << idxTr0 << " " << idxTr1 << " " << idxTr2 << std::endl;
-	}
-// Close the file and return
-	outfile.close();
-}
+//void OutputCreator::writeNotUsedVOFF(const std::string filename) {
+//
+//	std::ofstream outfile;
+//
+//	std::vector<PointD3> points;
+//	std::vector<PointD3> tris;
+//
+//	for (auto it = dt_.vertices_begin(); it != dt_.vertices_end(); it++) {
+//		if (it->info().isNotUsed()) points.push_back(it->point());
+//	}
+//
+//// Open file
+//	outfile.open(filename.c_str());
+//	if (!outfile.is_open()) {
+//		std::cerr << "Unable to open file: " << filename << std::endl;
+//		return;
+//	}
+//
+//	int numTr = tris.size();
+//
+//	outfile << "OFF" << std::endl;
+//	outfile << points.size() << " " << numTr << " 0" << std::endl;
+//
+//// Write out lines one by one.
+//	for (auto itPoints : points)
+//		outfile << static_cast<float>(itPoints.x()) << " " << static_cast<float>(itPoints.y()) << " " << static_cast<float>(itPoints.z()) << " " << std::endl;
+//	for (auto itTris : tris) {
+//		int idxTr0 = static_cast<int>(round(itTris.x()));
+//		int idxTr1 = static_cast<int>(round(itTris.y()));
+//		int idxTr2 = static_cast<int>(round(itTris.z()));
+//
+//		outfile << "3 " << idxTr0 << " " << idxTr1 << " " << idxTr2 << std::endl;
+//	}
+//// Close the file and return
+//	outfile.close();
+//}
 
 void OutputCreator::writeAllVerticesToOFF(std::string prefixPath, std::vector<int> ids) {
 
