@@ -22,12 +22,14 @@
 typedef struct {
   bool inverseConicEnabled;
   float probOrVoteThreshold;
+  float rayRemovalThreshold;
   float maxDistanceCamFeature;
   bool enableSuboptimalPolicy;
   int suboptimalMethod;
   float w_1;
   float w_2;
   float w_3;
+  float w_m;
   float steinerGridSideLength;
   float steinerGridStepLength;
 
@@ -38,6 +40,7 @@ typedef struct {
 
   int fake_points_multiplier;
 
+  bool time_stats_output;
   bool all_sort_of_output;
   bool update_points_position;
 
@@ -47,11 +50,13 @@ typedef struct {
     out << "inverseConicEnabled: " << inverseConicEnabled << std::endl;
     out << "maxDistanceCamFeature: " << maxDistanceCamFeature << std::endl;
     out << "probOrVoteThreshold: " << probOrVoteThreshold << std::endl;
+    out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
     out << "enableSuboptimalPolicy: " << enableSuboptimalPolicy << std::endl;
     out << "suboptimalMethod: " << suboptimalMethod << std::endl;
     out << "w_1: " << w_1 << std::endl;
     out << "w_2: " << w_2 << std::endl;
     out << "w_3: " << w_3 << std::endl;
+    out << "w_m: " << w_3 << std::endl;
     out << "steinerGridStepLength: " << steinerGridStepLength << std::endl;
     out << "steinerGridSideLength: " << steinerGridSideLength << std::endl;
 

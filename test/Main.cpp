@@ -34,7 +34,6 @@
 //*************************************************************************************************/
 int main(int argc, char **argv) {
 	utilities::Logger log;
-	log.startEvent();
 	std::ofstream statsFile, visiblePointsFile;
 	ManifoldReconstructionConfig confManif;
 	std::string input_file;
@@ -65,6 +64,7 @@ int main(int argc, char **argv) {
 	std::cout << "max_iterations set to: " << maxIterations_ << std::endl;
 	std::cout << confManif.toString() << std::endl;
 
+	log.startEvent();
 
 	if (confManif.manifold_update_every <= 0 || confManif.save_manifold_every <= 0) {
 		std::cerr << std::endl << "constraint: confManif.manifold_update_every > 0, confManif.save_manifold_every > 0" << std::endl;
@@ -95,9 +95,9 @@ int main(int argc, char **argv) {
 	return 0;
 #else
 	std::cout << "start parsing " << argv[1] << std::endl;
-	log.startEvent();
+	if(confManif.time_stats_output) log.startEvent();
 	ORBIncrementalParser op(argv[1], confManif);
-	log.endEventAndPrint("Parsing\t\t\t\t", true);
+	if(confManif.time_stats_output) log.endEventAndPrint("Parsing\t\t\t\t", true);
 
 	std::cout << "orb: " << op.numCameras() << " cams" << std::endl << std::endl;
 
@@ -126,8 +126,13 @@ int main(int argc, char **argv) {
 		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/", "current");
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
-		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
-		std::cout << std::endl;
+		if(confManif.time_stats_output){
+			log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
+			std::cout << std::endl;
+		}
+		else log.endEvent();
+
+
 		if (m.iterationCount > confManif.initial_manifold_update_skip && !(m.iterationCount % confManif.manifold_update_every)) m.insertStatValue(log.getLastDelta());
 
 #ifdef PRODUCE_STATS
@@ -147,71 +152,6 @@ int main(int argc, char **argv) {
 	if (m.iterationCount > confManif.initial_manifold_update_skip) m.updateManifold();
 
 	m.saveManifold("output/", "final");
-
-	log.endEventAndPrint("main\t\t\t\t\t\t", true);
-
-	return 0;
-
-	log.startEvent();
-
-	/***
-	 *
-	 *  second loop: move everything to one side
-	 *
-	 *
-	 */
-
-	for (auto cameraMapPair : op.getData().getCameras()) {
-		CameraType* camera = cameraMapPair.second;
-		glm::vec3 pCamera = camera->center;
-		camera->center = glm::vec3(pCamera.x, pCamera.y + 5.0001, pCamera.z);
-	}
-
-	for (auto pointMapPair : op.getData().getPoints()) {
-		PointType* point = pointMapPair.second;
-		glm::vec3 pPoint = point->position;
-		point->position = glm::vec3(pPoint.x, pPoint.y + 5.0001, pPoint.z);
-	}
-
-	for (auto cameraMapPair : op.getData().getCameras()) {
-		CameraType* camera = cameraMapPair.second;
-
-		if (camera == NULL) {
-			continue;
-		}
-
-		// If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
-		if (maxIterations_ && m.iterationCount >= 2 * maxIterations_) break;
-
-		log.startEvent();
-
-		m.addCamera(camera);
-
-		// Skip the manifold update for the first confManif.initial_manifold_update_skip cameras
-		if (m.iterationCount > confManif.initial_manifold_update_skip && !(m.iterationCount % confManif.manifold_update_every)) m.updateManifold();
-
-		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
-
-		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
-		std::cout << std::endl;
-
-#ifdef PRODUCE_STATS
-		statsFile.open("output/stats/stats.txt", std::ios_base::app);
-		statsFile << std::endl << std::endl << "Iteration " << m.iterationCount << std::endl;
-		statsFile << op.getStats();
-		statsFile.close();
-
-		std::ostringstream nameVisiblePoints; nameVisiblePoints << "output/vp/visible_points_" << camera->idCam << ".off";
-		visiblePointsFile.open(nameVisiblePoints.str().c_str());
-		visiblePointsFile << op.getDataOFF();
-		visiblePointsFile.close();
-#endif
-	}
-
-	// Do a last manifold update in case op.numCameras() isn't a multiple of confManif.manifold_update_every
-	if (m.iterationCount > confManif.initial_manifold_update_skip) m.updateManifold();
-
-	m.saveManifold("output/", "final_moved");
 
 	log.endEventAndPrint("main\t\t\t\t\t\t", true);
 

@@ -17,6 +17,8 @@ struct RayPath {
 	int cameraId = -1;
 	int pointId = -1;
 
+	double mistrustVote = 0.0;
+
 	std::vector<Delaunay3::Cell_handle> path; // TODO could it be a vector?
 };
 

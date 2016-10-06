@@ -43,6 +43,10 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document["probOrVoteThreshold"].IsFloat()) throw JsonAccessException("");
 		c.probOrVoteThreshold = document["probOrVoteThreshold"].GetFloat();
 
+		if (!document.HasMember("rayRemovalThreshold")) throw JsonAccessException("");
+		if (!document["rayRemovalThreshold"].IsFloat()) throw JsonAccessException("");
+		c.rayRemovalThreshold = document["rayRemovalThreshold"].GetFloat();
+
 		if (!document.HasMember("enableSuboptimalPolicy")) throw JsonAccessException("");
 		if (!document["enableSuboptimalPolicy"].IsBool()) throw JsonAccessException("");
 		c.enableSuboptimalPolicy = document["enableSuboptimalPolicy"].GetBool();
@@ -62,6 +66,10 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document.HasMember("w_3")) throw JsonAccessException("");
 		if (!document["w_3"].IsFloat()) throw JsonAccessException("");
 		c.w_3 = document["w_3"].GetFloat();
+
+		if (!document.HasMember("w_m")) throw JsonAccessException("");
+		if (!document["w_m"].IsFloat()) throw JsonAccessException("");
+		c.w_m = document["w_m"].GetFloat();
 
 		if (!document.HasMember("steinerGridStepLength")) throw JsonAccessException("");
 		if (!document["steinerGridStepLength"].IsFloat()) throw JsonAccessException("");
@@ -90,6 +98,10 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document.HasMember("all_sort_of_output")) throw JsonAccessException("");
 		if (!document["all_sort_of_output"].IsBool()) throw JsonAccessException("");
 		c.all_sort_of_output = document["all_sort_of_output"].GetBool();
+
+		if (!document.HasMember("time_stats_output")) throw JsonAccessException("");
+		if (!document["time_stats_output"].IsBool()) throw JsonAccessException("");
+		c.time_stats_output = document["time_stats_output"].GetBool();
 
 		if (document.HasMember("fake_points_multiplier")){
 			if (!document["fake_points_multiplier"].IsInt()) throw JsonAccessException("");

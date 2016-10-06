@@ -33,7 +33,7 @@ ManifoldMeshReconstructor::ManifoldMeshReconstructor(ManifoldReconstructionConfi
 	sgCurrentMaxX_ = sgCurrentMaxY_ = sgCurrentMaxZ_ = conf_.steinerGridStepLength;
 
 	timeStatsFile_.open("stats/timeStats.csv");
-	timeStatsFile_ << "cameras number, updateSteinerGrid, shrinkManifold, shrinkSingle, shrinkSeveral, Add new vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, growManifold, growManifoldSev, growManifold, InsertInBoundary, RemoveFromBoundary, addedPoints, movedPoints, Overall" << endl;
+	timeStatsFile_ << "cameras number, updateSteinerGrid, shrinkManifold, shrinkSingle, shrinkSeveral, Add new vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, rayRemoving, growManifold, growManifoldSev, growManifold, InsertInBoundary, RemoveFromBoundary, addedPoints, movedPoints, Overall" << endl;
 }
 
 ManifoldMeshReconstructor::~ManifoldMeshReconstructor() {
@@ -148,25 +148,30 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	rt2_SuccessfulCachedIndices = 0;
 	rt2_TriedCachedIndices = 0;
 
-	Chronometer chronoCheck;
+	Chronometer chronoCheck, chronoEverything;
 	chronoCheck.start();
 	chronoCheck.stop();
-	cout << "ManifoldMeshReconstructor::updateTriangulation: \t\t min chrono time\t\t" << chronoCheck.getNanoseconds() << " ns" << endl;
+	if(conf_.time_stats_output) cout << "ManifoldMeshReconstructor::updateTriangulation: \t\t min chrono time\t\t" << chronoCheck.getNanoseconds() << " ns" << endl;
 
 	int addedPointsStat = 0, movedPointsStat = 0, updatedCamerasStat = updatedCamerasIdx_.size();
 
 	if (dt_.number_of_vertices() == 0) {
-		logger_.startEvent();
-//		createSteinerPointGridAndBound();
+		chronoEverything.reset(); chronoEverything.start();
+
 		initSteinerPointGridAndBound();
 		updateSteinerPointGridAndBound();
-		logger_.endEventAndPrint("├ initSteinerGrid\t\t", true);
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "├ initSteinerGrid\t\t" << chronoEverything.getSeconds()  << endl;
 	} else {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
+
 		updateSteinerPointGridAndBound();
-		logger_.endEventAndPrint("├ updateSteinerGrid\t\t", true);
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "├ updateSteinerGrid\t\t" << chronoEverything.getSeconds()  << endl;
 	}
-	timeStatsFile_ << logger_.getLastDelta() << ", ";
+	timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 
 	/* DEBUG BEGIN */
 
@@ -214,13 +219,15 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	timerShrinkTime_ = 0.0;
 	timerShrinkSeveralTime_ = 0.0;
 	if (enclosingVolumePoints.size()) {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
+
 		shrinkManifold3(enclosingVolumePoints);
-		logger_.endEventAndPrint("├ shrinkManifold\t\t", true);
-		timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "├ shrinkManifold\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
-		logger_.startEvent();
-		cout << "├ shrinkManifold\t\tSkipped" << endl;
+		if(conf_.time_stats_output) cout << "├ shrinkManifold\t\tSkipped" << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
 
@@ -247,7 +254,8 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	 */
 
 	if (updatedCamerasIdx_.size()) {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
+
 		for (auto updatedCameraIndex : updatedCamerasIdx_) {
 
 			for (auto pIndex : cams_[updatedCameraIndex].newVisiblePoints) {
@@ -281,18 +289,23 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 				}
 			}
 
+			// TODO: !!! clear cams_[updatedCameraIndex].newVisiblePoints. Only a problem if cameras are updated
+
 		}
 		updatedCamerasIdx_.clear();
-		logger_.endEventAndPrint("├ Add new vertices\t\t", true);
-		timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "├ Add new vertices\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
-		cout << "├ Add new vertices\t\tSkipped" << endl;
+		if(conf_.time_stats_output) cout << "├ Add new vertices\t\tSkipped" << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
 
 	// Move the vertices for the moved points
 	if (conf_.update_points_position && pointsMovedIdx_.size()) {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
+
 		for (auto id : pointsMovedIdx_) {
 
 			Segment s = Segment(points_[id].position, points_[id].newPosition);
@@ -306,10 +319,12 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 		}
 		pointsMovedIdx_.clear();
-		logger_.endEventAndPrint("├ Move vertices\t\t\t", true);
-		timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "├ Move vertices\t\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
-		cout << "├ Move vertices\t\t\tSkipped" << endl;
+		if(conf_.time_stats_output) cout << "├ Move vertices\t\t\tSkipped" << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
 
@@ -317,15 +332,18 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 	// Update the constraints for the moved cameras
 	if (movedCamerasIdx_.size()) {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
+
 		for (int cameraIndex : movedCamerasIdx_) {
 			moveCameraConstraints(cameraIndex);
 		}
 		movedCamerasIdx_.clear();
-		logger_.endEventAndPrint("├ Move Cameras\t\t\t", true);
-		timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "├ Move Cameras\t\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
-		cout << "├ Move Cameras\t\t\tSkipped" << endl;
+		if(conf_.time_stats_output) cout << "├ Move Cameras\t\t\tSkipped" << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
 
@@ -341,21 +359,22 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	timeStatsFile_ << (float) addedPointsStat / 100 / updatedCamerasStat << ", ";
 	timeStatsFile_ << (float) movedPointsStat / 100 / updatedCamerasStat << ", ";
 
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t updated cameras:\t\t\t" << updatedCamerasStat << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t added points:\t\t\t" << addedPointsStat << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t moved points:\t\t\t" << movedPointsStat << endl;
+	if(conf_.time_stats_output){
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t updated cameras:\t\t\t" << updatedCamerasStat << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t added points:\t\t\t" << addedPointsStat << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t moved points:\t\t\t" << movedPointsStat << endl;
 
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t insertInBoundary_:\t\t\t" << manifoldManager_->chronoInsertInBoundary_.getSeconds() << " s" << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t removeFromBoundary_:\t\t\t" << manifoldManager_->chronoRemoveFromBoundary_.getSeconds() << " s" << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t insertInBoundary_:\t\t\t" << manifoldManager_->chronoInsertInBoundary_.getSeconds() << " s" << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t mm \t removeFromBoundary_:\t\t\t" << manifoldManager_->chronoRemoveFromBoundary_.getSeconds() << " s" << endl;
 
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t useless:\t\t\t" << rt2_ChronoUseless_.getSeconds() << " s" << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t first cell:\t\t\t" << rt2_ChronoFirstCell_.getSeconds() << " s" << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t cell traversing:\t\t" << rt2_ChronoCellTraversing_.getSeconds() << " s" << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t index cache hit ratio:\t\t" << (double) rt2_SuccessfulCachedIndices / (double) rt2_TriedCachedIndices << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours weight update:\t\t" << rt2_ChronoNeighboursD1WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD1WeightUpdate_ << endl;
-	cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours int insert/remove:\t\t" << rt2_ChronoNeighboursD2WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD2WeightUpdate_ << endl;
-
-	cout << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t useless:\t\t\t" << rt2_ChronoUseless_.getSeconds() << " s" << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t first cell:\t\t\t" << rt2_ChronoFirstCell_.getSeconds() << " s" << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t cell traversing:\t\t" << rt2_ChronoCellTraversing_.getSeconds() << " s" << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t index cache hit ratio:\t\t" << (double) rt2_SuccessfulCachedIndices / (double) rt2_TriedCachedIndices << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours weight update:\t\t" << rt2_ChronoNeighboursD1WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD1WeightUpdate_ << endl;
+		cout << "ManifoldMeshReconstructor::updateTriangulation:\t\t\t rt2\t neighbours int insert/remove:\t\t" << rt2_ChronoNeighboursD2WeightUpdate_.getSeconds() << " s\t / \t" << rt2_CountNeighboursD2WeightUpdate_ << endl;
+		cout << endl;
+	}
 
 	iterationCounter_++;
 }
@@ -368,17 +387,22 @@ void ManifoldMeshReconstructor::rayTracingFromAllCam() {
 //	}
 //	cout << "\tvote_sum: " << vote_sum << endl;
 
+	Chronometer chronoEverything;
+
 	if (raysToBeUntraced_.size()) {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
+
 		for (auto cIndex_pIndex : raysToBeUntraced_) {
 //			rayUntracing(getRayPath(cIndex_pIndex.first, cIndex_pIndex.second));
 			rayUntracing2(getRayPath(cIndex_pIndex.first, cIndex_pIndex.second));
 		}
 		raysToBeUntraced_.clear();
-		logger_.endEventAndPrint("│ ├ rayUntracing\t\t", true);
-		timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "│ ├ rayUntracing\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
-		cout << "│ ├ rayUntracing\t\tSkipped" << endl;
+		if(conf_.time_stats_output) cout << "│ ├ rayUntracing\t\tSkipped" << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
 
@@ -389,7 +413,7 @@ void ManifoldMeshReconstructor::rayTracingFromAllCam() {
 //	cout << "\tvote_sum: " << vote_sum << endl;
 
 	if (raysToBeTraced_.size()) {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
 		for (auto cIndex_pIndex : raysToBeTraced_) {
 			raysToBeRetraced_.erase(cIndex_pIndex);
 //			rayTracing(cIndex_pIndex.first, cIndex_pIndex.second, false, true);
@@ -398,10 +422,12 @@ void ManifoldMeshReconstructor::rayTracingFromAllCam() {
 			rayTracing4(cIndex_pIndex.first, cIndex_pIndex.second);
 		}
 		raysToBeTraced_.clear();
-		logger_.endEventAndPrint("│ ├ rayTracing\t\t\t", true);
-		timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "│ ├ rayTracing\t\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
-		cout << "│ ├ rayTracing\t\t\tSkipped" << endl;
+		if(conf_.time_stats_output) cout << "│ ├ rayTracing\t\t\tSkipped" << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
 //
@@ -412,7 +438,7 @@ void ManifoldMeshReconstructor::rayTracingFromAllCam() {
 //	cout << "\tvote_sum: " << vote_sum << endl;
 
 	if (raysToBeRetraced_.size()) {
-		logger_.startEvent();
+		chronoEverything.reset(); chronoEverything.start();
 		for (auto cIndex_pIndex : raysToBeRetraced_) {
 //			rayRetracing(cIndex_pIndex.first, cIndex_pIndex.second, newCells_);
 //			rayRetracing3(cIndex_pIndex.first, cIndex_pIndex.second);
@@ -429,12 +455,39 @@ void ManifoldMeshReconstructor::rayTracingFromAllCam() {
 		}
 		newCells_.clear();
 
-		logger_.endEventAndPrint("│ ├ rayRetracing\t\t", true);
-		timeStatsFile_ << logger_.getLastDelta() << ", ";
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "│ ├ rayRetracing\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
-		cout << "│ ├ rayRetracing\t\tSkipped" << endl;
+		if(conf_.time_stats_output) cout << "│ ├ rayRetracing\t\tSkipped" << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
+
+	int raysRemovedCount = 0, raysCandidateToBeRemovedCount = raysCandidateToBeRemoved_.size();
+
+	if (raysCandidateToBeRemoved_.size()) {
+		chronoEverything.reset(); chronoEverything.start();
+		for (auto cIndex_pIndex : raysCandidateToBeRemoved_) {
+//			cout << "ManifoldMeshReconstructor::rayTracingFromAllCam:\t removing ray " << cIndex_pIndex.first << ", " << cIndex_pIndex.second << endl;
+			auto r = getRayPath(cIndex_pIndex.first, cIndex_pIndex.second);
+
+			if(r->mistrustVote > conf_.rayRemovalThreshold){
+				raysRemovedCount++;
+				rayUntracing2(r);
+			}
+		}
+		raysCandidateToBeRemoved_.clear();
+
+		chronoEverything.stop();
+		if(conf_.time_stats_output) cout << "│ ├ rayRemoving\t\t" << chronoEverything.getSeconds()  << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
+	} else {
+		if(conf_.time_stats_output) cout << "│ ├ rayRemoving\t\tSkipped" << endl;
+		timeStatsFile_ << 0.0 << ", ";
+	}
+	cout << "ManifoldMeshReconstructor::rayTracingFromAllCam:\t rays removed:\t " << raysRemovedCount << "\t/\t" << raysCandidateToBeRemovedCount << endl;
+
+
 
 //	vote_sum = 0.0;
 //	for (auto cell = dt_.finite_cells_begin(); cell != dt_.finite_cells_end(); cell++) {
@@ -514,6 +567,7 @@ void ManifoldMeshReconstructor::rayTracing4(int cameraIndex, int pointIndex, boo
 	for (auto i : incidentCells) {
 		if (i == targetCell) {
 			markCell(i, cameraIndex, pointIndex, rayPath->path, retrace);
+			if(!retrace) markRemovalCandidateRays(vertexHandle, i, incidentCells); // TODO also if retracing?
 			return;
 		}
 	}
@@ -521,7 +575,7 @@ void ManifoldMeshReconstructor::rayTracing4(int cameraIndex, int pointIndex, boo
 	// Otherwise there has to be a neighbour cell that intersects with the ray and it is the neighbour opposite to the point's vertex
 	for (auto i : incidentCells) {
 
-		// facetIndex is the index of the facet opposite to the point's vertex
+		// facetIndex is the index of the facet opposite to the point's vertex in the incident cell i
 		int facetIndex = i->index(vertexHandle);
 
 		// If the facet (i, facetIndex) intersects with the ray, the corresponding neighbour is the next cell,
@@ -530,6 +584,7 @@ void ManifoldMeshReconstructor::rayTracing4(int cameraIndex, int pointIndex, boo
 			firstExitFacetFound = true;
 
 			markCell(i, cameraIndex, pointIndex, rayPath->path, retrace);
+			if(!retrace) markRemovalCandidateRays(vertexHandle, i, incidentCells); // TODO also if retracing?
 
 			previousCell = i;
 			currentCell = i->neighbor(facetIndex);
@@ -691,16 +746,37 @@ void ManifoldMeshReconstructor::unmarkCell(Delaunay3::Cell_handle& c, const int 
 	rt2_ChronoNeighboursD1WeightUpdate_.stop();
 }
 
+void ManifoldMeshReconstructor::markRemovalCandidateRays(Vertex3D_handle& v, Delaunay3::Cell_handle& c, std::vector<Delaunay3::Cell_handle>& incidentCells){
+	std::vector<Delaunay3::Cell_handle> neighbours;
+	for(int neighbourIndex=0; neighbourIndex<4; neighbourIndex++) neighbours.push_back(c->neighbor(neighbourIndex));
+
+	// Select cells i that are incident to vertex v and opposed to cell c (not neighbours),
+	// and for each of them increment mistrust vote on intersecting rays and add them to raysCandidateToBeRemoved_.
+	for(auto i : incidentCells){
+		if(i != c && i != neighbours[0] && i != neighbours[1] && i != neighbours[2] && i != neighbours[3]){
+			for(auto intersection : i->info().getIntersections()){
+				getRayPath(intersection.first, intersection.second)->mistrustVote += conf_.w_m;
+//				cout << getRayPath(intersection.first, intersection.second)->mistrustVote << endl;
+				raysCandidateToBeRemoved_.insert(pair<int, int>(intersection.first, intersection.second));
+			}
+		}
+	}
+
+
+	// TODO can take into accout the freeVote of cell i or the number of rays intersecting the cell (to avoid mass removing)?
+}
+
 void ManifoldMeshReconstructor::growManifold3(std::set<PointD3> points) {
 //	if (!freeSpaceTets_.size()) {
 //		cerr << "freeSpaceTets_ is empty; Can't grow" << endl;
 //		return;
 //	}
+	Chronometer chronoEverything;
 
 	if (conf_.all_sort_of_output) saveBoundary(1, 0);
 
 	// TODO move the initialisation to updateTriangulation
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
 	if (manifoldManager_->getBoundarySize() == 0) {
 		double max = 0.0;
 		Delaunay3::Cell_handle startingCell;
@@ -723,22 +799,26 @@ void ManifoldMeshReconstructor::growManifold3(std::set<PointD3> points) {
 	} else {
 		manifoldManager_->regionGrowing3(points);
 	}
-	logger_.endEventAndPrint("│ ├ growManifold\t\t", true);
-	timeStatsFile_ << logger_.getLastDelta() << ", ";
+
+	chronoEverything.stop();
+	if(conf_.time_stats_output) cout << "│ ├ growManifold\t\t" << chronoEverything.getSeconds()  << endl;
+	timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 
 	if (conf_.all_sort_of_output) saveBoundary(1, 1);
 
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
 	manifoldManager_->growSeveralAtOnce3(points);
-	logger_.endEventAndPrint("│ ├ growManifoldSev\t\t", true);
-	timeStatsFile_ << logger_.getLastDelta() << ", ";
+	chronoEverything.stop();
+	if(conf_.time_stats_output) cout << "│ ├ growManifoldSev\t\t" << chronoEverything.getSeconds()  << endl;
+	timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 
 	if (conf_.all_sort_of_output) saveBoundary(1, 2);
 
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
 	manifoldManager_->regionGrowing3(points);
-	logger_.endEventAndPrint("│ ├ growManifold\t\t", true);
-	timeStatsFile_ << logger_.getLastDelta() << ", ";
+	chronoEverything.stop();
+	if(conf_.time_stats_output) cout << "│ ├ growManifold\t\t" << chronoEverything.getSeconds()  << endl;
+	timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 
 	if (conf_.all_sort_of_output) saveBoundary(1, 3);
 }
@@ -782,41 +862,56 @@ void ManifoldMeshReconstructor::saveFreespace(const std::string filename) {
 }
 
 void ManifoldMeshReconstructor::shrinkManifold3(std::set<PointD3> points) {
+	Chronometer chronoEverything;
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 0);
 
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
+
 	manifoldManager_->shrinkManifold3(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
+
+	chronoEverything.stop();
+	if(conf_.time_stats_output) cout << "│ ├ shrink\t\t\t" << chronoEverything.getSeconds()  << endl;
+	timerShrinkTime_ += chronoEverything.getSeconds();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 1);
 
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
+
 	manifoldManager_->shrinkSeveralAtOnce3(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
-	timerShrinkSeveralTime_ += logger_.getLastDelta();
+
+	chronoEverything.stop();
+	if(conf_.time_stats_output) cout << "│ ├ shrinkSeveral\t\t" << chronoEverything.getSeconds()  << endl;
+	timerShrinkSeveralTime_ += chronoEverything.getSeconds();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 2);
 
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
+
 	manifoldManager_->shrinkManifold3(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
+
+	chronoEverything.stop();
+	if(conf_.time_stats_output) cout << "│ ├ shrink\t\t\t" << chronoEverything.getSeconds()  << endl;
+	timerShrinkTime_ += chronoEverything.getSeconds();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 3);
 
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
+
 	manifoldManager_->shrinkSeveralAtOnce3(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrinkSeveral\t\t", true);
-	timerShrinkSeveralTime_ += logger_.getLastDelta();
+
+	if(conf_.time_stats_output) cout << "│ ├ shrinkSeveral\t\t" << chronoEverything.getSeconds()  << endl;
+	timerShrinkSeveralTime_ += chronoEverything.getSeconds();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 4);
 
-	logger_.startEvent();
+	chronoEverything.reset(); chronoEverything.start();
+
 	manifoldManager_->shrinkManifold3(points, l_, currentEnclosingVersion_);
-	logger_.endEventAndPrint("│ ├ shrink\t\t\t", true);
-	timerShrinkTime_ += logger_.getLastDelta();
+
+	chronoEverything.stop();
+	if(conf_.time_stats_output) cout << "│ ├ shrink\t\t\t" << chronoEverything.getSeconds()  << endl;
+	timerShrinkTime_ += chronoEverything.getSeconds();
 
 	if (conf_.all_sort_of_output) saveBoundary(0, 5);
 

@@ -130,9 +130,10 @@ private:
 	/*add new point to the Delaunay Triangulation*/
 	bool insertVertex(PointReconstruction &points);
 	/*mark a tetrahedron with a visibility rays, it updates the information stored in the tetrahedron*/
-	void unmarkCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex);
 	void markCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex, std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells);
-//	void markTetraedron2(
+	void unmarkCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex);
+	void markRemovalCandidateRays(Vertex3D_handle& v, Delaunay3::Cell_handle& c, std::vector<Delaunay3::Cell_handle>& incidentCells);
+	//	void markTetraedron2(
 //			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, bool incrementCount, bool onlyMarkNewCells);
 //	void markTetraedron(
 //			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, RayReconstruction* ray,
@@ -240,6 +241,8 @@ private:
 
 	std::set<std::pair<int, int>> raysToBeUntraced_;
 
+	std::set<std::pair<int, int>> raysCandidateToBeRemoved_;
+
 	std::set<int> updatedCamerasIdx_;
 	std::vector<int> pointsMovedIdx_;
 	std::vector<int> movedCamerasIdx_;
@@ -250,7 +253,7 @@ private:
 	float sgCurrentMinX_, sgCurrentMaxX_, sgCurrentMinY_, sgCurrentMaxY_, sgCurrentMinZ_, sgCurrentMaxZ_;
 
 	ManifoldReconstructionConfig conf_;
-	utilities::Logger logger_;
+//	utilities::Logger logger_;
 	ManifoldManager * manifoldManager_;
 	OutputCreator *outputM_;
 	std::ofstream fileOut_;
