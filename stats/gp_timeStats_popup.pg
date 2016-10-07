@@ -33,7 +33,12 @@ plot input_file using 1:2, \
 "" using 1:18, \
 "" using 1:19, \
 "" using 1:20, \
-"" using 1:21
+"" using 1:21, \
+"" using 1:22, \
+"" using 1:23, \
+"" using 1:24, \
+"" using 1:25, \
+"" using 1:26
 #
 
 pause -1

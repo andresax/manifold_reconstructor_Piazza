@@ -160,7 +160,7 @@ struct PointReconstruction { //TODO export in an actual class
 	PointD3 newPosition;
 
 	// true when not yet in the triangulation (and vertexHandle isn't set)
-	bool new_;
+	bool notTriangulated;
 	Vertex3D_handle vertexHandle;
 	int idVertex;
 
@@ -169,7 +169,7 @@ struct PointReconstruction { //TODO export in an actual class
 	PointReconstruction() {
 		position = PointD3(0.0, 0.0, 0.0);
 		newPosition = PointD3(0.0, 0.0, 0.0);
-		new_ = true;
+		notTriangulated = true;
 		idVertex = -1;
 		idReconstruction = -1;
 	}

@@ -915,7 +915,7 @@ void OutputCreator::writeOneTriangleAndRayToOFF(std::string prefixPath, std::vec
 	outputFile.close();
 }
 
-void OutputCreator::writeRaysToOFF(std::string prefixPath, std::vector<int> ids, std::vector<Segment> &constraints) {
+void OutputCreator::writeRaysToOFF(std::string prefixPath, std::vector<int> ids, std::vector<Segment>& constraints) {
 
 	std::ofstream outputFile;
 	std::ostringstream outputFileName;

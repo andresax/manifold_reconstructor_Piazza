@@ -133,6 +133,9 @@ private:
 	void markCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex, std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells);
 	void unmarkCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex);
 	void markRemovalCandidateRays(Vertex3D_handle& v, Delaunay3::Cell_handle& c, std::vector<Delaunay3::Cell_handle>& incidentCells);
+	void removeRay(RayPath* r);
+	void removeVisibilityPair(RayPath* r);
+
 	//	void markTetraedron2(
 //			Delaunay3::Cell_handle& cell, const int camIndex, const int featureIndex, std::vector<Delaunay3::Cell_handle>& path, bool incrementCount, bool onlyMarkNewCells);
 //	void markTetraedron(
@@ -176,7 +179,9 @@ private:
 //	int moveVertex_WHeuristic(int idxPoint, int idxCam);
 	/*not tested yet*/
 	int moveVertex(int idxPoint);
-//	int moveVertex(int idxPoint, int idxCam);
+
+	void removeVertex(int idxPoint);
+
 	void moveCameraConstraints(int idxCam);
 	/**test if the segment traverse two tetrahedra in facet f*/
 //	bool cellTraversalExitTest(
@@ -194,6 +199,7 @@ private:
 
 	RayPath* addRayPath(int cameraId, int pointId);
 	RayPath* getRayPath(int cameraId, int pointId);
+	void eraseRayPath(RayPath* r);
 	std::set<RayPath*> getRayPathsFromCamera(int cameraId);
 	std::set<RayPath*> getRayPathsFromPoint(int pointId);
 
@@ -242,6 +248,8 @@ private:
 	std::set<std::pair<int, int>> raysToBeUntraced_;
 
 	std::set<std::pair<int, int>> raysCandidateToBeRemoved_;
+
+	std::vector<int> pointsToBeRemovedIdx_;
 
 	std::set<int> updatedCamerasIdx_;
 	std::vector<int> pointsMovedIdx_;
