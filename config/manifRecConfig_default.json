@@ -8,7 +8,7 @@
 	"w_3": 1.0,
 	"w_m": 1.0,
 	"probOrVoteThreshold": 20.0,
-	"rayRemovalThreshold": 150.0,
+	"rayRemovalThreshold": 10.0,
 	
 	"maxDistanceCamFeature": 40.0,
 	"steinerGridStepLength": 20.0,
@@ -19,7 +19,7 @@
 	"save_manifold_every": 32,
 	"primary_points_visibility_threshold": 2,
 	
-	"time_stats_output": false,
+	"time_stats_output": true,
 	"all_sort_of_output": false,
 	"fake_points_multiplier": 0,
 	"update_points_position": false

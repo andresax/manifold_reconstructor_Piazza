@@ -118,6 +118,13 @@ void ManifoldManager::shrinkManifold3(const std::set<PointD3>& points, const flo
 			if (isInEnclosingVolume) countInEnclosingVolume++;
 			else continue;
 
+			if (!currentTet->info().iskeptManifold() || !currentTet->info().isBoundary()) continue;
+
+			if (!currentTet->info().iskeptManifold()) cerr << "ManifoldManager::shrinkManifold3:\t wrong shrink order (trying to shrink non manifold cell)\t iteration: " << countIterations << endl;
+			if (!currentTet->info().isBoundary()) cerr << "ManifoldManager::shrinkManifold3:\t wrong shrink order (non boundary cell in queue)\t iteration: " << countIterations << endl;
+			if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary()) cerr << "ManifoldManager::shrinkManifold3:\t inconsistent boundary and manifold (m and !b)\t iteration: " << countIterations << endl;
+			if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary()) cerr << "ManifoldManager::shrinkManifold3:\t inconsistent boundary and manifold (!m and b)\t iteration: " << countIterations << endl;
+
 			chronoTesting.start();
 			if (singleTetTest2(currentTet)) {
 				chronoTesting.stop();
@@ -372,6 +379,13 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 
 			currentTet->info().setToBeTested(false);
 
+			if (currentTet->info().iskeptManifold() || currentTet->info().isBoundary()) continue;
+
+			if (currentTet->info().isBoundary()) cerr << "ManifoldManager::regionGrowingProcedure3:\t wrong grow order (boundary cell in queue)\t iteration: " << countIterations << endl;
+			if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary()) cerr << "ManifoldManager::regionGrowingProcedure3:\t inconsistent boundary and manifold (m and !b)\t iteration: " << countIterations << endl;
+			if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary()) cerr << "ManifoldManager::regionGrowingProcedure3:\t inconsistent boundary and manifold (!m and b)\t iteration: " << countIterations << endl;
+			if (currentTet->info().iskeptManifold()) cerr << "ManifoldManager::regionGrowingProcedure3:\t wrong grow order\t iteration: " << countIterations << endl;
+
 			chronoTesting.start();
 			if (singleTetTest2(currentTet)) {
 				chronoTesting.stop();
@@ -392,6 +406,7 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 						if (find(tetsQueue.begin(), tetsQueue.end(), neighbour) == tetsQueue.end()) {
 							std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
 							tetsQueue.insert(it, neighbour);
+							fixedPoint = false;
 						}
 						chronoQueueInserting.stop();
 
@@ -400,6 +415,8 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 
 			} else {
 				chronoTesting.stop();
+
+				if(currentTet->info().iskeptManifold()) cerr << "ManifoldManager::regionGrowingProcedure3: changing manifold state of ungrown cell; iteration " << countIterations << endl;
 
 				currentTet->info().setKeptManifold(false); // TODO useful?
 
@@ -421,6 +438,7 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 	tetsQueue.clear();
 
 	if(conf_.time_stats_output){
+		cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t countIterations:\t\t\t\t" << countIterations << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
@@ -489,7 +507,15 @@ void ManifoldManager::growSeveralAtOnce3(const std::set<PointD3>& points) {
 
 		countTotal++;
 
-		if (currentTet->info().isBoundary()) break;
+		if (currentTet->info().isBoundary())  cerr << "ManifoldManager::growSeveralAtOnce3:\t wrong grow order (boundary cell in queue)" << endl;
+
+		if (currentTet->info().iskeptManifold() || currentTet->info().isBoundary()) continue;
+
+		if (currentTet->info().isBoundary()) cerr << "ManifoldManager::growSeveralAtOnce3:\t wrong grow order (boundary cell in queue)" << endl;
+		if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary()) cerr << "ManifoldManager::growSeveralAtOnce3:\t inconsistent boundary and manifold (m and !b)" << endl;
+		if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary()) cerr << "ManifoldManager::growSeveralAtOnce3:\t inconsistent boundary and manifold (!m and b)" << endl;
+		if (currentTet->info().iskeptManifold()) cerr << "ManifoldManager::growSeveralAtOnce3:\t wrong grow order" << endl;
+
 
 		// TODO before or after aborting the cycle?
 		currentTet->info().setToBeTested(false);

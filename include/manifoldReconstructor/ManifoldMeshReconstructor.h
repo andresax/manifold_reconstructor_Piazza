@@ -248,6 +248,8 @@ private:
 	std::set<std::pair<int, int>> raysToBeUntraced_;
 
 	std::set<std::pair<int, int>> raysCandidateToBeRemoved_;
+	std::set<std::pair<int, int>> raysToBeChecked_;
+	std::set<std::pair<int, int>> raysNotValid_;
 
 	std::vector<int> pointsToBeRemovedIdx_;
 
