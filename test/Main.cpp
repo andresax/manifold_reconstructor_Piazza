@@ -14,6 +14,7 @@
 //  GNU General Public License for more details.
 
 #include <CameraPointsCollection.h>
+#include <Chronometer.h>
 #include <Logger.h>
 #include <ORBIncrementalParser.h>
 #include <ConfigParser.h>
@@ -95,9 +96,9 @@ int main(int argc, char **argv) {
 	return 0;
 #else
 	std::cout << "start parsing " << argv[1] << std::endl;
-	if(confManif.time_stats_output) log.startEvent();
+	if (confManif.time_stats_output) log.startEvent();
 	ORBIncrementalParser op(argv[1], confManif);
-	if(confManif.time_stats_output) log.endEventAndPrint("Parsing\t\t\t\t", true);
+	if (confManif.time_stats_output) log.endEventAndPrint("Parsing\t\t\t\t", true);
 
 	std::cout << "orb: " << op.numCameras() << " cams" << std::endl << std::endl;
 
@@ -126,9 +127,10 @@ int main(int argc, char **argv) {
 		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/", "current");
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
+		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.getOutputManager()->writeMeshToOff("output/current_from_OutputManager.off");
+
 		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
 		std::cout << std::endl;
-
 
 		if (m.iterationCount > confManif.initial_manifold_update_skip && !(m.iterationCount % confManif.manifold_update_every)) m.insertStatValue(log.getLastDelta());
 

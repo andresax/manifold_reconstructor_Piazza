@@ -2,13 +2,15 @@
 	"inverseConicEnabled": true,
 	"enableSuboptimalPolicy": false,
 	"suboptimalMethod": 0,
+	"enableRayMistrust": false,
 	
 	"w_1": 10.0,
 	"w_2": 2.0,
 	"w_3": 1.0,
 	"w_m": 1.0,
-	"probOrVoteThreshold": 20.0,
-	"rayRemovalThreshold": 10.0,
+	"freeVoteThreshold": 20.0,
+	"rayRemovalThreshold": 100000000.0,
+	"vertexRemovalThreshold": 100000000.0,
 	
 	"maxDistanceCamFeature": 40.0,
 	"steinerGridStepLength": 20.0,

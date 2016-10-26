@@ -21,38 +21,44 @@
 
 typedef struct {
   bool inverseConicEnabled;
-  float probOrVoteThreshold;
-  float rayRemovalThreshold;
-  float maxDistanceCamFeature;
   bool enableSuboptimalPolicy;
+  bool enableRayMistrust;
+  bool update_points_position;
+
+  float freeVoteThreshold;
+  float rayRemovalThreshold;
+  float vertexRemovalThreshold;
+  int primary_points_visibility_threshold;
+  int numPointsPerCamera;
+
+  float maxDistanceCamFeature;
   int suboptimalMethod;
   float w_1;
   float w_2;
   float w_3;
   float w_m;
-  float steinerGridSideLength;
+//  float steinerGridSideLength;
   float steinerGridStepLength;
 
   int manifold_update_every;
   int initial_manifold_update_skip;
   int save_manifold_every;
-  int primary_points_visibility_threshold;
-  int numPointsPerCamera;
 
   int fake_points_multiplier;
-
   bool time_stats_output;
   bool all_sort_of_output;
-  bool update_points_position;
-  
+
   std::string outputFolder;
+  std::string timeStatsFolder;
+  std::string countStatsFolder;
 
 
   std::string toString() {
     std::stringstream out;
     out << "inverseConicEnabled: " << inverseConicEnabled << std::endl;
     out << "maxDistanceCamFeature: " << maxDistanceCamFeature << std::endl;
-    out << "probOrVoteThreshold: " << probOrVoteThreshold << std::endl;
+    out << "freeVoteThreshold: " << freeVoteThreshold << std::endl;
+    out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
     out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
     out << "enableSuboptimalPolicy: " << enableSuboptimalPolicy << std::endl;
     out << "suboptimalMethod: " << suboptimalMethod << std::endl;
@@ -61,7 +67,7 @@ typedef struct {
     out << "w_3: " << w_3 << std::endl;
     out << "w_m: " << w_3 << std::endl;
     out << "steinerGridStepLength: " << steinerGridStepLength << std::endl;
-    out << "steinerGridSideLength: " << steinerGridSideLength << std::endl;
+//    out << "steinerGridSideLength: " << steinerGridSideLength << std::endl;
 
     out << "manifold_update_every: " << manifold_update_every << std::endl;
     out << "initial_manifold_update_skip: " << initial_manifold_update_skip << std::endl;

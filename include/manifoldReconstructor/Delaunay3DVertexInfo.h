@@ -17,29 +17,13 @@ public:
 	Delaunay3DVertexInfo();
 	virtual ~Delaunay3DVertexInfo();
 
-	// Getters
-//  int isUsed() const {
-//    return used_;
-//  }
-//  bool isNotUsed() const {
-//    return notUsed_;
-//  }
+	int getPointId() const {
+		return pointId_;
+	}
 
-// Setters
-//  void setUsed(int value) {
-//    used_ = value;
-//  }
-//
-//  void setNotUsed(bool value) {
-//    notUsed_ = value;
-//  }
-
-//  void incrUsed() {
-//    used_++;
-//  }
-//  void decrUsed() {
-//    used_--;
-//  }
+	void setPointId(int pointId) {
+		pointId_ = pointId;
+	}
 
 	int getLastCam() const {
 		return lastCam_;
@@ -68,7 +52,8 @@ public:
 private:
 //	int used_;
 //	bool notUsed_;
-	int lastCam_;
+	int lastCam_ = -1;
+	int pointId_ = -1;
 //	int firstCam_;
 	std::vector<int> listViewingCam_;
 };

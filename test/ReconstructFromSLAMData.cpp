@@ -24,10 +24,10 @@
 //#define PRIMARY_POINTS_VISIBILITY_THRESHOLD     3
 #define SECONDARY_POINTS_VISIBILITY_THRESHOLD   2
 
-ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& manifConf) {
+ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& conf) : manifConf_(conf) {
 	iterationCount = 0;
 
-	manifConf_ = manifConf;
+//	manifConf_ = manifConf;
 	manifRec_ = new ManifoldMeshReconstructor(manifConf_);
 	utilities::Logger logger_;
 

@@ -45,7 +45,7 @@ typedef std::set<FSConstraint, FSConstraint::LtFSConstraint> SetConstraints;
  */
 class ManifoldMeshReconstructor {
 public:
-	ManifoldMeshReconstructor(ManifoldReconstructionConfig conf);
+	ManifoldMeshReconstructor(ManifoldReconstructionConfig& conf);
 	virtual ~ManifoldMeshReconstructor();
 
 //	void printWhatever();
@@ -108,7 +108,9 @@ public:
 	/*Saves in OFF file format the boundary mesh between tetrahedra labelled as free space and those labelled as matter */
 	void saveFreespace(const std::string filename);
 
-//	void setWeights(float w_1, float w_2, float w_3);
+	OutputManager* getOutputManager(){
+		return manifoldManager_->getOutputManager();
+	}
 
 	std::ofstream timeStatsFile_;
 
@@ -218,7 +220,7 @@ private:
 
 	std::vector<CamReconstruction> cams_;
 	std::vector<PointReconstruction> points_;
-	std::vector<Vertex3D_handle> vecVertexHandles_;
+//	std::vector<Vertex3D_handle> vecVertexHandles_;
 	std::vector<glm::vec3> camsPositions_;
 //	std::vector<int> curPointsVisible_;
 
@@ -252,6 +254,7 @@ private:
 	std::set<std::pair<int, int>> raysNotValid_;
 
 	std::vector<int> pointsToBeRemovedIdx_;
+	std::vector<Delaunay3::Vertex_handle> verticesToBeRemovedIdx_;
 
 	std::set<int> updatedCamerasIdx_;
 	std::vector<int> pointsMovedIdx_;
@@ -262,10 +265,10 @@ private:
 	float sgMinX_, sgMaxX_, sgMinY_, sgMaxY_, sgMinZ_, sgMaxZ_;
 	float sgCurrentMinX_, sgCurrentMaxX_, sgCurrentMinY_, sgCurrentMaxY_, sgCurrentMinZ_, sgCurrentMaxZ_;
 
-	ManifoldReconstructionConfig conf_;
+	ManifoldReconstructionConfig& conf_;
 //	utilities::Logger logger_;
-	ManifoldManager * manifoldManager_;
-	OutputCreator *outputM_;
+	ManifoldManager* manifoldManager_;
+	OutputCreator* outputM_;
 	std::ofstream fileOut_;
 
 	long currentEnclosingVersion_ = 0;

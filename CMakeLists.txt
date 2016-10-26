@@ -36,6 +36,7 @@ file(GLOB_RECURSE meshRec_SOURCE
                   src/ManifoldManager.cpp
                   src/ManifoldMeshReconstructor.cpp
                   src/OutputCreator.cpp
+                  src/OutputManager.cpp
                   src/utilities/*.cpp
                   src/cam_parsers/ORBIncrementalParser.cpp
                   src/cam_parsers/ConfigParser.cpp

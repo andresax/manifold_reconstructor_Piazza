@@ -7,6 +7,7 @@
 
 #include <ManifoldManager.h>
 #include <OutputCreator.h>
+#include <OutputManager.h>
 #include <utilities.hpp>
 #include <sstream>
 #include <iostream>
@@ -15,17 +16,15 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-ManifoldManager::ManifoldManager(Delaunay3& dt, bool inverseConic, float probabTh, ManifoldReconstructionConfig conf) :
-		dt_(dt) {
+ManifoldManager::ManifoldManager(Delaunay3& dt, ManifoldReconstructionConfig& conf) :
+		dt_(dt), conf_(conf) {
 
-	conf_ = conf;
-	inverseConic_ = inverseConic;
-	probabTh_ = probabTh;
 	outputM_ = new OutputCreator(dt_);
+	out_ = new OutputManager(boundaryCellsSpatialMap_, conf);
+
 }
 
 ManifoldManager::~ManifoldManager() {
-//	boundaryCells_.clear();
 	boundaryCellsSpatialMap_.clear();
 }
 
@@ -120,10 +119,14 @@ void ManifoldManager::shrinkManifold3(const std::set<PointD3>& points, const flo
 
 			if (!currentTet->info().iskeptManifold() || !currentTet->info().isBoundary()) continue;
 
-			if (!currentTet->info().iskeptManifold()) cerr << "ManifoldManager::shrinkManifold3:\t wrong shrink order (trying to shrink non manifold cell)\t iteration: " << countIterations << endl;
-			if (!currentTet->info().isBoundary()) cerr << "ManifoldManager::shrinkManifold3:\t wrong shrink order (non boundary cell in queue)\t iteration: " << countIterations << endl;
-			if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary()) cerr << "ManifoldManager::shrinkManifold3:\t inconsistent boundary and manifold (m and !b)\t iteration: " << countIterations << endl;
-			if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary()) cerr << "ManifoldManager::shrinkManifold3:\t inconsistent boundary and manifold (!m and b)\t iteration: " << countIterations << endl;
+			if (!currentTet->info().iskeptManifold())
+				cerr << "ManifoldManager::shrinkManifold3:\t wrong shrink order (trying to shrink non manifold cell)\t iteration: " << countIterations << endl;
+			if (!currentTet->info().isBoundary())
+				cerr << "ManifoldManager::shrinkManifold3:\t wrong shrink order (non boundary cell in queue)\t iteration: " << countIterations << endl;
+			if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary())
+				cerr << "ManifoldManager::shrinkManifold3:\t inconsistent boundary and manifold (m and !b)\t iteration: " << countIterations << endl;
+			if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary())
+				cerr << "ManifoldManager::shrinkManifold3:\t inconsistent boundary and manifold (!m and b)\t iteration: " << countIterations << endl;
 
 			chronoTesting.start();
 			if (singleTetTest2(currentTet)) {
@@ -170,7 +173,7 @@ void ManifoldManager::shrinkManifold3(const std::set<PointD3>& points, const flo
 		}
 	}
 
-	if(conf_.time_stats_output){
+	if (conf_.time_stats_output) {
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t lastEnclosingPointCache:\t\t" << chronoLastEnclosingPointCache.getMicroseconds() << " µs" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
@@ -179,7 +182,7 @@ void ManifoldManager::shrinkManifold3(const std::set<PointD3>& points, const flo
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t enclosing:\t\t\t\t" << chronoEnclosing.getSeconds() << " s\t / \t" << countTotal << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << " s\t / \t" << countInEnclosingVolume << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkManifold3:\t\t\t\t shrink:\t\t\t\t" << chronoShrinking.getSeconds() << " s\t / \t" << countShrinked << endl;
-	//	cout << "ManifoldManager::shrinkManifold3:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
+		//	cout << "ManifoldManager::shrinkManifold3:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
 		cout << "ManifoldManager::shrinkManifold3:\t\t\t\t countSuccessfulEnclosingVersionCache:\t\t\t" << countSuccessfulEnclosingVersionCache << "\t / \t" << countTotal << endl;
 		cout << "ManifoldManager::shrinkManifold3:\t\t\t\t countSuccessfulLastEnclosingPointCache:\t\t" << countSuccessfulLastEnclosingPointCache << "\t / \t" << countTotal - countSuccessfulEnclosingVersionCache << endl;
 		cout << "ManifoldManager::shrinkManifold3:\t\t\t\t number_of_finite_cells:\t\t" << dt_.number_of_finite_cells() << endl;
@@ -222,7 +225,7 @@ void ManifoldManager::shrinkSeveralAtOnce3(const std::set<PointD3>& points, cons
 //	int countBoundaryInitCells = boundaryCells_.size();
 //	int countQueueInitCells = tetsQueue.size();
 
-	//	std::sort(tetsQueue.begin(), tetsQueue.end());
+//	std::sort(tetsQueue.begin(), tetsQueue.end());
 	chronoQueueInit.stop();
 
 	while (!tetsQueue.empty()) {
@@ -273,8 +276,7 @@ void ManifoldManager::shrinkSeveralAtOnce3(const std::set<PointD3>& points, cons
 //		if(isInEnclosingVolume_1 != isInEnclosingVolume) cerr << "ManifoldManager::shrinkSeveralAtOnce2:\t wrong enclosing" << endl;
 
 		if (isInEnclosingVolume) {
-			// TODO check on non boundary vertices first
-			// TODO use vertices instead (when the test fail for all adjacent cells, the test is done many times on the same vertex)
+			// TODO check only non boundary vertices like in growSeveralAtOnce
 			for (int curIdx = 0; curIdx < 4; ++curIdx) {
 				if (!currentTet->info().isBoundary()) break;
 
@@ -289,13 +291,13 @@ void ManifoldManager::shrinkSeveralAtOnce3(const std::set<PointD3>& points, cons
 		}
 	}
 
-	if(conf_.time_stats_output){
+	if (conf_.time_stats_output) {
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t queue popping:\t\t\t\t" << chronoQueuePopping.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t enclosing:\t\t\t\t" << chronoEnclosing.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t addAndCheckManifoldness:\t\t" << chronoAddAndCheckManifoldness.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << " s\t / \t" << functionProfileCounter_isRegular_ << endl;
-	//	cout << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
+		//	cout << "ManifoldManager::shrinkSeveralAtOnce3:\t\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
 	}
 }
 
@@ -311,7 +313,7 @@ void ManifoldManager::regionGrowing3(const std::set<PointD3>& points) {
 void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 	// Stats
 //	int countQueueInitCells, countBoundaryInitCells;
-	int countGrowned = 0, countTotal = 0, countIterations = 1;
+	int countGrowned = 0, countTotal = 0, countIterations = 0, maxIterations = 5;
 	Chronometer chronoQueueInit, chronoQueueInserting, chronoQueuePopping, chronoInserting, chronoTesting, chronoGrowing;
 
 	bool fixedPoint = false;
@@ -365,7 +367,7 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 //		std::cerr << "ManifoldManager::regionGrowingProcedure3: \t\t tetsQueue is empty" << std::endl;
 //	}
 
-	while (!fixedPoint) {
+	while (!fixedPoint && countIterations < maxIterations) {
 		fixedPoint = true;
 
 		while (!tetsQueue.empty()) {
@@ -379,11 +381,16 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 
 			currentTet->info().setToBeTested(false);
 
+//			if (currentTet->info().isBoundary()) continue;
+
 			if (currentTet->info().iskeptManifold() || currentTet->info().isBoundary()) continue;
 
-			if (currentTet->info().isBoundary()) cerr << "ManifoldManager::regionGrowingProcedure3:\t wrong grow order (boundary cell in queue)\t iteration: " << countIterations << endl;
-			if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary()) cerr << "ManifoldManager::regionGrowingProcedure3:\t inconsistent boundary and manifold (m and !b)\t iteration: " << countIterations << endl;
-			if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary()) cerr << "ManifoldManager::regionGrowingProcedure3:\t inconsistent boundary and manifold (!m and b)\t iteration: " << countIterations << endl;
+			if (currentTet->info().isBoundary())
+				cerr << "ManifoldManager::regionGrowingProcedure3:\t wrong grow order (boundary cell in queue)\t iteration: " << countIterations << endl;
+			if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary())
+				cerr << "ManifoldManager::regionGrowingProcedure3:\t inconsistent boundary and manifold (m and !b)\t iteration: " << countIterations << endl;
+			if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary())
+				cerr << "ManifoldManager::regionGrowingProcedure3:\t inconsistent boundary and manifold (!m and b)\t iteration: " << countIterations << endl;
 			if (currentTet->info().iskeptManifold()) cerr << "ManifoldManager::regionGrowingProcedure3:\t wrong grow order\t iteration: " << countIterations << endl;
 
 			chronoTesting.start();
@@ -416,7 +423,8 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 			} else {
 				chronoTesting.stop();
 
-				if(currentTet->info().iskeptManifold()) cerr << "ManifoldManager::regionGrowingProcedure3: changing manifold state of ungrown cell; iteration " << countIterations << endl;
+				if (currentTet->info().iskeptManifold())
+					cerr << "ManifoldManager::regionGrowingProcedure3: changing manifold state of ungrown cell; iteration " << countIterations << endl;
 
 				currentTet->info().setKeptManifold(false); // TODO useful?
 
@@ -437,7 +445,7 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 //	if (tetsQueue.size()) cerr << "ManifoldManager::regionGrowingProcedure3: \t\t exiting while queue not empty" << endl;
 	tetsQueue.clear();
 
-	if(conf_.time_stats_output){
+	if (conf_.time_stats_output) {
 		cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t countIterations:\t\t\t\t" << countIterations << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue init:\t\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t queue inserting:\t\t\t" << chronoQueueInserting.getSeconds() << " s" << endl;
@@ -445,7 +453,7 @@ void ManifoldManager::regionGrowingProcedure3(const std::set<PointD3>& points) {
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t inserting:\t\t\t\t" << chronoInserting.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t test:\t\t\t\t\t" << chronoTesting.getSeconds() << " s\t / \t" << countTotal << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::regionGrowingProcedure3:\t\t\t grow:\t\t\t\t\t" << chronoGrowing.getSeconds() << " s\t / \t" << countGrowned << endl;
-	//	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
+		//	cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t countQueueInitCells:\t\t\t\t\t" << countQueueInitCells << "\t / \t" << countBoundaryInitCells << endl;
 		cout << "ManifoldManager::regionGrowingProcedure3:\t\t\t number_of_finite_cells:\t\t" << dt_.number_of_finite_cells() << endl;
 	}
 }
@@ -456,7 +464,8 @@ void ManifoldManager::growSeveralAtOnce3(const std::set<PointD3>& points) {
 	Chronometer chronoQueueInit, chronoRemoveAndCheckManifoldness;
 	int countTotal = 0, countSuccess = 0;
 
-	std::vector<Delaunay3::Cell_handle> tetsQueue;
+	std::set<Delaunay3::Vertex_handle> boundaryVertices;
+//	std::vector<Delaunay3::Cell_handle> tetsQueue;
 	std::set<Delaunay3::Cell_handle> localBoundaryCellsUnion;
 
 	chronoQueueInit.start();
@@ -483,16 +492,21 @@ void ManifoldManager::growSeveralAtOnce3(const std::set<PointD3>& points) {
 
 		if (!dt_.is_cell(boundaryCell)) std::cerr << "ManifoldManager::growSeveralAtOnce3: dead cell in boundary" << std::endl;
 
-		for (int neighbourId = 0; neighbourId < 4; ++neighbourId) {
-			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(neighbourId);
+		for (int faceIndex = 0; faceIndex < 4; ++faceIndex) {
+			Delaunay3::Cell_handle neighbour = boundaryCell->neighbor(faceIndex);
 
 			if (!dt_.is_cell(neighbour)) std::cerr << "ManifoldManager::growSeveralAtOnce3: dead cell in boundary" << std::endl;
 
-			if (boundaryCell->info().iskeptManifold() && !neighbour->info().iskeptManifold() && !neighbour->info().isToBeTested() && isFreespace(neighbour)) {
+			if (boundaryCell->info().iskeptManifold() && !neighbour->info().iskeptManifold() && isFreespace(neighbour)) {
 
-				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
-				tetsQueue.insert(it, neighbour);
-				neighbour->info().setToBeTested(true);
+				for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
+
+					if (vertexIndex != faceIndex) boundaryVertices.insert(boundaryCell->vertex(vertexIndex));
+				}
+
+//				std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(tetsQueue.begin(), tetsQueue.end(), neighbour, sortTetByIntersection());
+//				tetsQueue.insert(it, neighbour);
+//				neighbour->info().setToBeTested(true);
 			}
 		}
 	}
@@ -501,38 +515,17 @@ void ManifoldManager::growSeveralAtOnce3(const std::set<PointD3>& points) {
 
 	chronoRemoveAndCheckManifoldness.start();
 
-	while (!tetsQueue.empty()) {
-		Delaunay3::Cell_handle currentTet = tetsQueue.back();
-		tetsQueue.pop_back();
-
+	for (auto v : boundaryVertices) {
 		countTotal++;
 
-		if (currentTet->info().isBoundary())  cerr << "ManifoldManager::growSeveralAtOnce3:\t wrong grow order (boundary cell in queue)" << endl;
+		bool success = addSeveralAndCheckManifoldness2(v);
 
-		if (currentTet->info().iskeptManifold() || currentTet->info().isBoundary()) continue;
-
-		if (currentTet->info().isBoundary()) cerr << "ManifoldManager::growSeveralAtOnce3:\t wrong grow order (boundary cell in queue)" << endl;
-		if (currentTet->info().iskeptManifold() && !currentTet->info().isBoundary()) cerr << "ManifoldManager::growSeveralAtOnce3:\t inconsistent boundary and manifold (m and !b)" << endl;
-		if (!currentTet->info().iskeptManifold() && currentTet->info().isBoundary()) cerr << "ManifoldManager::growSeveralAtOnce3:\t inconsistent boundary and manifold (!m and b)" << endl;
-		if (currentTet->info().iskeptManifold()) cerr << "ManifoldManager::growSeveralAtOnce3:\t wrong grow order" << endl;
-
-
-		// TODO before or after aborting the cycle?
-		currentTet->info().setToBeTested(false);
-
-		for (int curIdx = 0; curIdx < 4; ++curIdx) {
-			// TODO check on non boundary vertices first
-			// TODO stop when success?
-			bool success = addSeveralAndCheckManifoldness2(currentTet, curIdx);
-
-			if (success) countSuccess++;
-			if (success) break;
-		}
+		if (success) countSuccess++;
 	}
 
 	chronoRemoveAndCheckManifoldness.stop();
 
-	if(conf_.time_stats_output){
+	if (conf_.time_stats_output) {
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t queue init:\t\t\t" << chronoQueueInit.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t remove and check manifoldness:\t\t" << chronoRemoveAndCheckManifoldness.getSeconds() << " s" << endl;
 		cout << std::fixed << std::setprecision(3) << "ManifoldManager::growSeveralAtOnce3:\t\t\t\t isRegular:\t\t\t\t" << functionProfileChronometer_isRegular_.getSeconds() << " s\t / \t" << functionProfileCounter_isRegular_ << endl;
@@ -540,10 +533,10 @@ void ManifoldManager::growSeveralAtOnce3(const std::set<PointD3>& points) {
 	}
 }
 
-bool ManifoldManager::addSeveralAndCheckManifoldness2(Delaunay3::Cell_handle& currentTet, int curIdx) {
+bool ManifoldManager::addSeveralAndCheckManifoldness2(Delaunay3::Vertex_handle curV) {
 	std::vector<Delaunay3::Cell_handle> incidentCells, cellsModified;
 	std::vector<Delaunay3::Vertex_handle> incidentV;
-	Delaunay3::Vertex_handle curV = currentTet->vertex(curIdx);
+//	Delaunay3::Vertex_handle curV = currentTet->vertex(curIdx);
 	dt_.incident_cells(curV, std::back_inserter(incidentCells));
 	dt_.adjacent_vertices(curV, std::back_inserter(incidentV));
 
@@ -657,7 +650,6 @@ void ManifoldManager::addTetAndUpdateBoundary2(Delaunay3::Cell_handle& currentTe
 		currentTet->info().setBoundary(false);
 	}
 
-
 //Check if the neigh of the added tetrahedron still belongs to the boundary
 	for (int curNeighId = 0; curNeighId < 4; ++curNeighId) {
 		Delaunay3::Cell_handle currNeigh = currentTet->neighbor(curNeighId);
@@ -751,7 +743,6 @@ bool ManifoldManager::insertInBoundary(Delaunay3::Cell_handle& cellToBeAdded) {
 	// TODO rewrite in a cleaner way
 	if (!cellToBeAdded->info().isBoundary()) {
 		cellToBeAdded->info().setBoundary(true);
-
 
 //		std::vector<Delaunay3::Cell_handle>::iterator it = std::lower_bound(boundaryCells_.begin(), boundaryCells_.end(), cellToBeAdded, sortTetByIntersection());
 //		if (it != boundaryCells_.end()) {
@@ -891,8 +882,9 @@ bool ManifoldManager::removeFromBoundary(Delaunay3::Cell_handle& cellToBeRemoved
 //	return true;
 //}
 
-bool ManifoldManager::isRegularProfiled(Delaunay3::Vertex_handle &v) {
+bool ManifoldManager::isRegularProfiled(Delaunay3::Vertex_handle& v) {
 	functionProfileCounter_isRegular_++;
+	counter_++;
 
 	functionProfileChronometer_isRegular_.start();
 
@@ -903,147 +895,304 @@ bool ManifoldManager::isRegularProfiled(Delaunay3::Vertex_handle &v) {
 	return r;
 }
 
-bool ManifoldManager::isRegular(Delaunay3::Vertex_handle &v) {
+bool ManifoldManager::isRegular(Delaunay3::Vertex_handle& v) {
+	/*	Given |δV| as the manifold surface;
+	 * 	The test is true if the triangles in δV including v can be ordered as t_0_ , ···, t_k−1_
+	 * 	such that t_i_ ∩ t_(i+1)mod k_ is an edge, and such an edge is included in exactly two triangles t_i_ and t_j_
+	 * 	In other words, the graph of the v-opposite edges in the δV triangles must form one and only one cycle.
+	 *
+	 * 	Definitions:
+	 * 	Binary Vertex (as in graph theory):
+	 * 		A vertex that is part of exactly two edges.
+	 * 	Binary Graph:
+	 * 		A graph whose vertices are all binary vertices.
+	 * 	v-opposite boundary edge (as in triangulation):
+	 * 		An edge e such that the triangle t is composed of the vertices v, v1, v2. e is composed of v1 and v2.
+	 * 		t ∈ δV, meaning that t is a face between two cells c1, c2 and c1 is in the manifold volume, c2 is not.
+	 * 	v-opposite boundary vertices (as in triangulation):
+	 * 		The vertices v1, v2 in the previous definition.
+	 *
+	 *	Note: only undirected graphs are considered.
+	 */
 
-	std::vector<Delaunay3::Cell_handle> incidentCells;
-	std::vector<Delaunay3::Vertex_handle> incidentV;
-	dt_.incident_cells(v, std::back_inserter(incidentCells));
-	dt_.adjacent_vertices(v, std::back_inserter(incidentV));
-
-	std::vector<Delaunay3::Vertex_handle> pathVert;
-	std::vector<Delaunay3::Edge> pathEdge;
-	std::vector<Delaunay3::Edge> pathEdgeUnique;
-	/*look for mesh edges concurring in each vertex (incidentV) incident to v*/
-	for (auto incV : incidentV) {
-		/*Find one tetrahedron with edge v->incV*/
-		auto c = incidentCells.begin();
-		bool found = false;
-		Delaunay3::Edge curEdge;
-		Delaunay3::Cell_handle startingCell;
-
-		while (c != incidentCells.end() && !found) {
-			if ((*c)->has_vertex(incV)) {
-				Delaunay3::Edge e((*c), (*c)->index(incV), (*c)->index(v));
-				curEdge = e;
-				found = true;
-				startingCell = (*c);
-			}
-			c++;
+	struct Edge {
+		Delaunay3::Vertex_handle first, second;
+		Edge(Delaunay3::Vertex_handle first, Delaunay3::Vertex_handle second) :
+				first(first), second(second) {
 		}
+		inline bool operator<(const Edge& r) {
+			Delaunay3::Vertex_handle x = min(first, second);
+			Delaunay3::Vertex_handle y = min(r.first, r.second);
+			if (x < y) return true;
+			else if (y > x) return false;
+			else return max(first, second) < max(r.first, r.second);
+		}
+		inline bool operator!=(const Edge& r) {
+			return (first != r.first && first != r.second) || (second != r.second && second != r.first);
+		}
+		Delaunay3::Vertex_handle otherVertex(Delaunay3::Vertex_handle v1) {
+			if (v1 != first) return first;
+			else return second;
+		}
+	};
 
-		if (found) {
-			Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(curEdge, startingCell);
-			Delaunay3::Cell_handle lastCell = cellCirc;
-			bool lastManif = cellCirc->info().iskeptManifold();
-			/*look for edges of the mesh*/
-			do {
-				cellCirc++;
-				if (lastManif == !cellCirc->info().iskeptManifold()) {
-					int curIdx;
-					for (int curV = 0; curV < 4; ++curV) {/*look for the vertex along the mesh elements of the edge starting from incV*/
-						Delaunay3::Vertex_handle curVonLast = cellCirc->vertex(curV);
-						if (curV != cellCirc->index(v) && curV != cellCirc->index(incV) && lastCell->has_vertex(curVonLast)) {
-							curIdx = curV;
-						}
-					}
-
-					/*store the edge of the mesh*/
-					pathEdge.push_back(Delaunay3::Edge(cellCirc, cellCirc->index(incV), curIdx));
-
+	// Can contain two edges like a pair, the contained edges are unique like in a set, the contained edges can be accessed as a vector.
+	struct EdgePair {
+		std::vector<Edge> edges;
+		EdgePair() {
+		}
+		bool insert(Edge e) {
+			if (edges.size() == 0) {
+				edges.push_back(e);
+				return true;
+			} else if (edges.size() == 1) {
+				if (e != edges[0]) {
+					edges.push_back(e);
 				}
-				lastManif = cellCirc->info().iskeptManifold();
-				lastCell = cellCirc;
-			} while (cellCirc != startingCell);
+				return true;
+			} else {
+				if (e != edges[0] && e != edges[1]) {
+					edges.push_back(e);
+					return false;
+				}
+				return true;
+			}
 		}
+		// Precondition: The edges e1 and e2 are both and the only edges contained in this pair.
+		// Given the edge e1, returns the other one.
+		Edge otherEdge(Edge e1) {
+			if (edges.size() != 2) cerr << "EdgePair not quite a pair: " << edges.size() << " edge" << endl;
+			if (e1 != edges[0]) return edges[0];
+			else return edges[1];
+		}
+	};
+
+	std::set<Delaunay3::Vertex_handle> vOppositeBoundaryVertices;
+	std::set<Edge> vOppositeBoundaryEdges;
+
+	std::vector<Delaunay3::Cell_handle> vIncidentCells;
+	dt_.incident_cells(v, std::back_inserter(vIncidentCells));
+
+	std::vector<Delaunay3::Vertex_handle> vAdjacentVertices;
+	dt_.adjacent_vertices(v, std::back_inserter(vAdjacentVertices));
+
+	std::map<Delaunay3::Vertex_handle, EdgePair> vertexToEdgesMap;
+
+	bool foundNonBinaryVertices = false;
+
+	// Find all v-opposite boundary edges and vertices
+	for (auto incidentCell : vIncidentCells) {
+		int vIndex = incidentCell->index(v);
+
+		for (int i = 0; i < 4; i++)
+			if (i != vIndex) {
+				if (incidentCell->info().iskeptManifold() != incidentCell->neighbor(i)->info().iskeptManifold()) {
+					int j = 0, m, n;
+					// The edge given by (incidentCell, m, n) with m, n the two indices different from i and vIndex,
+					// is on the boundary and opposite to the vertex v
+
+					for (; j == i || j == vIndex; j++)
+						;
+					m = j; // m is equal to the first index different from i and vIndex
+					for (j++; j == i || j == vIndex; j++)
+						;
+					n = j; // n is equal to the second (and last) index different from i and vIndex
+
+					Edge e(incidentCell->vertex(m), incidentCell->vertex(n));
+					vOppositeBoundaryEdges.insert(e);
+
+					vOppositeBoundaryVertices.insert(incidentCell->vertex(m));
+					vOppositeBoundaryVertices.insert(incidentCell->vertex(n));
+
+					foundNonBinaryVertices |= !vertexToEdgesMap[incidentCell->vertex(m)].insert(e);
+					foundNonBinaryVertices |= !vertexToEdgesMap[incidentCell->vertex(n)].insert(e);
+
+					// If there are non binary vertices, than the test is unsuccesful
+					if(foundNonBinaryVertices) return false;
+
+					// To debug: boundaryTriangles.push_back(dt_.triangle(incidentCell, i)); ... outputM_->writeTrianglesToOFF("output/isRegular/v ", std::vector<int> { counter_ }, boundaryTriangles);
+				}
+			}
 	}
 
-	std::vector<bool> testE(pathEdge.size(), true);
+	// Since it's now guaranteed that the graph is binary, all vertices (if any) are part of a cycle.
+	// The test is succesful if there are either no cycles or exactly one cycle.
+	// Given that all vertices are part of a cycle, to test whether there are multiple cycles,
+	// it suffices to walk on a cycle and see if it contains all the vertices.
 
-	for (int idxExt = 0; idxExt < pathEdge.size(); ++idxExt) {
+	if (!vOppositeBoundaryEdges.size()) return true;
 
-		if (testE[idxExt]) {
-			Delaunay3::Vertex_handle vE1 = pathEdge[idxExt].first->vertex(pathEdge[idxExt].second);
-			Delaunay3::Vertex_handle vE2 = pathEdge[idxExt].first->vertex(pathEdge[idxExt].third);
+	// Walk on the first cycle to count the number of its vertices and compare it to the total vertices
+	std::vector<Delaunay3::Vertex_handle> verticesInFirstCycle;
 
-			pathVert.push_back(vE1);
-			pathVert.push_back(vE2);
-			pathEdgeUnique.push_back(pathEdge[idxExt]);
-			//Remove duplicates
-			for (int idxInt = idxExt + 1; idxInt < pathEdge.size(); ++idxInt) {
-				Delaunay3::Vertex_handle vI1 = pathEdge[idxInt].first->vertex(pathEdge[idxInt].second);
-				Delaunay3::Vertex_handle vI2 = pathEdge[idxInt].first->vertex(pathEdge[idxInt].third);
+	Delaunay3::Vertex_handle currentVertex = vOppositeBoundaryEdges.begin()->first;
+	Edge currentEdge = vertexToEdgesMap[currentVertex].edges[0];
 
-				if ((vI1 == vE1 && vI2 == vE2) || (vI1 == vE2 && vI2 == vE1)) {
-					testE[idxInt] = false;
-				}
-			}
+	verticesInFirstCycle.push_back(currentVertex);
 
+	while (verticesInFirstCycle[0] != (currentVertex = currentEdge.otherVertex(currentVertex))) {
+		// Insert the new vertex in the path
+		verticesInFirstCycle.push_back(currentVertex);
+
+		// If the edges connected to the current vertex aren't exactly two, than this is not a binary undirected graph
+		if (vertexToEdgesMap[currentVertex].edges.size() != 2) {
+			cerr << "Non binary graph  " << vOppositeBoundaryVertices.size() << ", \te: " << vOppositeBoundaryEdges.size() << endl;
+			return false;
 		}
+
+		// Select the edge that is connected to the new vertex and is different from the old one
+		currentEdge = vertexToEdgesMap[currentVertex].otherEdge(currentEdge);
+
 	}
 
-	if (pathEdgeUnique.empty()) {
+	if (verticesInFirstCycle.size() == vOppositeBoundaryVertices.size())
 		return true;
-	}
-	std::vector<bool> yetVisited(pathEdgeUnique.size(), false);
+	 else
+		return false;
 
-	int curEdgeIdx = 0;
-
-	Delaunay3::Vertex_handle initV = pathEdgeUnique[0].first->vertex(pathEdgeUnique[0].second);
-	Delaunay3::Vertex_handle curV = pathEdgeUnique[0].first->vertex(pathEdgeUnique[0].second);
-
-//yetVisited[curEdgeIdx] = true;
-
-	do {
-		int countConcurr = 0;
-		int testEdgeOK = 0;
-
-		for (int testEdge = 0; testEdge < pathEdgeUnique.size(); testEdge++) {
-			if (curV == pathEdgeUnique[testEdge].first->vertex(pathEdgeUnique[testEdge].second) || curV == pathEdgeUnique[testEdge].first->vertex(pathEdgeUnique[testEdge].third)) {
-
-				countConcurr++;
-
-				if (yetVisited[testEdge] == false) {
-					testEdgeOK = testEdge;
-				}
-			}
-		}
-
-		if (countConcurr != 2) {
-			return false;
-		}
-
-// std::cout << "Step2:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
-		if (curV == pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].second)) {
-
-			curV = pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].third);
-
-		} else if (curV == pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].third)) {
-
-			curV = pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].second);
-		} else {
-
-			//std::cerr << "isRegular SOMETHING WRONG" << std::endl;
-		}
-//std::cout << "Step3:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
-
-		yetVisited[testEdgeOK] = true;
-
-	} while (curV != initV);
-
-	for (auto v : yetVisited) {
-		if (!v) {
-			return false;
-		}
-	}
-	return true;
 }
+//
+//bool ManifoldManager::isRegular(Delaunay3::Vertex_handle& v) {
+//
+//	std::vector<Delaunay3::Cell_handle> incidentCells;
+//	std::vector<Delaunay3::Vertex_handle> incidentV;
+//	dt_.incident_cells(v, std::back_inserter(incidentCells));
+//	dt_.adjacent_vertices(v, std::back_inserter(incidentV));
+//
+//	std::vector<Delaunay3::Vertex_handle> pathVert;
+//	std::vector<Delaunay3::Edge> pathEdge;
+//	std::vector<Delaunay3::Edge> pathEdgeUnique;
+//	/*look for mesh edges concurring in each vertex (incidentV) incident to v*/
+//	for (auto incV : incidentV) {
+//		/*Find one tetrahedron with edge v->incV*/
+//		auto c = incidentCells.begin();
+//		bool found = false;
+//		Delaunay3::Edge curEdge;
+//		Delaunay3::Cell_handle startingCell;
+//
+//		while (c != incidentCells.end() && !found) {
+//			if ((*c)->has_vertex(incV)) {
+//				Delaunay3::Edge e((*c), (*c)->index(incV), (*c)->index(v));
+//				curEdge = e;
+//				found = true;
+//				startingCell = (*c);
+//			}
+//			c++;
+//		}
+//
+//		if (found) {
+//			Delaunay3::Cell_circulator cellCirc = dt_.incident_cells(curEdge, startingCell);
+//			Delaunay3::Cell_handle lastCell = cellCirc;
+//			bool lastManif = cellCirc->info().iskeptManifold();
+//			/*look for edges of the mesh*/
+//			do {
+//				cellCirc++;
+//				if (lastManif == !cellCirc->info().iskeptManifold()) {
+//					int curIdx;
+//					for (int curV = 0; curV < 4; ++curV) {/*look for the vertex along the mesh elements of the edge starting from incV*/
+//						Delaunay3::Vertex_handle curVonLast = cellCirc->vertex(curV);
+//						if (curV != cellCirc->index(v) && curV != cellCirc->index(incV) && lastCell->has_vertex(curVonLast)) {
+//							curIdx = curV;
+//						}
+//					}
+//
+//					/*store the edge of the mesh*/
+//					pathEdge.push_back(Delaunay3::Edge(cellCirc, cellCirc->index(incV), curIdx));
+//
+//				}
+//				lastManif = cellCirc->info().iskeptManifold();
+//				lastCell = cellCirc;
+//			} while (cellCirc != startingCell);
+//		}
+//	}
+//
+//	std::vector<bool> testE(pathEdge.size(), true);
+//
+//	for (int idxExt = 0; idxExt < pathEdge.size(); ++idxExt) {
+//
+//		if (testE[idxExt]) {
+//			Delaunay3::Vertex_handle vE1 = pathEdge[idxExt].first->vertex(pathEdge[idxExt].second);
+//			Delaunay3::Vertex_handle vE2 = pathEdge[idxExt].first->vertex(pathEdge[idxExt].third);
+//
+//			pathVert.push_back(vE1);
+//			pathVert.push_back(vE2);
+//			pathEdgeUnique.push_back(pathEdge[idxExt]);
+//			//Remove duplicates
+//			for (int idxInt = idxExt + 1; idxInt < pathEdge.size(); ++idxInt) {
+//				Delaunay3::Vertex_handle vI1 = pathEdge[idxInt].first->vertex(pathEdge[idxInt].second);
+//				Delaunay3::Vertex_handle vI2 = pathEdge[idxInt].first->vertex(pathEdge[idxInt].third);
+//
+//				if ((vI1 == vE1 && vI2 == vE2) || (vI1 == vE2 && vI2 == vE1)) {
+//					testE[idxInt] = false;
+//				}
+//			}
+//
+//		}
+//	}
+//
+//	if (pathEdgeUnique.empty()) {
+//		return true;
+//	}
+//	std::vector<bool> yetVisited(pathEdgeUnique.size(), false);
+//
+//	int curEdgeIdx = 0;
+//
+//	Delaunay3::Vertex_handle initV = pathEdgeUnique[0].first->vertex(pathEdgeUnique[0].second);
+//	Delaunay3::Vertex_handle curV = pathEdgeUnique[0].first->vertex(pathEdgeUnique[0].second);
+//
+////yetVisited[curEdgeIdx] = true;
+//
+//	do {
+//		int countConcurr = 0;
+//		int testEdgeOK = 0;
+//
+//		for (int testEdge = 0; testEdge < pathEdgeUnique.size(); testEdge++) {
+//			if (curV == pathEdgeUnique[testEdge].first->vertex(pathEdgeUnique[testEdge].second) || curV == pathEdgeUnique[testEdge].first->vertex(pathEdgeUnique[testEdge].third)) {
+//
+//				countConcurr++;
+//
+//				if (yetVisited[testEdge] == false) {
+//					testEdgeOK = testEdge;
+//				}
+//			}
+//		}
+//
+//		if (countConcurr != 2) {
+//			return false;
+//		}
+//
+//// std::cout << "Step2:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
+//		if (curV == pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].second)) {
+//
+//			curV = pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].third);
+//
+//		} else if (curV == pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].third)) {
+//
+//			curV = pathEdgeUnique[testEdgeOK].first->vertex(pathEdgeUnique[testEdgeOK].second);
+//		} else {
+//
+//			//std::cerr << "isRegular SOMETHING WRONG" << std::endl;
+//		}
+////std::cout << "Step3:(" << curV->point().x() << ", " << curV->point().y() << "," << curV->point().z() << ") " << std::endl;
+//
+//		yetVisited[testEdgeOK] = true;
+//
+//	} while (curV != initV);
+//
+//	for (auto v : yetVisited) {
+//		if (!v) {
+//			return false;
+//		}
+//	}
+//	return true;
+//}
 
 bool ManifoldManager::isFreespace(Delaunay3::Cell_handle &cell) {
 	bool value;
-	if (!inverseConic_) {
-		value = !cell->info().isKeptByVoteCount(probabTh_);
+	if (!conf_.inverseConicEnabled) {
+		value = !cell->info().isKeptByVoteCount(conf_.freeVoteThreshold);
 	} else {
-		value = !cell->info().isKeptByVoteCountProb(probabTh_);      // && cell->info().getVoteCount()>=1.0;
+		value = !cell->info().isKeptByVoteCountProb(conf_.freeVoteThreshold);
 	}
 	return value;
 }

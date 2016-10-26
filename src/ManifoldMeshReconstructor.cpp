@@ -19,9 +19,10 @@ using std::cerr;
 using std::endl;
 using std::pair;
 
-ManifoldMeshReconstructor::ManifoldMeshReconstructor(ManifoldReconstructionConfig conf) {
-	conf_ = conf;
-	manifoldManager_ = new ManifoldManager(dt_, conf_.inverseConicEnabled, conf_.probOrVoteThreshold, conf_);
+ManifoldMeshReconstructor::ManifoldMeshReconstructor(ManifoldReconstructionConfig& conf) :
+		conf_(conf) {
+//	conf_ = conf;
+	manifoldManager_ = new ManifoldManager(dt_, conf_);
 	outputM_ = new OutputCreator(dt_);
 
 	stepX_ = stepY_ = stepZ_ = conf_.steinerGridStepLength;
@@ -33,7 +34,7 @@ ManifoldMeshReconstructor::ManifoldMeshReconstructor(ManifoldReconstructionConfi
 	sgCurrentMaxX_ = sgCurrentMaxY_ = sgCurrentMaxZ_ = conf_.steinerGridStepLength;
 
 	timeStatsFile_.open("/home/enrico/gamesh_stats/timeStats.csv");
-	timeStatsFile_ << "cameras number, updateSteinerGrid, shrinkManifold, shrinkSingle, shrinkSeveral, Add new vertices, Remove vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, rayRemoving, growManifold, growManifoldSev, growManifold, InsertInBoundary, RemoveFromBoundary, addedPoints, movedPoints, Overall" << endl;
+	timeStatsFile_ << "cameras number, updateSteinerGrid, shrinkManifold, shrinkSingle, shrinkSeveral, rayRemoving, rayInvalidating, Remove vertices, Remove points, Add new vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, growManifold, growManifoldSev, growManifold, InsertInBoundary, RemoveFromBoundary, addedPoints, movedPoints, Overall" << endl;
 }
 
 ManifoldMeshReconstructor::~ManifoldMeshReconstructor() {
@@ -206,6 +207,30 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 
 	/*
+	 * 	TEST
+	 * 	Vertex removing based on min adjacent freeVote
+	 *
+	 */
+
+	if (false) {
+		for (auto v = dt_.vertices_begin(); v != dt_.vertices_end(); v++) {
+			std::vector<Delaunay3::Cell_handle> incidentCells;
+			bool canBeRemoved = true;
+			dt_.incident_cells(v, std::back_inserter(incidentCells));
+
+			if (v->info().getPointId() == -1) continue; // the vertex is associated with a Steiner point and should not be removed
+
+			for (auto c : incidentCells)
+				if (c->info().isBoundary() || c->info().getVoteCountProb() <= conf_.vertexRemovalThreshold) {
+					canBeRemoved = false;
+					break;
+				}
+
+			if (canBeRemoved) verticesToBeRemovedIdx_.push_back(v);
+		}
+	}
+
+	/*
 	 *  Enclosing
 	 */
 
@@ -257,7 +282,8 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	 *  Ray removing
 	 */
 
-	int verticesRemovedCount = pointsToBeRemovedIdx_.size(), raysRemovedAndInvalidatedCount = 0, raysInvaldatedCount = 0, raysRemovedCount = 0, raysCandidateToBeRemovedCount = raysCandidateToBeRemoved_.size();
+	int pointsRemovedCount = pointsToBeRemovedIdx_.size(), verticesRemovedCount = verticesToBeRemovedIdx_.size(), raysRemovedAndInvalidatedCount = 0, raysInvaldatedCount = 0,
+			raysRemovedCount = 0, raysCandidateToBeRemovedCount = raysCandidateToBeRemoved_.size();
 
 	if (raysCandidateToBeRemoved_.size()) {
 
@@ -275,7 +301,7 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 			if (r->mistrustVote > conf_.rayRemovalThreshold) {
 				raysRemovedCount++;
-				if(raysNotValid_.count(cIndex_pIndex)) raysRemovedAndInvalidatedCount++;
+				if (raysNotValid_.count(cIndex_pIndex)) raysRemovedAndInvalidatedCount++;
 				removeRay(r);
 			}
 		}
@@ -318,21 +344,36 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 
 	cout << "ManifoldMeshReconstructor::rayTracingFromAllCam:\t rays removed AND invalidated:\t " << raysRemovedAndInvalidatedCount << endl;
 
-
-
 	/*
+	 * 	DEBUG
 	 *  Vertex removing
 	 */
 
-	if (pointsToBeRemovedIdx_.size()) {
+	if (verticesToBeRemovedIdx_.size()) {
+
+		std::vector<Segment> outputRays;
+		for (auto v : verticesToBeRemovedIdx_) {
+			auto pointId = v->info().getPointId();
+			auto pointPosition = points_[pointId].position;
+
+			for (auto cameraId : points_[pointId].viewingCams)
+				outputRays.push_back(Segment(cams_[cameraId].position, pointPosition));
+
+		}
+		outputM_->writeRaysToOFF("output/erasedRays/", std::vector<int> { iterationCounter_ }, outputRays);
+
 		chronoEverything.reset();
 		chronoEverything.start();
 
-		for (auto id : pointsToBeRemovedIdx_) {
-		//	cout << "removing vertex " << id << endl;
-			removeVertex(id);
+		for (auto v : verticesToBeRemovedIdx_) {
+			auto pointId = v->info().getPointId();
+
+			for (auto cameraId : points_[pointId].viewingCams)
+				removeRay(getRayPath(cameraId, pointId));
+
+			removeVertex(pointId);
 		}
-		pointsToBeRemovedIdx_.clear();
+		verticesToBeRemovedIdx_.clear();
 
 		chronoEverything.stop();
 		if (conf_.time_stats_output) cout << "├ Remove vertices\t\t\t" << chronoEverything.getSeconds() << endl;
@@ -342,6 +383,29 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 		timeStatsFile_ << 0.0 << ", ";
 	}
 	cout << "ManifoldMeshReconstructor::rayTracingFromAllCam:\t vertices removed:\t " << verticesRemovedCount << endl;
+
+	/*
+	 *  Points removing
+	 */
+
+	if (pointsToBeRemovedIdx_.size()) {
+		chronoEverything.reset();
+		chronoEverything.start();
+
+		for (auto id : pointsToBeRemovedIdx_) {
+			//	cout << "removing vertex " << id << endl;
+			removeVertex(id);
+		}
+		pointsToBeRemovedIdx_.clear();
+
+		chronoEverything.stop();
+		if (conf_.time_stats_output) cout << "├ Remove points\t\t\t" << chronoEverything.getSeconds() << endl;
+		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
+	} else {
+		if (conf_.time_stats_output) cout << "├ Remove points\t\t\tSkipped" << endl;
+		timeStatsFile_ << 0.0 << ", ";
+	}
+	cout << "ManifoldMeshReconstructor::rayTracingFromAllCam:\t points removed:\t " << pointsRemovedCount << endl;
 
 	/*
 	 *  Vertex inserting
@@ -465,10 +529,10 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 	/*
 	 *  Ray checking
 	 */
-	for(auto cIndex_pIndex : raysToBeChecked_){
+	for (auto cIndex_pIndex : raysToBeChecked_) {
 		RayPath* r = getRayPath(cIndex_pIndex.first, cIndex_pIndex.second);
 		for (Delaunay3::Cell_handle c : r->path) {
-			if(!c->info().iskeptManifold()){
+			if (!c->info().iskeptManifold()) {
 				r->valid = false;
 				raysNotValid_.insert(cIndex_pIndex);
 			}
@@ -476,7 +540,6 @@ void ManifoldMeshReconstructor::updateTriangulation() {
 		}
 	}
 	raysToBeChecked_.clear();
-
 
 	timeStatsFile_ << manifoldManager_->chronoInsertInBoundary_.getSeconds() << ", ";
 	timeStatsFile_ << manifoldManager_->chronoRemoveFromBoundary_.getSeconds() << ", ";
@@ -675,7 +738,7 @@ void ManifoldMeshReconstructor::rayTracing4(int cameraIndex, int pointIndex, boo
 	for (auto i : incidentCells) {
 		if (i == targetCell) {
 			markCell(i, cameraIndex, pointIndex, rayPath->path, retrace);
-			if (!retrace) markRemovalCandidateRays(vertexHandle, i, incidentCells); // TODO also if retracing?
+			if (!retrace && conf_.enableRayMistrust) markRemovalCandidateRays(vertexHandle, i, incidentCells); // TODO also if retracing?
 			return;
 		}
 	}
@@ -692,7 +755,7 @@ void ManifoldMeshReconstructor::rayTracing4(int cameraIndex, int pointIndex, boo
 			firstExitFacetFound = true;
 
 			markCell(i, cameraIndex, pointIndex, rayPath->path, retrace);
-			if (!retrace) markRemovalCandidateRays(vertexHandle, i, incidentCells); // TODO also if retracing?
+			if (!retrace && conf_.enableRayMistrust) markRemovalCandidateRays(vertexHandle, i, incidentCells); // TODO also if retracing?
 
 			previousCell = i;
 			currentCell = i->neighbor(facetIndex);
@@ -865,7 +928,7 @@ void ManifoldMeshReconstructor::markRemovalCandidateRays(Vertex3D_handle& v, Del
 		if (i != c && i != neighbours[0] && i != neighbours[1] && i != neighbours[2] && i != neighbours[3]) {
 			int intersectionsCount = i->info().getIntersections().size();
 			for (auto intersection : i->info().getIntersections()) {
-				getRayPath(intersection.first, intersection.second)->mistrustVote += conf_.w_m/intersectionsCount;
+				getRayPath(intersection.first, intersection.second)->mistrustVote += conf_.w_m / intersectionsCount;
 //				cout << getRayPath(intersection.first, intersection.second)->mistrustVote << endl;
 				raysCandidateToBeRemoved_.insert(pair<int, int>(intersection.first, intersection.second));
 			}
@@ -1206,10 +1269,11 @@ bool ManifoldMeshReconstructor::insertVertex(PointReconstruction& point) {
 	newCells_.insert(newCellsFromHole.begin(), newCellsFromHole.end());
 
 	// Add the new vertex handle hndlQ to vecVertexHandles
-	vecVertexHandles_.push_back(vertexHandle);
-	point.idVertex = vecVertexHandles_.size() - 1;
-	point.vertexHandle = vertexHandle;
+//	vecVertexHandles_.push_back(vertexHandle);
+//	point.idVertex = vecVertexHandles_.size() - 1;
 	point.notTriangulated = false;
+	point.vertexHandle = vertexHandle;
+	vertexHandle->info().setPointId(point.idReconstruction);
 
 	if (!conf_.enableSuboptimalPolicy) {
 		// Schedule rayTracing for all rays between the point and the cameras viewing it
@@ -1339,6 +1403,7 @@ int ManifoldMeshReconstructor::moveVertex(int idxPoint) {
 		// Fill the hole by inserting the new vertex
 		vertexHandle = dt_.insert_in_hole(newPosition, vecConflictCells.begin(), vecConflictCells.end(), f.first, f.second);
 		point.vertexHandle = vertexHandle;
+		vertexHandle->info().setPointId(point.idReconstruction);
 
 		// Vector of the cells that were created to fill the hole
 		std::vector<Delaunay3::Cell_handle> newCellsFromHole;
@@ -1411,7 +1476,6 @@ void ManifoldMeshReconstructor::removeVertex(int idxPoint) {
 	point.notTriangulated = true;
 	point.vertexHandle = NULL;
 }
-
 
 void ManifoldMeshReconstructor::moveCameraConstraints(int idxCam) {
 	// The set of all the constraints that

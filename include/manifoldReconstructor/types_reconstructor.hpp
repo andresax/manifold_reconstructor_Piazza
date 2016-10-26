@@ -162,7 +162,7 @@ struct PointReconstruction { //TODO export in an actual class
 	// true when not yet in the triangulation (and vertexHandle isn't set)
 	bool notTriangulated;
 	Vertex3D_handle vertexHandle;
-	int idVertex;
+//	int idVertex;
 
 	std::vector<int> viewingCams;
 
@@ -170,7 +170,7 @@ struct PointReconstruction { //TODO export in an actual class
 		position = PointD3(0.0, 0.0, 0.0);
 		newPosition = PointD3(0.0, 0.0, 0.0);
 		notTriangulated = true;
-		idVertex = -1;
+//		idVertex = -1;
 		idReconstruction = -1;
 	}
 };
