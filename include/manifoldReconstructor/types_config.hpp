@@ -20,72 +20,91 @@
 #include <string>
 
 typedef struct {
-  bool inverseConicEnabled;
-  bool enableSuboptimalPolicy;
-  bool enableRayMistrust;
-  bool update_points_position;
+	bool enableIdentifiedPoints;
+	bool enableInverseConic;
+	bool enableRayMistrust;
+	bool enablePointsPositionUpdate;
+	bool enableUnusedVertexRemoving;
+	bool enableMeshSaving;
+	bool enableMeshPublishing;
+	bool generateColoredMesh;
 
-  float freeVoteThreshold;
-  float rayRemovalThreshold;
-  float vertexRemovalThreshold;
-  int primary_points_visibility_threshold;
-  int numPointsPerCamera;
+	float freeVoteThreshold;
+	int nonConicFreeVoteThreshold = 1;
+	float rayRemovalThreshold;
+	float unusedVertexRemovalThreshold;
+	int primaryPointsVisibilityThreshold;
 
-  float maxDistanceCamFeature;
-  int suboptimalMethod;
-  float w_1;
-  float w_2;
-  float w_3;
-  float w_m;
-//  float steinerGridSideLength;
-  float steinerGridStepLength;
+	int maxPointsPerCamera;
+	float maxDistanceCameraPoints;
+	float steinerGridStepLength;
+	float w_1;
+	float w_2;
+	float w_3;
+	float w_m;
 
-  int manifold_update_every;
-  int initial_manifold_update_skip;
-  int save_manifold_every;
+	int triangulationUpdateEvery;
+	int initialTriangulationUpdateSkip;
+	int saveMeshEvery;
 
-  int fake_points_multiplier;
-  bool time_stats_output;
-  bool all_sort_of_output;
+	int fakePointsMultiplier;
+	bool timeStatsOutput;
+	bool debugOutput;
+	bool publishReceivedPointcloud;
+	bool publishUsedPointcloud;
+	bool checkIntegrityWhenFinished;
 
-  std::string outputFolder;
-  std::string timeStatsFolder;
-  std::string countStatsFolder;
+	std::string inputTopic;
+	std::string outputTopic;
 
+	std::string receivedPointcloudTopic;
+	std::string usedPointcloudTopic;
 
-  std::string toString() {
-    std::stringstream out;
-    out << "inverseConicEnabled: " << inverseConicEnabled << std::endl;
-    out << "maxDistanceCamFeature: " << maxDistanceCamFeature << std::endl;
-    out << "freeVoteThreshold: " << freeVoteThreshold << std::endl;
-    out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
-    out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
-    out << "enableSuboptimalPolicy: " << enableSuboptimalPolicy << std::endl;
-    out << "suboptimalMethod: " << suboptimalMethod << std::endl;
-    out << "w_1: " << w_1 << std::endl;
-    out << "w_2: " << w_2 << std::endl;
-    out << "w_3: " << w_3 << std::endl;
-    out << "w_m: " << w_3 << std::endl;
-    out << "steinerGridStepLength: " << steinerGridStepLength << std::endl;
-//    out << "steinerGridSideLength: " << steinerGridSideLength << std::endl;
+	std::string outputFolder;
+	std::string timeStatsFolder;
+	std::string countStatsFolder;
 
-    out << "manifold_update_every: " << manifold_update_every << std::endl;
-    out << "initial_manifold_update_skip: " << initial_manifold_update_skip << std::endl;
-    out << "save_manifold_every: " << save_manifold_every << std::endl;
-    out << "primary_points_visibility_threshold: " << primary_points_visibility_threshold << std::endl;
-    out << "num_points_per_camera: " << numPointsPerCamera << std::endl;
+	std::string toString() {
+		std::stringstream out;
+		out << "enableIdentifiedPoints: " << enableIdentifiedPoints << std::endl;
+		out << "enableInverseConic: " << enableInverseConic << std::endl;
+		out << "enableRayMistrust: " << enableRayMistrust << std::endl;
+		out << "enablePointsPositionUpdate: " << enablePointsPositionUpdate << std::endl;
+		out << "enableUnusedVertexRemoving: " << enableUnusedVertexRemoving << std::endl;
+		out << "generateColoredMesh: " << generateColoredMesh << std::endl;
 
-    out << "fake_points_multiplier: " << fake_points_multiplier << std::endl;
+		out << "freeVoteThreshold: " << freeVoteThreshold << std::endl;
+		out << "nonConicFreeVoteThreshold: " << nonConicFreeVoteThreshold << std::endl;
+		out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
+		out << "unusedVertexRemovalThreshold: " << unusedVertexRemovalThreshold << std::endl;
+		out << "primaryPointsVisibilityThreshold: " << primaryPointsVisibilityThreshold << std::endl;
 
-    out << "all_sort_of_output: " << all_sort_of_output << std::endl;
-    out << "update_points_position: " << update_points_position << std::endl;
+		out << "maxPointsPerCamera: " << maxPointsPerCamera << std::endl;
+		out << "maxDistanceCameraPoints: " << maxDistanceCameraPoints << std::endl;
+		out << "steinerGridStepLength: " << steinerGridStepLength << std::endl;
+		out << "w_1: " << w_1 << std::endl;
+		out << "w_2: " << w_2 << std::endl;
+		out << "w_3: " << w_3 << std::endl;
+		out << "w_m: " << w_m << std::endl;
 
-    out << "output_folder: " << outputFolder << std::endl;
-    
-    return out.str();
-  }
+		out << "triangulationUpdateEvery: " << triangulationUpdateEvery << std::endl;
+		out << "initialTriangulationUpdateSkip: " << initialTriangulationUpdateSkip << std::endl;
+		out << "saveMeshEvery: " << saveMeshEvery << std::endl;
+
+		out << "fakePointsMultiplier: " << fakePointsMultiplier << std::endl;
+		out << "timeStatsOutput: " << timeStatsOutput << std::endl;
+		out << "debugOutput: " << debugOutput << std::endl;
+		out << "publishReceivedPointcloud: " << publishReceivedPointcloud << std::endl;
+		out << "publishUsedPointcloud: " << publishUsedPointcloud << std::endl;
+		out << "checkIntegrityWhenFinished: " << checkIntegrityWhenFinished << std::endl;
+
+		out << "outputFolder: " << outputFolder << std::endl;
+		out << "outputFolder: " << timeStatsFolder << std::endl;
+		out << "outputFolder: " << countStatsFolder << std::endl;
+
+		return out.str();
+	}
 
 } ManifoldReconstructionConfig;
-
 
 #endif /* TYPES_TEST_HPP_ */

@@ -34,8 +34,8 @@ file(GLOB_RECURSE meshRec_SOURCE
                   src/Delaunay3DCellInfo.cpp
                   src/Delaunay3DVertexInfo.cpp
                   src/ManifoldManager.cpp
-                  src/ManifoldMeshReconstructor.cpp
-                  src/OutputCreator.cpp
+                  src/TriangulationManager.cpp
+#                  src/OutputCreator.cpp
                   src/OutputManager.cpp
                   src/utilities/*.cpp
                   src/cam_parsers/ORBIncrementalParser.cpp

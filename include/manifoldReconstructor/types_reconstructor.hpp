@@ -37,10 +37,7 @@
 #include <Delaunay3DCellInfo.h>
 #include <Delaunay3DVertexInfo.h>
 
-#include "FSConstraint.h"
-
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-//typedef K::Point_3 Point;
 typedef K::Triangle_3 Triangle;
 typedef K::Segment_3 Segment;
 
@@ -54,17 +51,20 @@ typedef CGAL::Triangulation_hierarchy_3<Dt> Delaunay3;
 typedef Delaunay3::Point PointD3;
 typedef Delaunay3::Vertex_handle Vertex3D_handle;
 
-typedef std::pair<PointD3, float> DistanceWeight;
-
-
-//	1 1 1
-//	1 1 2
-//	1 2 1
-//	1 2 2
-//	2 1 1
-//	2 1 2
-//	2 2 1
-//	2 2 2
+namespace std {
+template <>
+struct hash<Delaunay3::Vertex_handle>
+{
+    size_t operator()(Delaunay3::Vertex_handle const & x) const noexcept
+    {
+        return (std::hash<int>()(x->info().getPointId())); // TODO assign a unique id to Steiner poits also
+    }
+};
+}
+//
+//Delaunay3::Vertex_handle v;
+//
+//int a = v.m_ptr.p;
 
 struct index3 {
 	int i, j, k;
@@ -112,7 +112,8 @@ struct PointType {
 
 	glm::vec3 position;
 	std::vector<CameraType*> viewingCams;
-	//int numObservations;
+
+	float r = 0, g = 0, b = 0, a = 0;
 
 	int getNunmberObservation() {
 		return viewingCams.size();
@@ -123,37 +124,23 @@ struct PointType {
 	}
 };
 
-struct PointParser {
-	float x;
-	float y;
-	float z;
-
-	int R;
-	int G;
-	int B;
-
-	//position of the feature in the corresponding image;
-	//the center of the image plane is the origin
-	std::vector<float> viewingCamerasX;
-	std::vector<float> viewingCamerasY;
-
-	std::vector<int> viewingCamerasIndices;
-};
-
 struct sortTetByIntersection {
 	inline bool operator()(const Delaunay3::Cell_handle& i, const Delaunay3::Cell_handle& j) {
-		return i->info().getVoteCountProb() < j->info().getVoteCountProb();
+		return i->info().getFreeVote() < j->info().getFreeVote();
 	}
 };
 
 struct sortTetByIntersectionAndDefaultLess {
 	inline bool operator()(const Delaunay3::Cell_handle& i, const Delaunay3::Cell_handle& j) {
-		return (i->info().getVoteCountProb() < j->info().getVoteCountProb()) || ((i->info().getVoteCountProb() == j->info().getVoteCountProb()) && i < j);
+		return (i->info().getFreeVote() < j->info().getFreeVote()) || ((i->info().getFreeVote() == j->info().getFreeVote()) && i < j);
 	}
 };
-struct PointReconstruction { //TODO export in an actual class
+
+struct PointReconstruction {
 	int idReconstruction;
 	PointD3 position;
+
+	float r = 0, g = 0, b = 0, a = 0;
 
 	// true when the point has been moved and newPosition is set
 	bool toBeMoved = false;
@@ -162,7 +149,6 @@ struct PointReconstruction { //TODO export in an actual class
 	// true when not yet in the triangulation (and vertexHandle isn't set)
 	bool notTriangulated;
 	Vertex3D_handle vertexHandle;
-//	int idVertex;
 
 	std::vector<int> viewingCams;
 
@@ -170,7 +156,6 @@ struct PointReconstruction { //TODO export in an actual class
 		position = PointD3(0.0, 0.0, 0.0);
 		newPosition = PointD3(0.0, 0.0, 0.0);
 		notTriangulated = true;
-//		idVertex = -1;
 		idReconstruction = -1;
 	}
 };
@@ -183,7 +168,7 @@ struct CamReconstruction {
 	bool toBeMoved = false;
 	PointD3 newPosition;
 
-	Vertex3D_handle vertexHandle; // TODO correct?
+	Vertex3D_handle vertexHandle;
 
 	std::vector<int> visiblePoints;
 	std::vector<int> newVisiblePoints;

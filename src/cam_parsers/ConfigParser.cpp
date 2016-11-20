@@ -33,11 +33,11 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 
 		if (!document.HasMember("inverseConicEnabled")) throw JsonAccessException("inverseConicEnabled");
 		if (!document["inverseConicEnabled"].IsBool()) throw JsonAccessException("inverseConicEnabled");
-		c.inverseConicEnabled = document["inverseConicEnabled"].GetBool();
+		c.enableInverseConic = document["inverseConicEnabled"].GetBool();
 
 		if (!document.HasMember("maxDistanceCamFeature")) throw JsonAccessException("maxDistanceCamFeature");
 		if (!document["maxDistanceCamFeature"].IsFloat()) throw JsonAccessException("maxDistanceCamFeature");
-		c.maxDistanceCamFeature = document["maxDistanceCamFeature"].GetFloat();
+		c.maxDistanceCameraPoints = document["maxDistanceCamFeature"].GetFloat();
 
 		if (!document.HasMember("freeVoteThreshold")) throw JsonAccessException("freeVoteThreshold");
 		if (!document["freeVoteThreshold"].IsFloat()) throw JsonAccessException("freeVoteThreshold");
@@ -49,19 +49,19 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 
 		if (!document.HasMember("vertexRemovalThreshold")) throw JsonAccessException("vertexRemovalThreshold");
 		if (!document["vertexRemovalThreshold"].IsFloat()) throw JsonAccessException("vertexRemovalThreshold");
-		c.vertexRemovalThreshold = document["vertexRemovalThreshold"].GetFloat();
+		c.unusedVertexRemovalThreshold = document["vertexRemovalThreshold"].GetFloat();
 
-		if (!document.HasMember("enableSuboptimalPolicy")) throw JsonAccessException("enableSuboptimalPolicy");
-		if (!document["enableSuboptimalPolicy"].IsBool()) throw JsonAccessException("enableSuboptimalPolicy");
-		c.enableSuboptimalPolicy = document["enableSuboptimalPolicy"].GetBool();
+//		if (!document.HasMember("enableSuboptimalPolicy")) throw JsonAccessException("enableSuboptimalPolicy");
+//		if (!document["enableSuboptimalPolicy"].IsBool()) throw JsonAccessException("enableSuboptimalPolicy");
+//		c.enableSuboptimalPolicy = document["enableSuboptimalPolicy"].GetBool();
 
 		if (!document.HasMember("enableRayMistrust")) throw JsonAccessException("enableRayMistrust");
 		if (!document["enableRayMistrust"].IsBool()) throw JsonAccessException("enableRayMistrust");
 		c.enableRayMistrust = document["enableRayMistrust"].GetBool();
 
-		if (!document.HasMember("suboptimalMethod")) throw JsonAccessException("suboptimalMethod");
-		if (!document["suboptimalMethod"].IsInt()) throw JsonAccessException("suboptimalMethod");
-		c.suboptimalMethod = document["suboptimalMethod"].GetInt();
+//		if (!document.HasMember("suboptimalMethod")) throw JsonAccessException("suboptimalMethod");
+//		if (!document["suboptimalMethod"].IsInt()) throw JsonAccessException("suboptimalMethod");
+//		c.suboptimalMethod = document["suboptimalMethod"].GetInt();
 
 		if (!document.HasMember("w_1")) throw JsonAccessException("w_1");
 		if (!document["w_1"].IsFloat()) throw JsonAccessException("w_1");
@@ -89,36 +89,36 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 
 		if (!document.HasMember("manifold_update_every")) throw JsonAccessException("manifold_update_every");
 		if (!document["manifold_update_every"].IsInt()) throw JsonAccessException("manifold_update_every");
-		c.manifold_update_every = document["manifold_update_every"].GetInt();
+		c.triangulationUpdateEvery = document["manifold_update_every"].GetInt();
 
 		if (!document.HasMember("initial_manifold_update_skip")) throw JsonAccessException("initial_manifold_update_skip");
 		if (!document["initial_manifold_update_skip"].IsInt()) throw JsonAccessException("initial_manifold_update_skip");
-		c.initial_manifold_update_skip = document["initial_manifold_update_skip"].GetInt();
+		c.initialTriangulationUpdateSkip = document["initial_manifold_update_skip"].GetInt();
 
 		if (!document.HasMember("save_manifold_every")) throw JsonAccessException("save_manifold_every");
 		if (!document["save_manifold_every"].IsInt()) throw JsonAccessException("save_manifold_every");
-		c.save_manifold_every = document["save_manifold_every"].GetInt();
+		c.saveMeshEvery = document["save_manifold_every"].GetInt();
 
 		if (!document.HasMember("primary_points_visibility_threshold")) throw JsonAccessException("primary_points_visibility_threshold");
 		if (!document["primary_points_visibility_threshold"].IsInt()) throw JsonAccessException("primary_points_visibility_threshold");
-		c.primary_points_visibility_threshold = document["primary_points_visibility_threshold"].GetInt();
+		c.primaryPointsVisibilityThreshold = document["primary_points_visibility_threshold"].GetInt();
 
 		if (!document.HasMember("all_sort_of_output")) throw JsonAccessException("all_sort_of_output");
 		if (!document["all_sort_of_output"].IsBool()) throw JsonAccessException("all_sort_of_output");
-		c.all_sort_of_output = document["all_sort_of_output"].GetBool();
+		c.debugOutput = document["all_sort_of_output"].GetBool();
 
 		if (!document.HasMember("time_stats_output")) throw JsonAccessException("time_stats_output");
 		if (!document["time_stats_output"].IsBool()) throw JsonAccessException("time_stats_output");
-		c.time_stats_output = document["time_stats_output"].GetBool();
+		c.timeStatsOutput = document["time_stats_output"].GetBool();
 
 		if (document.HasMember("fake_points_multiplier")) {
 			if (!document["fake_points_multiplier"].IsInt()) throw JsonAccessException("fake_points_multiplier");
-			c.fake_points_multiplier = document["fake_points_multiplier"].GetInt();
-		} else c.fake_points_multiplier = 0;
+			c.fakePointsMultiplier = document["fake_points_multiplier"].GetInt();
+		} else c.fakePointsMultiplier = 0;
 
 		if (!document.HasMember("update_points_position")) throw JsonAccessException("update_points_position");
 		if (!document["update_points_position"].IsBool()) throw JsonAccessException("update_points_position");
-		c.update_points_position = document["update_points_position"].GetBool();
+		c.enablePointsPositionUpdate = document["update_points_position"].GetBool();
 
 	} catch (JsonAccessException& e) {
 		std::cerr << e.what() << std::endl;

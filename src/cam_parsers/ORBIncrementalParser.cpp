@@ -124,7 +124,7 @@ CameraType* ORBIncrementalParser::nextCamera() {
 			// std::cout << "       idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
 
 			// FAKE POINTS
-			for(int fIndex = 0; fIndex < conf_.fake_points_multiplier; fIndex++) {
+			for(int fIndex = 0; fIndex < conf_.fakePointsMultiplier; fIndex++) {
 				long unsigned int fakePointId = (1+fIndex)*1000000 + jsonObservationObject["pointId"].GetInt();
 				PointType* fakePoint;
 

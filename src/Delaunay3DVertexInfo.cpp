@@ -10,6 +10,17 @@
 Delaunay3DVertexInfo::Delaunay3DVertexInfo() {
 }
 
+Delaunay3DVertexInfo::Delaunay3DVertexInfo(long int pointId) :
+		pointId_(pointId) {
+}
+
 Delaunay3DVertexInfo::~Delaunay3DVertexInfo() {
 }
 
+long int Delaunay3DVertexInfo::getPointId() const {
+	return pointId_;
+}
+
+void Delaunay3DVertexInfo::setPointId(long int pointId) {
+	if (pointId_ == -1) pointId_ = pointId;
+}

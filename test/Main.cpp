@@ -67,10 +67,10 @@ int main(int argc, char **argv) {
 
 	log.startEvent();
 
-	if (confManif.manifold_update_every <= 0 || confManif.save_manifold_every <= 0) {
-		std::cerr << std::endl << "constraint: confManif.manifold_update_every > 0, confManif.save_manifold_every > 0" << std::endl;
-		return 1;
-	}
+//	if (confManif.manifold_update_every <= 0 || confManif.save_manifold_every <= 0) {
+//		std::cerr << std::endl << "constraint: confManif.manifold_update_every > 0, confManif.save_manifold_every > 0" << std::endl;
+//		return 1;
+//	}
 
 #ifdef USE_SFM
 
@@ -96,9 +96,9 @@ int main(int argc, char **argv) {
 	return 0;
 #else
 	std::cout << "start parsing " << argv[1] << std::endl;
-	if (confManif.time_stats_output) log.startEvent();
+	if (confManif.timeStatsOutput) log.startEvent();
 	ORBIncrementalParser op(argv[1], confManif);
-	if (confManif.time_stats_output) log.endEventAndPrint("Parsing\t\t\t\t", true);
+	if (confManif.timeStatsOutput) log.endEventAndPrint("Parsing\t\t\t\t", true);
 
 	std::cout << "orb: " << op.numCameras() << " cams" << std::endl << std::endl;
 
@@ -122,17 +122,17 @@ int main(int argc, char **argv) {
 		m.addCamera(camera);
 
 		// Skip the manifold update for the first confManif.initial_manifold_update_skip cameras
-		if (m.iterationCount > confManif.initial_manifold_update_skip && !(m.iterationCount % confManif.manifold_update_every)) m.updateManifold();
+		if (m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)) m.update();
 
-		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/", "current");
+		if (m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)) m.saveMesh("output/", "current");
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
-		if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.getOutputManager()->writeMeshToOff("output/current_from_OutputManager.off");
+		if (m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)) m.getOutputManager()->writeMeshToOff("output/current_from_OutputManager.off");
 
 		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
 		std::cout << std::endl;
 
-		if (m.iterationCount > confManif.initial_manifold_update_skip && !(m.iterationCount % confManif.manifold_update_every)) m.insertStatValue(log.getLastDelta());
+		if (m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)) m.insertStatValue(log.getLastDelta());
 
 #ifdef PRODUCE_STATS
 		statsFile.open("output/stats/stats.txt", std::ios_base::app);
@@ -148,9 +148,9 @@ int main(int argc, char **argv) {
 	}
 
 	// Do a last manifold update in case op.numCameras() isn't a multiple of confManif.manifold_update_every
-	if (m.iterationCount > confManif.initial_manifold_update_skip) m.updateManifold();
+	if (m.iterationCount > confManif.initialTriangulationUpdateSkip) m.update();
 
-	m.saveManifold("output/", "final");
+	m.saveMesh("output/", "final");
 
 	log.endEventAndPrint("main\t\t\t\t\t\t", true);
 
