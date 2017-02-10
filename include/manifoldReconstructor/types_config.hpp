@@ -40,6 +40,7 @@ typedef struct {
 	int maxPointsPerCamera = 1000;
 	float maxDistanceCameraPoints = 40.0;
 	float steinerGridStepLength = 10.0;
+	int maxSteinerVerticesPerTriangle = 4;
 	float w_1 = 1.0;
 	float w_2 = 0.8;
 	float w_3 = 0.4;
@@ -87,6 +88,7 @@ typedef struct {
 		out << "maxPointsPerCamera: " << maxPointsPerCamera << std::endl;
 		out << "maxDistanceCameraPoints: " << maxDistanceCameraPoints << std::endl;
 		out << "steinerGridStepLength: " << steinerGridStepLength << std::endl;
+		out << "maxSteinerVerticesPerTriangle: " << maxSteinerVerticesPerTriangle << std::endl;
 		out << "w_1: " << w_1 << std::endl;
 		out << "w_2: " << w_2 << std::endl;
 		out << "w_3: " << w_3 << std::endl;

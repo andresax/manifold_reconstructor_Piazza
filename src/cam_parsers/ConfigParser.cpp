@@ -74,6 +74,11 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 //		if (!document["suboptimalMethod"].IsInt()) throw JsonAccessException("suboptimalMethod");
 //		c.suboptimalMethod = document["suboptimalMethod"].GetInt();
 
+		if (document.HasMember("maxSteinerVerticesPerTriangle")) {
+			if (!document["maxSteinerVerticesPerTriangle"].IsInt()) throw JsonAccessException("maxSteinerVerticesPerTriangle");
+			c.maxSteinerVerticesPerTriangle = document["maxSteinerVerticesPerTriangle"].GetInt();
+		}
+		
 		if (!document.HasMember("w_1")) throw JsonAccessException("w_1");
 		if (!document["w_1"].IsFloat()) throw JsonAccessException("w_1");
 		c.w_1 = document["w_1"].GetFloat();

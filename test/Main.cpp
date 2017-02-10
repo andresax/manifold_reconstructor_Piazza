@@ -235,9 +235,9 @@ int main(int argc, char **argv) {
 	ConfigParser configParser = ConfigParser();
 	confManif = configParser.parse(config_file);
 
-	confManif.outputFolder = "/home/enrico/gamesh_output/mr/";
-	confManif.timeStatsFolder = "/home/enrico/gamesh_stats/";//from_gen_config/timeStats/";
-	confManif.countStatsFolder = "/home/enrico/gamesh_stats/";//from_gen_config/countStats/";
+	confManif.outputFolder = "~/enrico_ws/gamesh_output/mr/";
+	confManif.timeStatsFolder = "~/enrico_ws/gamesh_stats/";//from_gen_config/timeStats/";
+	confManif.countStatsFolder = "~/enrico_ws/gamesh_stats/";//from_gen_config/countStats/";
 
 	std::cout << "input set to: " << input_file << std::endl;
 	std::cout << "config set to: " << config_file << std::endl;
@@ -348,6 +348,8 @@ int main(int argc, char **argv) {
 
 		// Skip the manifold update for the first confManif.initial_manifold_update_skip cameras
 		if (m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)) m.update();
+		
+		if (m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)) m.integrityCheck();
 
 		if (m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)) m.saveMesh("output/from_gen_config/", "current");
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));

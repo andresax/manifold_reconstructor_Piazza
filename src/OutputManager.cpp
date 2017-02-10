@@ -201,6 +201,12 @@ void OutputManager::writeMeshToOff(const std::string filename) {
 //		for (auto c : i_lbc.second) { // For each boundary cell in the container
 
 	for (auto c : boundaryCells) {
+		if(!dt_.is_cell(c)){
+			std::cerr << "OutputManager::writeMeshToOff:\t\tdead cell in boundary" << std::endl;
+			continue;
+		}
+		
+	
 		for (int faceIndex = 0; faceIndex < 4; faceIndex++) { // For each face in the cell
 
 			// If the face is a boundary face (between the boundary cell and a non manifold cell)
@@ -211,10 +217,15 @@ void OutputManager::writeMeshToOff(const std::string filename) {
 
 				int steinerVertices = 0;
 				for (auto v : triangleVertices) if(v->info().getPointId() < 0) steinerVertices++;
-
-				if(steinerVertices >= 1) {
-					std::cout << "avoided steiner vertex" << std::endl;
-					continue;
+				
+				if(conf_.maxSteinerVerticesPerTriangle >= 0){
+					if(steinerVertices >= conf_.maxSteinerVerticesPerTriangle) {
+						std::cout << "steiner vertices: " << steinerVertices << "\tconf_.maxSteinerVerticesPerTriangle: " << conf_.maxSteinerVerticesPerTriangle << std::endl;
+						std::cout << "avoided steiner vertices: " << triangleVertices[0]->info().getPointId() << ", " << triangleVertices[1]->info().getPointId() << ", " << triangleVertices[2]->info().getPointId() << ", " << std::endl;
+						continue;
+					}
+				}else{
+					std::cerr << "s";//conf_.toString() << std::endl;	
 				}
 
 				// Add the face's vertices to the vertices list (if they aren't already in it)
