@@ -65,7 +65,7 @@ public:
 		return manifoldManager_->getOutputManager();
 	}
 
-	std::ofstream timeStatsFile_;
+	std::ofstream timeStatsFile_, countStatsFile_;
 
 private:
 
@@ -100,7 +100,7 @@ private:
 	bool insertVertex(PointReconstruction& point);
 	bool moveVertex(int pointIndex);
 	void removeVertex(int pointIndex);
-	void moveCameraConstraints(int cameraIndex);
+	bool moveCameraConstraints(int cameraIndex);
 
 
 	Delaunay3 dt_;
@@ -151,7 +151,7 @@ private:
 
 	float timerShrinkTime_ = 0.0;
 	float timerShrinkSeveralTime_ = 0.0;
-	long rt2_CountNeighboursD1WeightUpdate_ = 0, rt2_CountNeighboursD2WeightUpdate_ = 0, rt2_SuccessfulCachedIndices = 0, rt2_TriedCachedIndices = 0;
+	long rt2_CountNeighboursD1WeightUpdate_ = 0, rt2_CountNeighboursD2WeightUpdate_ = 0, rt2_SuccessfulCachedIndices = 0, rt2_TriedCachedIndices = 0, countTracedRays_ = 0, countRetracedRays_ = 0, countUntracedRays_ = 0, countInsertedSteinerPoints_ = 0;
 	Chronometer rt2_ChronoUseless_, rt2_ChronoFirstCell_, rt2_ChronoCellTraversing_;
 	Chronometer rt2_ChronoNeighboursD1Selection_, rt2_ChronoNeighboursD2Selection_, rt2_ChronoNeighboursD1WeightUpdate_, rt2_ChronoNeighboursD2WeightUpdate_;
 	std::vector<Segment> movedPointsSegments_;

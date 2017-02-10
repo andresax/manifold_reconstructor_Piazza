@@ -22,7 +22,7 @@ ORBIncrementalParser::ORBIncrementalParser(std::string path, ManifoldReconstruct
 	}
 
 	basePath_ = std::string(document_["root_path"].GetString());
-	if (!document_.HasMember("slam_data_version") || document_["slam_data_version"] != "0.2") {
+	if (!document_.HasMember("slam_data_version") || (document_["slam_data_version"] != "0.2" && document_["slam_data_version"] != "0.3")) {
 		std::cerr << "incorrect data version" << std::endl << document_["slam_data_version"].GetString() << std::endl;
 	}
 
@@ -45,16 +45,18 @@ CameraType* ORBIncrementalParser::nextCamera() {
 		const rapidjson::Value& jsonView = jsonViewsArray_[jsonViewIndex_];
 		jsonViewIndex_++;
 
-		CameraType* camera = new CameraType();
-
 		long unsigned int cameraId = jsonView["viewId"].GetInt();
 
+		CameraType* camera;
+
 		if (ORB_data_.hasCamera(cameraId)) {
-			return NULL; // TODO manage camera update
+			camera = ORB_data_.getCamera(cameraId);
+		}else{
+			camera = new CameraType();
+			camera->idCam = cameraId;
+			ORB_data_.addCamera(camera);
 		}
 
-		camera->idCam = cameraId;
-		ORB_data_.addCamera(camera);
 
 		std::string local(jsonView["local_path"].GetString());
 		std::string filename(jsonView["filename"].GetString());
@@ -98,6 +100,20 @@ CameraType* ORBIncrementalParser::nextCamera() {
 		camera->intrinsics = intrinsic;
 		// TODO check camera properties are correct
 
+		camera->erasedPoints.clear();
+		camera->erasedPoints.insert(camera->visiblePointsT.begin(), camera->visiblePointsT.end());
+
+		if(camera->idReconstruction >= 0){
+			// Erase the old camera pointers in the points
+			for(auto p : camera->visiblePointsT){
+				p->viewingCams.erase(camera);
+			}
+
+			camera->visiblePointsT.clear();
+			//camera->visiblePoints.clear();
+		}
+
+		// For each point
 		const rapidjson::Value& jsonObservationsArray = jsonView["observations"];
 		for (rapidjson::SizeType jsonObservationIndex = 0; jsonObservationIndex < jsonObservationsArray.Size(); jsonObservationIndex++) {
 			const rapidjson::Value& jsonObservationObject = jsonObservationsArray[jsonObservationIndex];
@@ -110,38 +126,42 @@ CameraType* ORBIncrementalParser::nextCamera() {
 
 				//std::cout << "UPDATE idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
 
+				ORB_data_.addVisibility(camera, point);
+				camera->erasedPoints.erase(point);
+
 			} else {
 				point = new PointType();
 				point->idPoint = pointId;
 				ORB_data_.addPoint(point);
+				ORB_data_.addVisibility(camera, point);
 			}
-
-			ORB_data_.addVisibility(camera, point);
 
 			const rapidjson::Value& jsonCameraCenter = jsonObservationObject["X"];
 			float x = jsonCameraCenter[0].GetFloat(), y = jsonCameraCenter[1].GetFloat(), z = jsonCameraCenter[2].GetFloat();
 			point->position = glm::vec3(x, y, z);
 			// std::cout << "       idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
 
-			// FAKE POINTS
-			for(int fIndex = 0; fIndex < conf_.fakePointsMultiplier; fIndex++) {
-				long unsigned int fakePointId = (1+fIndex)*1000000 + jsonObservationObject["pointId"].GetInt();
-				PointType* fakePoint;
+			if(conf_.fakePointsMultiplier) std::cerr << "conf_.fakePointsMultiplier option not available" << std::endl;
 
-				if (ORB_data_.hasPoint(fakePointId)) {
-					fakePoint = ORB_data_.getPoint(fakePointId);
-				} else {
-					fakePoint = new PointType();
-					fakePoint->idPoint = fakePointId;
-					ORB_data_.addPoint(fakePoint);
-				}
-
-				ORB_data_.addVisibility(camera, fakePoint);
-
-//				const rapidjson::Value& jsonCameraCenter = jsonObservationObject["X"];
-				float fakeX = (1+fIndex)*0.1 + jsonCameraCenter[0].GetFloat(), fakeY = jsonCameraCenter[1].GetFloat(), fakeZ = jsonCameraCenter[2].GetFloat();
-				fakePoint->position = glm::vec3(fakeX, fakeY, fakeZ);
-			}
+//			// FAKE POINTS
+//			for(int fIndex = 0; fIndex < conf_.fakePointsMultiplier; fIndex++) {
+//				long unsigned int fakePointId = (1+fIndex)*1000000 + jsonObservationObject["pointId"].GetInt();
+//				PointType* fakePoint;
+//
+//				if (ORB_data_.hasPoint(fakePointId)) {
+//					fakePoint = ORB_data_.getPoint(fakePointId);
+//				} else {
+//					fakePoint = new PointType();
+//					fakePoint->idPoint = fakePointId;
+//					ORB_data_.addPoint(fakePoint);
+//				}
+//
+//				ORB_data_.addVisibility(camera, fakePoint);
+//
+////				const rapidjson::Value& jsonCameraCenter = jsonObservationObject["X"];
+//				float fakeX = (1+fIndex)*0.1 + jsonCameraCenter[0].GetFloat(), fakeY = jsonCameraCenter[1].GetFloat(), fakeZ = jsonCameraCenter[2].GetFloat();
+//				fakePoint->position = glm::vec3(fakeX, fakeY, fakeZ);
+//			}
 
 			//TODO point's 2D coordinates in frame
 //      const rapidjson::Value& jsonCameraFrameCoordinates = jsonObservationObject["x"];
@@ -271,7 +291,7 @@ std::string ORBIncrementalParser::getDataSPlot() {
 		CameraType* c = mCamera.second;
 		long unsigned int idCam = c->idCam;
 		for (auto p : c->visiblePointsT) {
-			out << c->idCam COMMA p->position.x COMMA p->position.y COMMA p->position.z COMMA p->getNunmberObservation() << std::endl;
+			out << c->idCam COMMA p->position.x COMMA p->position.y COMMA p->position.z COMMA p->getNumberObservations() << std::endl;
 		}
 
 	}
@@ -307,13 +327,13 @@ std::string ORBIncrementalParser::getStats() {
 		std::map<int, int> count;
 
 		for (auto p : c->visiblePointsT) {
-			int nOcc = p->getNunmberObservation();
+			int nOcc = p->getNumberObservations();
 
 			std::map<int, int>::iterator it = count.find(nOcc);
 			if (it != count.end()) {
 				count[nOcc] += 1;
 			} else {
-				count.insert(std::pair<int, int>(p->getNunmberObservation(), 1));
+				count.insert(std::pair<int, int>(p->getNumberObservations(), 1));
 			}
 
 		}
@@ -375,7 +395,7 @@ std::string ORBIncrementalParser::getDataOFF() {
 		CameraType* c = mCamera.second;
 
 		for (auto p : c->visiblePointsT) {
-			if (p->idReconstruction >= 0 && p->getNunmberObservation() >= 2) visiblePoints.insert(p); // TODO if visibility is higher than 2
+			if (p->idReconstruction >= 0 && p->getNumberObservations() >= 2) visiblePoints.insert(p); // TODO if visibility is higher than 2
 		}
 
 	}
@@ -394,12 +414,12 @@ std::string ORBIncrementalParser::getPointsAsOFF(bool all, int minObservations) 
 	int nPoints = 0;
 
 	for (auto p : ORB_data_.getPoints())
-		if ((all || p.second->idReconstruction >= 0) && p.second->getNunmberObservation() >= minObservations) nPoints++;
+		if ((all || p.second->idReconstruction >= 0) && p.second->getNumberObservations() >= minObservations) nPoints++;
 
 	out << "OFF" << std::endl << nPoints << " 0 0" << std::endl;
 
 	for (auto p : ORB_data_.getPoints())
-		if ((all || p.second->idReconstruction >= 0) && p.second->getNunmberObservation() >= minObservations)
+		if ((all || p.second->idReconstruction >= 0) && p.second->getNumberObservations() >= minObservations)
 			out << p.second->position.x SPACE p.second->position.y SPACE p.second->position.z << std::endl;
 
 	return out.str();

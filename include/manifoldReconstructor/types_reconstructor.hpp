@@ -52,13 +52,12 @@ typedef Delaunay3::Point PointD3;
 typedef Delaunay3::Vertex_handle Vertex3D_handle;
 
 namespace std {
-template <>
-struct hash<Delaunay3::Vertex_handle>
-{
-    size_t operator()(Delaunay3::Vertex_handle const & x) const noexcept
-    {
-        return (std::hash<int>()(x->info().getPointId())); // TODO assign a unique id to Steiner poits also
-    }
+template<>
+struct hash<Delaunay3::Vertex_handle> {
+	size_t operator()(Delaunay3::Vertex_handle const & x) const noexcept
+	{
+		return (std::hash<int>()(x->info().getPointId())); // TODO assign a unique id to Steiner poits also
+	}
 };
 }
 //
@@ -69,14 +68,18 @@ struct hash<Delaunay3::Vertex_handle>
 struct index3 {
 	int i, j, k;
 
-	index3(int i_, int j_, int k_){
+	index3(int i_, int j_, int k_) {
 		i = i_;
 		j = j_;
 		k = k_;
 	}
 
-	bool operator==(const index3& b) const { return i == b.i && j == b.j && k == b.k; }
-	bool operator< (const index3& b) const { return i < b.i || (i == b.i && (j < b.j || (j == b.j && (k < b.k)))); }
+	bool operator==(const index3& b) const {
+		return i == b.i && j == b.j && k == b.k;
+	}
+	bool operator<(const index3& b) const {
+		return i < b.i || (i == b.i && (j < b.j || (j == b.j && (k < b.k))));
+	}
 
 };
 
@@ -98,11 +101,11 @@ struct CameraType {
 	int imageWidth;
 	int imageHeight;
 
-	std::vector<int> visiblePoints;
-	std::vector<PointType*> visiblePointsT;
+//	std::set<int> visiblePoints;
+	std::set<PointType*> visiblePointsT, erasedPoints;
 
 	void addPoint(PointType* point) {
-		visiblePointsT.push_back(point);
+		visiblePointsT.insert(point);
 	}
 };
 
@@ -111,16 +114,16 @@ struct PointType {
 	long int idReconstruction = -1;
 
 	glm::vec3 position;
-	std::vector<CameraType*> viewingCams;
+	std::set<CameraType*> viewingCams;
 
 	float r = 0, g = 0, b = 0, a = 0;
 
-	int getNunmberObservation() {
+	int getNumberObservations() {
 		return viewingCams.size();
 	}
 
 	void addCamera(CameraType *cam) {
-		viewingCams.push_back(cam);
+		viewingCams.insert(cam);
 	}
 };
 

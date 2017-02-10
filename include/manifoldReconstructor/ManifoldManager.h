@@ -50,6 +50,13 @@ public:
 	Chronometer chronoInsertInBoundary_, chronoRemoveFromBoundary_, chronoIsRegularOverall_, chronoIsRegularOverall2_,
 			chronoSingleTestOverall_;
 
+	int countInsertInBoundary_ = 0, countRemoveFromBoundary_ = 0,
+	countSingleTestOverall_ = 0, countIsRegularTest_ = 0, countEnclosingCells_ = 0, countEnclosingVolumeCacheHit_ = 0, countEnclosingVolumeCacheTotal_ = 0,
+	countShrinkedSingular_ = 0, countShrinkedSeveral_ = 0, countGrownSingular_ = 0, countGrownSeveral_ = 0;
+
+	Chronometer chronoIsRegular_;
+	long functionProfileCounter_isRegular_ = 0, functionProfileCounter_isRegularSuccessful_ = 0;
+
 private:
 
 	/******************************************************/
@@ -91,8 +98,6 @@ private:
 	ManifoldReconstructionConfig& conf_;
 	OutputManager* out_ = NULL;
 
-	Chronometer chronoIsRegular_;
-	long functionProfileCounter_isRegular_ = 0;
 	int counter_ = 0;
 };
 

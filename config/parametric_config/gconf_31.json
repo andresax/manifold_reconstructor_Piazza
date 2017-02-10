@@ -3,25 +3,23 @@
 	"enableSuboptimalPolicy": false,
 	"suboptimalMethod": 0,
 	"enableRayMistrust": false,
-	"removeSteinerVertices": false,
 	
-	"w_1": 10.0,
-	"w_2": 2.0,
-	"w_3": 1.0,
+	"w_1": 1.0,
+	"w_2": 0.8,
+	"w_3": 0.4,
 	"w_m": 1.0,
-	"freeVoteThreshold": 20.0,
+	"freeVoteThreshold": 40.0,
 	"rayRemovalThreshold": 100000000.0,
 	"vertexRemovalThreshold": 100000000.0,
 	"primary_points_visibility_threshold": 2,
 	"outlierFilteringThreshold": 0.25,
-	"maxPointsPerCamera": 200000,
-	"minDistancePointPositionUpdate": 0.0,
+	"maxPointsPerCamera": 500,
 	
 	"maxDistanceCamFeature": 40.0,
-	"steinerGridStepLength": 20.0,
+	"steinerGridStepLength": 5.0,
 	"steinerGridSideLength": 280.0,
 	
-	"manifold_update_every": 4,
+	"manifold_update_every": 8,
 	"initial_manifold_update_skip": 2,
 	"save_manifold_every": 10,
 	
@@ -30,5 +28,5 @@
 	"fake_points_multiplier": 0,
 	"update_points_position": false,
 	
-	"statsId": "long slam, update position"
+	"statsId": "ppc500 cpi8"
 }

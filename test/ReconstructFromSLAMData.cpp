@@ -12,8 +12,8 @@
 #define VERBOSE_UPDATE_MANIFOLD_FUNCTION true
 #define VERBOSE_ADD_CAMERA_FUNCTION false
 #define VERBOSE_SAVE_MANIFOLD_FUNCTION false
-#define VERBOSE_CAMERA_ADD false
-#define VERBOSE_CAMERA_UPDATE false
+#define VERBOSE_CAMERA_ADD true
+#define VERBOSE_CAMERA_UPDATE true
 #define VERBOSE_POINT_ADD false
 #define VERBOSE_POINT_UPDATE false
 #define VERBOSE_POINT_IGNORE false
@@ -79,10 +79,10 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 	for (auto const &p : newCamera->visiblePointsT) {
 
 		// Only consider points that were observed in many frames
-		if (p->getNunmberObservation() < config_.primaryPointsVisibilityThreshold) {
+		if (p->getNumberObservations() < config_.primaryPointsVisibilityThreshold) {
 			countIgnoredPoints++;
 			if (config_.timeStatsOutput && VERBOSE_POINT_IGNORE) {
-				std::cout << "IGNORE point \t" << p->idPoint << "\t (recId:" << p->idReconstruction << "),\tobs: " << p->getNunmberObservation() << std::endl;
+				std::cout << "IGNORE point \t" << p->idPoint << "\t (recId:" << p->idReconstruction << "),\tobs: " << p->getNumberObservations() << std::endl;
 			}
 			continue;
 		}
@@ -113,7 +113,7 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 			}
 
 			if (config_.timeStatsOutput && VERBOSE_POINT_ADD) {
-				std::cout << "ADD    point \t" << p->idPoint << "\t (recId:" << p->idReconstruction << "),\tobs: " << p->getNunmberObservation() << ": " << position.x << ", " << position.y << ", " << position.z << std::endl;
+				std::cout << "ADD    point \t" << p->idPoint << "\t (recId:" << p->idReconstruction << "),\tobs: " << p->getNumberObservations() << ": " << position.x << ", " << position.y << ", " << position.z << std::endl;
 			}
 
 		} else {
@@ -123,7 +123,7 @@ void ReconstructFromSLAMData::addCamera(CameraType* newCamera) {
 			manifRec_->movePoint(p->idReconstruction, position.x, position.y, position.z, p->r, p->g, p->b, p->a);
 			countUpdatedPoints++;
 			if (config_.timeStatsOutput && VERBOSE_POINT_UPDATE) {
-				std::cout << "UPDATE point \t" << p->idPoint << "\t (recId:" << p->idReconstruction << "),\tobs: " << p->getNunmberObservation() << ": " << position.x << ", " << position.y << ", " << position.z << std::endl;
+				std::cout << "UPDATE point \t" << p->idPoint << "\t (recId:" << p->idReconstruction << "),\tobs: " << p->getNumberObservations() << ": " << position.x << ", " << position.y << ", " << position.z << std::endl;
 			}
 
 			if (isCameraNew) {

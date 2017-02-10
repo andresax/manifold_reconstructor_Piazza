@@ -1,0 +1,6 @@
+cameras number, updateSteinerGrid, rayRemoving, shrinkManifold, shrinkSingle, shrinkSeveral, Remove vertices, Remove points, Add new vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, growManifold, growManifoldSev, growManifold, InsertInBoundary, RemoveFromBoundary, isRegular, singleTest, addedPoints, movedPoints, Overall
+
+11, 0.0833614, 0, 0.00462783, 0.00342288, 0.000994896, 0, 0, 0.251919, 0, 0, 0, 1.12878, 0, 0.0663886, 0.0817579, 0.0114055, 0.00980079, 0.00516514, 0.0674905, 0.0355047, 0.536364, 0, 1.68406, 
+22, 0.000143076, 0, 0.443034, 0.171625, 0.271108, 0, 0, 0.416987, 0, 0, 0, 1.511, 0.961828, 0.14161, 0.157804, 0.0201476, 0.0342868, 0.0219078, 0.20056, 0.154423, 0.502727, 0, 3.7058, 
+33, 0.0416421, 0, 0.415939, 0.183207, 0.232491, 0, 0, 0.291715, 0, 0, 0, 1.29388, 0.644643, 0.21499, 0.189537, 0.026499, 0.0438972, 0.0412301, 0.224019, 0.209409, 0.474545, 0, 3.16862, 
+44, 0.103398, 0, 0.598878, 0.315441, 0.2832, 0, 0, 0.233078, 0, 0, 0, 1.2999, 0.470356, 0.28881, 0.276123, 0.0329857, 0.0612949, 0.057674, 0.308204, 0.335679, 0.498182, 0, 3.35847, 

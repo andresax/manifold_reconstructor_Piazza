@@ -206,10 +206,20 @@ void OutputManager::writeMeshToOff(const std::string filename) {
 			// If the face is a boundary face (between the boundary cell and a non manifold cell)
 			if (!c->neighbor(faceIndex)->info().getManifoldFlag()) {
 
+
 				std::array<Delaunay3::Vertex_handle, 3> triangleVertices = faceIndexToVertices(c, faceIndex);
+
+				int steinerVertices = 0;
+				for (auto v : triangleVertices) if(v->info().getPointId() < 0) steinerVertices++;
+
+				if(steinerVertices >= 1) {
+					std::cout << "avoided steiner vertex" << std::endl;
+					continue;
+				}
 
 				// Add the face's vertices to the vertices list (if they aren't already in it)
 				for (auto v : triangleVertices) {
+
 					if (!vertexHandleToIndex.count(v)) {
 						points.push_back(v->point());
 						vertexHandles.push_back(v);

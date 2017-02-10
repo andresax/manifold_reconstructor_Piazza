@@ -51,6 +51,17 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document["vertexRemovalThreshold"].IsFloat()) throw JsonAccessException("vertexRemovalThreshold");
 		c.unusedVertexRemovalThreshold = document["vertexRemovalThreshold"].GetFloat();
 
+		if (document.HasMember("outlierFilteringThreshold") && document["outlierFilteringThreshold"].IsFloat())
+			c.outlierFilteringThreshold = document["outlierFilteringThreshold"].GetFloat();
+
+		if (!document.HasMember("maxPointsPerCamera")) throw JsonAccessException("maxPointsPerCamera");
+		if (!document["maxPointsPerCamera"].IsInt()) throw JsonAccessException("maxPointsPerCamera");
+		c.maxPointsPerCamera = document["maxPointsPerCamera"].GetInt();
+
+		if (!document.HasMember("minDistancePointPositionUpdate")) throw JsonAccessException("minDistancePointPositionUpdate");
+		if (!document["minDistancePointPositionUpdate"].IsFloat()) throw JsonAccessException("minDistancePointPositionUpdate");
+		c.minDistancePointPositionUpdate = document["minDistancePointPositionUpdate"].GetFloat();
+
 //		if (!document.HasMember("enableSuboptimalPolicy")) throw JsonAccessException("enableSuboptimalPolicy");
 //		if (!document["enableSuboptimalPolicy"].IsBool()) throw JsonAccessException("enableSuboptimalPolicy");
 //		c.enableSuboptimalPolicy = document["enableSuboptimalPolicy"].GetBool();
@@ -119,6 +130,8 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document.HasMember("update_points_position")) throw JsonAccessException("update_points_position");
 		if (!document["update_points_position"].IsBool()) throw JsonAccessException("update_points_position");
 		c.enablePointsPositionUpdate = document["update_points_position"].GetBool();
+
+		if (document.HasMember("statsId") && document["statsId"].IsString()) c.statsId = document["statsId"].GetString();
 
 	} catch (JsonAccessException& e) {
 		std::cerr << e.what() << std::endl;

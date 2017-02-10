@@ -20,39 +20,41 @@
 #include <string>
 
 typedef struct {
-	bool enableIdentifiedPoints;
-	bool enableInverseConic;
-	bool enableRayMistrust;
+	bool enableIdentifiedPoints = true;
+	bool enableInverseConic = true;
+	bool enableRayMistrust = false;
 	bool enablePointsPositionUpdate;
-	bool enableUnusedVertexRemoving;
-	bool enableMeshSaving;
-	bool enableMeshPublishing;
-	bool generateColoredMesh;
+	bool enableUnusedVertexRemoving = false;
+	bool enableMeshSaving = true;
+	bool enableMeshPublishing = false;
+	bool generateColoredMesh = false;
 
-	float freeVoteThreshold;
+	float freeVoteThreshold = 1.0;
 	int nonConicFreeVoteThreshold = 1;
-	float rayRemovalThreshold;
-	float unusedVertexRemovalThreshold;
-	int primaryPointsVisibilityThreshold;
+	float rayRemovalThreshold = 100.0;
+	float unusedVertexRemovalThreshold = 100.0;
+	int primaryPointsVisibilityThreshold = 1;
+	float outlierFilteringThreshold = 0.25;
+	float minDistancePointPositionUpdate = 0.0;
 
-	int maxPointsPerCamera;
-	float maxDistanceCameraPoints;
-	float steinerGridStepLength;
-	float w_1;
-	float w_2;
-	float w_3;
-	float w_m;
+	int maxPointsPerCamera = 1000;
+	float maxDistanceCameraPoints = 40.0;
+	float steinerGridStepLength = 10.0;
+	float w_1 = 1.0;
+	float w_2 = 0.8;
+	float w_3 = 0.4;
+	float w_m = 1.0;
 
-	int triangulationUpdateEvery;
-	int initialTriangulationUpdateSkip;
-	int saveMeshEvery;
+	int triangulationUpdateEvery = 10;
+	int initialTriangulationUpdateSkip = 2;
+	int saveMeshEvery = 10;
 
-	int fakePointsMultiplier;
-	bool timeStatsOutput;
-	bool debugOutput;
-	bool publishReceivedPointcloud;
-	bool publishUsedPointcloud;
-	bool checkIntegrityWhenFinished;
+	int fakePointsMultiplier = 0;
+	bool timeStatsOutput = true;
+	bool debugOutput = false;
+	bool publishReceivedPointcloud = false;
+	bool publishUsedPointcloud = false;
+	bool checkIntegrityWhenFinished = false;
 
 	std::string inputTopic;
 	std::string outputTopic;
@@ -63,6 +65,8 @@ typedef struct {
 	std::string outputFolder;
 	std::string timeStatsFolder;
 	std::string countStatsFolder;
+
+	std::string statsId;
 
 	std::string toString() {
 		std::stringstream out;
@@ -78,6 +82,7 @@ typedef struct {
 		out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
 		out << "unusedVertexRemovalThreshold: " << unusedVertexRemovalThreshold << std::endl;
 		out << "primaryPointsVisibilityThreshold: " << primaryPointsVisibilityThreshold << std::endl;
+		out << "minDistancePointPositionUpdate: " << minDistancePointPositionUpdate << std::endl;
 
 		out << "maxPointsPerCamera: " << maxPointsPerCamera << std::endl;
 		out << "maxDistanceCameraPoints: " << maxDistanceCameraPoints << std::endl;
@@ -99,8 +104,11 @@ typedef struct {
 		out << "checkIntegrityWhenFinished: " << checkIntegrityWhenFinished << std::endl;
 
 		out << "outputFolder: " << outputFolder << std::endl;
-		out << "outputFolder: " << timeStatsFolder << std::endl;
-		out << "outputFolder: " << countStatsFolder << std::endl;
+		out << "timeStatsFolder: " << timeStatsFolder << std::endl;
+		out << "countStatsFolder: " << countStatsFolder << std::endl;
+
+		out << "statsId: " << statsId << std::endl;
+
 
 		return out.str();
 	}

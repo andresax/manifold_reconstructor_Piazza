@@ -5,8 +5,8 @@
  *      Author: enrico
  */
 
-#ifndef RECONSTRUCTFROMSFMDATA_H_
-#define RECONSTRUCTFROMSFMDATA_H_
+#ifndef RECONSTRUCTFROMSLAMDATA_H_
+#define RECONSTRUCTFROMSLAMDATA_H_
 
 #include <TriangulationManager.h>
 #include <types_config.hpp>

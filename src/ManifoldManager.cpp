@@ -32,12 +32,14 @@ ManifoldManager::~ManifoldManager() {
 bool ManifoldManager::isInEnclosingVolume(Delaunay3::Cell_handle& c, const std::set<index3>& enclosingVolumeMapIndices,
 		const long& currentEnclosingVersion, Chronometer& chronoEnclosingCache, Chronometer& chronoEnclosingCheck) {
 	bool inEnclosingVolume = false;
-
+	countEnclosingVolumeCacheTotal_++;
 	chronoEnclosingCache.start();
 	if (c->info().getEnclosingVersion() == currentEnclosingVersion) {
+		countEnclosingVolumeCacheHit_++;
 		inEnclosingVolume = c->info().isInEnclosingVolume();
 		chronoEnclosingCache.stop();
 	} else {
+		countEnclosingCells_++;
 		chronoEnclosingCache.stop();
 
 		chronoEnclosingCheck.start();
@@ -168,6 +170,9 @@ void ManifoldManager::shrinkManifold(const std::set<index3>& enclosingVolumeMapI
 		cout << "ManifoldManager::shrinkManifold:\t\t\t\t shrink:\t\t\t\t" << chronoShrinking.getSeconds() << " s\t / \t" << countShrinked << endl;
 		cout << "ManifoldManager::shrinkManifold:\t\t\t\t number_of_finite_cells:\t\t" << dt_.number_of_finite_cells() << endl;
 	}
+
+	countShrinkedSingular_+=countShrinked;
+	countSingleTestOverall_+=countInEnclosingVolume;
 }
 
 void ManifoldManager::shrinkSeveralAtOnce(const std::set<index3>& enclosingVolumeMapIndices,
@@ -223,38 +228,38 @@ void ManifoldManager::shrinkSeveralAtOnce(const std::set<index3>& enclosingVolum
 // for(int n=0; n<10; ++n) printf(" %d", n);
 // printf(".\n");
 
-	chronoResourceInit.start();
-
-	std::vector<std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>>> verticesResources;
-
-	for (auto v : boundaryVertices) {
-		std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>> v_r;
-		v_r.first = v;
-		std::vector<Delaunay3::Vertex_handle> adjacentVertices;
-		dt_.adjacent_vertices(v, std::back_inserter(adjacentVertices));
-		for (auto adjacentVertex : adjacentVertices)
-			dt_.incident_cells(adjacentVertex, std::inserter(v_r.second, v_r.second.begin()));
-
-		verticesResources.push_back(v_r);
-	}
-
-	chronoResourceInit.stop();
-
-	chronoAddAndCheckManifoldness.start();
-#pragma omp parallel
-	{
-		std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>> locked_v_r;
-
-		while (nextLockableVertex(locked_v_r, verticesResources)) {
-			subSeveralAndCheckManifoldness(locked_v_r.first);
-			unlockCells(locked_v_r);
-		}
-	}
+//	chronoResourceInit.start();
+//
+//	std::vector<std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>>> verticesResources;
+//
+//	for (auto v : boundaryVertices) {
+//		std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>> v_r;
+//		v_r.first = v;
+//		std::vector<Delaunay3::Vertex_handle> adjacentVertices;
+//		dt_.adjacent_vertices(v, std::back_inserter(adjacentVertices));
+//		for (auto adjacentVertex : adjacentVertices)
+//			dt_.incident_cells(adjacentVertex, std::inserter(v_r.second, v_r.second.begin()));
+//
+//		verticesResources.push_back(v_r);
+//	}
+//
+//	chronoResourceInit.stop();
+//
+//	chronoAddAndCheckManifoldness.start();
+//#pragma omp parallel
+//	{
+//		std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>> locked_v_r;
+//
+//		while (nextLockableVertex(locked_v_r, verticesResources)) {
+//			subSeveralAndCheckManifoldness(locked_v_r.first);
+//			unlockCells(locked_v_r);
+//		}
+//	}
 
 	// TODO check non boundary vertices instead? May be faster and more effective
-//	for (auto v : boundaryVertices) {
-//		subSeveralAndCheckManifoldness(v);
-//	}
+	for (auto v : boundaryVertices) {
+		subSeveralAndCheckManifoldness(v);
+	}
 	chronoAddAndCheckManifoldness.stop();
 
 	if (conf_.timeStatsOutput) {
@@ -457,6 +462,8 @@ void ManifoldManager::growManifold(const std::set<index3>& enclosingVolumeMapInd
 		cout << "ManifoldManager::growManifold:\t\t\t\t\t grow:\t\t\t\t\t" << chronoGrowing.getSeconds() << " s\t / \t" << countGrowned << endl;
 		cout << "ManifoldManager::growManifold:\t\t\t\t\t number_of_finite_cells:\t\t" << dt_.number_of_finite_cells() << endl;
 	}
+
+	countGrownSingular_+=countGrowned;
 }
 
 void ManifoldManager::growSeveralAtOnce(const std::set<index3>& enclosingVolumeMapIndices) {
@@ -566,6 +573,8 @@ bool ManifoldManager::addSeveralAndCheckManifoldness(Delaunay3::Vertex_handle v)
 
 	} else {
 
+		countGrownSeveral_+=modifiedCells.size();
+
 		for (auto ic : modifiedCells)
 			ic->info().setManifoldFlag(false);
 
@@ -611,6 +620,8 @@ bool ManifoldManager::subSeveralAndCheckManifoldness(Delaunay3::Vertex_handle v)
 		return false;
 
 	} else {
+
+		countShrinkedSeveral_+=modifiedCells.size();
 
 		for (auto ic : modifiedCells)
 			ic->info().setManifoldFlag(true);
@@ -744,6 +755,7 @@ bool ManifoldManager::insertInBoundary(Delaunay3::Cell_handle& cellToBeAdded) {
 
 	cellToBeAdded->info().setBoundaryFlag(true);
 
+	countInsertInBoundary_++;
 	chronoInsertInBoundary_.stop();
 	return true;
 
@@ -781,6 +793,7 @@ bool ManifoldManager::removeFromBoundary(Delaunay3::Cell_handle& cellToBeRemoved
 
 	cellToBeRemoved->info().setBoundaryFlag(false);
 
+	countRemoveFromBoundary_++;
 	chronoRemoveFromBoundary_.stop();
 	return true;
 }
@@ -814,6 +827,7 @@ bool ManifoldManager::isBoundaryCell(Delaunay3::Cell_handle& c, std::vector<int>
 
 bool ManifoldManager::isRegularProfiled(Delaunay3::Vertex_handle& v) {
 	functionProfileCounter_isRegular_++;
+	countIsRegularTest_++;
 	counter_++;
 
 	bool r = isRegular(v);
@@ -822,7 +836,7 @@ bool ManifoldManager::isRegularProfiled(Delaunay3::Vertex_handle& v) {
 //		cerr << endl << endl << "#####################################" << endl << endl << "\tr != isRegular2(v)" << endl << endl << "#####################################" << endl << endl;
 //		throw new std::exception();
 //	}
-
+	if(r) functionProfileCounter_isRegularSuccessful_++;
 	return r;
 }
 

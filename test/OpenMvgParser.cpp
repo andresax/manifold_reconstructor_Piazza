@@ -1,23 +1,30 @@
-#include <ORBParser.h>
+/*
+ * OpenMvgParser.cpp
+ *
+ *  Created on: 16 mar 2016
+ *      Author: andrea
+ */
+
+#include <OpenMvgParser.h>
 #include <Exceptions.hpp>
 #include <stdexcept>
 #include <rapidjson/reader.h>
 #include <utilities.hpp>
 
-#define COMMA <<", "<<
-
-ORBParser::ORBParser(std::string path) {
+OpenMvgParser::OpenMvgParser(std::string path) {
   fileStream_.open(path.c_str());
 }
 
-ORBParser::~ORBParser() {
-  ORB_data_.clear();
-  //ORB_data_.camViewingPointN_.clear();
-  //ORB_data_.pointsVisibleFromCamN_.clear();
-  //ORB_data_.point2DoncamViewingPoint_.clear();
+OpenMvgParser::~OpenMvgParser() {
+  sfm_data_.points_.clear();
+  sfm_data_.camerasList_.clear();
+  sfm_data_.camerasPaths_.clear();
+  sfm_data_.camViewingPointN_.clear();
+  sfm_data_.pointsVisibleFromCamN_.clear();
+  sfm_data_.point2DoncamViewingPoint_.clear();
 }
 
-void ORBParser::parse() {
+void OpenMvgParser::parse() {
   std::string str((std::istreambuf_iterator<char>(fileStream_)), std::istreambuf_iterator<char>());
   document_.Parse(str.c_str());
 
@@ -34,12 +41,14 @@ void ORBParser::parse() {
 
   parseIntrinsics(intrinsics);
   parseExtrinsics(extrinsics);
+
   parseViews(intrinsics, extrinsics);
+
   parsePoints();
 
 }
 
-void ORBParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const std::map<int, CameraType> & extrinsics) {
+void OpenMvgParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const std::map<int, CameraType> & extrinsics) {
 
   std::string basePath(document_["root_path"].GetString());
 
@@ -47,49 +56,36 @@ void ORBParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const st
     if (!document_.HasMember("views"))
       throw JsonAccessException("JsonAccessException--> error while querying HasMember(views)");
     const rapidjson::Value& camerasJson = document_["views"];
-    //int numCameras = camerasJson.Size();
-    //ORB_data_.initCameras(numCameras);
-    //ORB_data_.cameras_.assign(numCameras, NULL);
-    //ORB_data_.camerasPaths_.assign(ORB_data_.numCameras_, std::string());
-
+    sfm_data_.numCameras_ = camerasJson.Size();
+    sfm_data_.camerasList_.assign(sfm_data_.numCameras_, CameraType());
+    sfm_data_.camerasPaths_.assign(sfm_data_.numCameras_, std::string());
     for (rapidjson::SizeType curCam = 0; curCam < camerasJson.Size(); curCam++) {
-      CameraType* cam = new CameraType();
-
-      cam->idCam = camerasJson[curCam]["key"].GetInt();
-      ORB_data_.addCamera(cam);
 
       std::string local(camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["local_path"].GetString());
       std::string filename(camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["filename"].GetString());
-      //ORB_data_.cameras_[curCam]->pathImage = basePath + local + filename;
-      //ORB_data_.camerasPaths_[curCam] = basePath + local + filename;
-      cam->pathImage = basePath + local + filename;
 
-      //ORB_data_.cameras_[curCam]->imageWidth = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["width"].GetInt();
-      //ORB_data_.cameras_[curCam]->imageHeight = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["height"].GetInt();
+      sfm_data_.camerasList_[curCam].pathImage = basePath + local + filename;
+      sfm_data_.camerasPaths_[curCam] = basePath + local + filename;
 
-      cam->imageWidth = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["width"].GetInt();
-      cam->imageHeight = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["height"].GetInt();
-
+      sfm_data_.camerasList_[curCam].imageWidth = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["width"].GetInt();
+      sfm_data_.camerasList_[curCam].imageHeight = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["height"].GetInt();
       int idIntrinsics = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["id_intrinsic"].GetInt();
       int idExtrinsics = camerasJson[curCam]["value"]["ptr_wrapper"]["data"]["id_pose"].GetInt();
 
       try {
         glm::mat3 intr = intrinsics.at(idIntrinsics);
-        cam->intrinsics = intr;
+        sfm_data_.camerasList_[curCam].intrinsics = intr;
       } catch (std::out_of_range e) {
         std::cerr << "std::out_of_range exception trying to look for intrinsics matrix " << idIntrinsics << std::endl;
       }
-
       try {
         CameraType camCurrent = extrinsics.at(idExtrinsics);
         glm::mat4 eMatrix(0.0), kMatrix(0.0);
-
         for (int curR = 0; curR < 3; curR++) {
           for (int curC = 0; curC < 3; curC++) {
             eMatrix[curR][curC] = camCurrent.rotation[curR][curC];
           }
         }
-
         eMatrix[0][3] = camCurrent.translation[0];
         eMatrix[1][3] = camCurrent.translation[1];
         eMatrix[2][3] = camCurrent.translation[2];
@@ -97,17 +93,15 @@ void ORBParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const st
 
         for (int curR = 0; curR < 3; curR++) {
           for (int curC = 0; curC < 3; curC++) {
-            kMatrix[curR][curC] = cam->intrinsics[curR][curC];
+            kMatrix[curR][curC] = sfm_data_.camerasList_[curCam].intrinsics[curR][curC];
           }
         }
 
-        cam->cameraMatrix =  eMatrix*kMatrix;
-        cam->rotation = glm::mat3(camCurrent.rotation);
-        cam->translation = glm::vec3(camCurrent.translation);
-        cam->center = glm::vec3(camCurrent.center);
 
-
-
+        sfm_data_.camerasList_[curCam].cameraMatrix =  eMatrix*kMatrix;
+        sfm_data_.camerasList_[curCam].rotation = glm::mat3(camCurrent.rotation);
+        sfm_data_.camerasList_[curCam].translation = glm::vec3(camCurrent.translation);
+        sfm_data_.camerasList_[curCam].center = glm::vec3(camCurrent.center);
        /* std::cout<<"curCam: "<<curCam<<std::endl;
         std::cout<<"Intrinsics A"<<std::endl;
         utilities::printMatrix(kMatrix);
@@ -134,21 +128,19 @@ void ORBParser::parseViews(const std::map<int, glm::mat3> & intrinsics, const st
 
 }
 
-void ORBParser::parsePoints() {
+void OpenMvgParser::parsePoints() {
   try {
 
     if (!document_.HasMember("structure"))
       throw JsonAccessException("JsonAccessException--> error while querying HasMember(structure)");
     const rapidjson::Value& structure = document_["structure"];
-    int numPoints = structure.Size();
+    sfm_data_.numPoints_ = structure.Size();
 
     //**********PARSING POINTS
-    //ORB_data_.camViewingPointN_.assign(ORB_data_.numPoints_, std::vector<int>());
-    //ORB_data_.pointsVisibleFromCamN_.assign(ORB_data_.numCameras_, std::vector<int>());
-
-    //ORB_data_.initPoints(numPoints);
-    //ORB_data_.point2DoncamViewingPoint_.assign(numPoints, std::vector<glm::vec2>());
-
+    sfm_data_.camViewingPointN_.assign(sfm_data_.numPoints_, std::vector<int>());
+    sfm_data_.point2DoncamViewingPoint_.assign(sfm_data_.numPoints_, std::vector<glm::vec2>());
+    sfm_data_.pointsVisibleFromCamN_.assign(sfm_data_.numCameras_, std::vector<int>());
+    sfm_data_.points_.assign(sfm_data_.numPoints_, glm::vec3());
     if (!structure.IsArray())
       throw JsonAccessException("JsonAccessException--> error while querying structure.IsArray()");
 
@@ -159,9 +151,6 @@ void ORBParser::parsePoints() {
       //      if (!structure[i].HasMember("key"))
       //        throw JsonAccessException("JsonAccessException--> error while querying structure[i].HasMember(key)");
       //std::cout << "structure[i][key]. " << structure[i]["key"].GetInt() << std::endl;
-
-      if (!structure[curPoint].HasMember("key"))
-        throw JsonAccessException("JsonAccessException--> error while querying structure[i].HasMember(key)");
 
       if (!structure[curPoint].HasMember("value"))
         throw JsonAccessException("JsonAccessException--> error while querying structure[i].HasMember(value)");
@@ -181,20 +170,11 @@ void ORBParser::parsePoints() {
       if (!X[2].IsDouble())
         throw JsonAccessException("JsonAccessException--> error while querying X2.IsDouble()");
 
-      PointType* point = new PointType();
-      point->idPoint = structure[curPoint]["key"].GetInt();
-      ORB_data_.addPoint(point);
-
-//      if (structure[curPoint].HasMember("num_obs")){
-//        point->numObservations = structure[curPoint]["num_obs"].GetInt();
-//      }
-
-
       float x0 = X[0].GetFloat();
       float x1 = X[1].GetFloat();
       float x2 = X[2].GetFloat();
 
-      point->position = glm::vec3(x0, x1, x2);
+      sfm_data_.points_[curPoint] = glm::vec3(x0, x1, x2);
 
       if (!structure[curPoint]["value"].HasMember("observations"))
         throw JsonAccessException("JsonAccessException--> error while querying structure[i][value].HasMember(observations)");
@@ -209,11 +189,10 @@ void ORBParser::parsePoints() {
           throw JsonAccessException("JsonAccessException--> error while querying observations[i].HasMember(key)");
         //std::cout << "observations[" << curId << "].HasMember(key)= " << observations[curId]["key"].GetInt() << std::endl;
 
-        int camId = observations[curId]["key"].GetInt();
-        ORB_data_.addVisibility(camId, point->idPoint);
+        int curCam = observations[curId]["key"].GetInt();
 
-        //ORB_data_.camViewingPointN_[curPoint].push_back(curCam);
-        //ORB_data_.pointsVisibleFromCamN_[curCam].push_back(curPoint);
+        sfm_data_.camViewingPointN_[curPoint].push_back(curCam);
+        sfm_data_.pointsVisibleFromCamN_[curCam].push_back(curPoint);
 
         if (!observations[curId].HasMember("value"))
           throw JsonAccessException("JsonAccessException--> error while querying observations[curId].HasMember(value)");
@@ -221,13 +200,9 @@ void ORBParser::parsePoints() {
         if (!observations[curId]["value"].HasMember("x"))
           throw JsonAccessException("JsonAccessException--> error while querying observations[curId][value].HasMember(x)");
 
-        //TODO point's 2D coordinates in frame
-        //const rapidjson::Value& pt2D = observations[curId]["value"]["x"];
-        //ORB_data_.point2DoncamViewingPoint_[curPoint].push_back(glm::vec2(pt2D[0].GetDouble(), pt2D[1].GetDouble()));
+        const rapidjson::Value& pt2D = observations[curId]["value"]["x"];
+        sfm_data_.point2DoncamViewingPoint_[curPoint].push_back(glm::vec2(pt2D[0].GetDouble(), pt2D[1].GetDouble()));
       }
-
-
-
     }
   } catch (JsonAccessException& e) {
     std::cerr << e.what() << std::endl;
@@ -239,7 +214,7 @@ void ORBParser::parsePoints() {
   }
 }
 
-void ORBParser::parseIntrinsics(std::map<int, glm::mat3> & intrinsics) {
+void OpenMvgParser::parseIntrinsics(std::map<int, glm::mat3> & intrinsics) {
 
   try {
 
@@ -266,7 +241,7 @@ void ORBParser::parseIntrinsics(std::map<int, glm::mat3> & intrinsics) {
   }
 }
 
-void ORBParser::parseExtrinsics(std::map<int, CameraType> & extrinsics) {
+void OpenMvgParser::parseExtrinsics(std::map<int, CameraType> & extrinsics) {
 
   try {
 
@@ -297,75 +272,4 @@ void ORBParser::parseExtrinsics(std::map<int, CameraType> & extrinsics) {
     std::cout << e.what() << std::endl;
 
   }
-}
-
-std::string ORBParser::getDataSPlot() {
-  std::stringstream out;
-
-  for(auto mCamera : ORB_data_.getCameras()){
-    CameraType* c = mCamera.second;
-    long unsigned int idCam =c->idCam;
-    for(auto p : c->visiblePointsT){
-      out << c->idCam COMMA p->position.x COMMA p->position.y COMMA p->position.z COMMA p->getNumberObservations() << std::endl;
-    }
-
-  }
-
-  return out.str();
-}
-
-
-std::string ORBParser::getDataCSV() {
-  std::stringstream out;
-
-  for(auto mCamera : ORB_data_.getCameras()){
-    CameraType* c = mCamera.second;
-    glm::vec3 center = c->center;
-
-    out << "c" COMMA c->idCam COMMA center.x COMMA center.y COMMA center.z << std::endl;
-
-    for(auto p : c->visiblePointsT){
-      out << "p" COMMA p->idPoint COMMA c->idCam COMMA p->position.x COMMA p->position.y COMMA p->position.z << std::endl;
-    }
-
-  }
-
-  return out.str();
-}
-
-
-std::string ORBParser::getStats() {
-  std::stringstream out;
-
-  for(auto mCamera : ORB_data_.getCameras()){
-    CameraType* c = mCamera.second;
-
-    out << "cam " << c->idCam << std::endl;
-    std::map<int, int> count;
-
-    for(auto p : c->visiblePointsT){
-      int nOcc = p->getNumberObservations();
-
-      std::map<int,int>::iterator it = count.find(nOcc);
-      if(it != count.end()){
-        count[nOcc] += 1;
-      }else{
-        count.insert(std::pair<int, int>(p->getNumberObservations(), 1));
-      }
-
-
-    }
-
-    for(auto vkOcc : count){
-      int sum = 0;
-      for(auto vkOcc_ : count){
-        if(vkOcc_.first >= vkOcc.first) sum += vkOcc_.second;
-      }
-
-      out << " =" << vkOcc.first << ":\t" << vkOcc.second << ";\t\t >=" << vkOcc.first << ":\t" << sum << std::endl;
-    }
-  }
-
-  return out.str();
-
 }

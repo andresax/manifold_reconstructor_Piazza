@@ -33,13 +33,24 @@ TriangulationManager::TriangulationManager(ManifoldReconstructionConfig& conf) :
 	sgCurrentMinX_ = sgCurrentMinY_ = sgCurrentMinZ_ = 0.0;
 	sgCurrentMaxX_ = sgCurrentMaxY_ = sgCurrentMaxZ_ = conf_.steinerGridStepLength;
 
-	timeStatsFile_.open("/home/enrico/gamesh_stats/timeStats.csv");
+	std::stringstream statsFileName;
+	statsFileName << conf_.timeStatsFolder << "timeStats " << conf_.statsId << ".csv";
+	cout << "Opening stats file " << statsFileName.str() << endl;
+	timeStatsFile_.open(statsFileName.str());
 	timeStatsFile_ << "cameras number, updateSteinerGrid, rayRemoving, shrinkManifold, shrinkSingle, shrinkSeveral, Remove vertices, Remove points, Add new vertices, Move vertices, Move Cameras, rayUntracing, rayTracing, rayRetracing, growManifold, growManifoldSev, growManifold, InsertInBoundary, RemoveFromBoundary, isRegular, singleTest, addedPoints, movedPoints, Overall" << endl;
+
+	std::stringstream countsFileName;
+	countsFileName << conf_.countStatsFolder << "countStats " << conf_.statsId << ".csv";
+	cout << "Opening counts file " << countsFileName.str() << endl;
+	countStatsFile_.open(countsFileName.str());
+	countStatsFile_ << "Iteration, Updated Cameras, Added Points, Moved Points, Inserted Steiner Points, Tracing Index Cache Hit Ratio, Traced Rays, Retraced Rays, Untraced Rays, Insert In Boundary, Remove From Boundary, Single Cell Test, Is Regular Test, Enclosing Cells, Enclosing Volume Cache Hit, Shrinked Singular, Shrinked Several, Grown Singular, Grown Several" << endl;
+
 }
 
 TriangulationManager::~TriangulationManager() {
 	delete (manifoldManager_);
 	timeStatsFile_.close();
+	countStatsFile_.close();
 }
 
 void TriangulationManager::updateTriangulation() {
@@ -65,6 +76,23 @@ void TriangulationManager::updateTriangulation() {
 
 	rt2_SuccessfulCachedIndices = 0;
 	rt2_TriedCachedIndices = 0;
+
+	manifoldManager_->countInsertInBoundary_ = 0;
+	manifoldManager_->countRemoveFromBoundary_ = 0;
+	manifoldManager_->countSingleTestOverall_ = 0;
+	manifoldManager_->countIsRegularTest_ = 0;
+	manifoldManager_->countEnclosingCells_ = 0;
+	manifoldManager_->countEnclosingVolumeCacheHit_ = 0;
+	manifoldManager_->countEnclosingVolumeCacheTotal_ = 0;
+	manifoldManager_->countShrinkedSingular_ = 0;
+	manifoldManager_->countShrinkedSeveral_ = 0;
+	manifoldManager_->countGrownSingular_ = 0;
+	manifoldManager_->countGrownSeveral_ = 0;
+
+	countTracedRays_ = 0;
+	countRetracedRays_ = 0;
+	countUntracedRays_ = 0;
+	countInsertedSteinerPoints_ = 0;
 
 	Chronometer chronoCheck, chronoEverything;
 	chronoCheck.start();
@@ -101,8 +129,8 @@ void TriangulationManager::updateTriangulation() {
 	 *  Ray removing
 	 */
 
-	int pointsRemovedCount = -1, verticesRemovedCount = -1, raysRemovedAndInvalidatedCount = 0, raysInvaldatedCount = 0,
-			raysRemovedCount = 0, raysCandidateToBeRemovedCount = raysCandidateToBeRemoved_.size();
+	int pointsRemovedCount = -1, verticesRemovedCount = -1, raysRemovedAndInvalidatedCount = 0, raysInvaldatedCount = 0, raysRemovedCount = 0,
+			raysCandidateToBeRemovedCount = raysCandidateToBeRemoved_.size();
 
 	if (raysCandidateToBeRemoved_.size()) {
 
@@ -175,14 +203,14 @@ void TriangulationManager::updateTriangulation() {
 	}
 
 	if (conf_.enablePointsPositionUpdate) for (auto pIndex : movedPointsId_) {
-		enclosingVolumePoints.insert(points_[pIndex].newPosition);
+		if(utilities::distanceEucl(points_[pIndex].position, points_[pIndex].newPosition) > conf_.minDistancePointPositionUpdate)
+			enclosingVolumePoints.insert(points_[pIndex].newPosition);
 	}
 
 	for (auto cIndex : updatedCamerasId_)
 		for (auto pIndex : cameras_[cIndex].newVisiblePoints)
-			if (points_[pIndex].notTriangulated && utilities::distanceEucl(points_[pIndex].position,
-					cameras_[cIndex].position) < conf_.maxDistanceCameraPoints) enclosingVolumePoints.insert(
-					points_[pIndex].position);
+			if (points_[pIndex].notTriangulated && utilities::distanceEucl(points_[pIndex].position, cameras_[cIndex].position) < conf_.maxDistanceCameraPoints)
+				enclosingVolumePoints.insert(points_[pIndex].position);
 
 	// TODO use cubed sphere to decrease the number of cells that will be tested
 	int subMapBounds = 2;
@@ -199,7 +227,7 @@ void TriangulationManager::updateTriangulation() {
 					enclosingVolumeMapIndices.insert(index3(i + i_, j + j_, k + k_));
 	}
 
-	// This is used to cache the enclosing information in the cells, incrementing it invalidates the cached values and needs to be done when the points on which the enclosing volume is base are changed
+	// This is used to cache the enclosing information in the cells, incrementing it invalidates the cached values and needs to be done when the points on which the enclosing volume is based are changed
 	currentEnclosingVersion_++;
 
 //	if (conf_.debugOutput) manifoldManager_->checkBoundaryIntegrity();
@@ -242,8 +270,7 @@ void TriangulationManager::updateTriangulation() {
 				outputRays.push_back(Segment(cameras_[cameraId].position, pointPosition));
 
 		}
-		manifoldManager_->getOutputManager()->writeRaysToOFF("output/erasedRays/",
-				std::vector<int> { iterationCounter_ }, outputRays);
+		manifoldManager_->getOutputManager()->writeRaysToOFF("output/erasedRays/", std::vector<int> { iterationCounter_ }, outputRays);
 
 		chronoEverything.reset();
 		chronoEverything.start();
@@ -344,6 +371,8 @@ void TriangulationManager::updateTriangulation() {
 	 *  Vertex moving
 	 */
 
+	int totalMovedPointsStat = movedPointsId_.size();
+
 	if (conf_.enablePointsPositionUpdate && movedPointsId_.size()) {
 		chronoEverything.reset();
 		chronoEverything.start();
@@ -370,19 +399,24 @@ void TriangulationManager::updateTriangulation() {
 		timeStatsFile_ << 0.0 << ", ";
 	}
 
-	if (conf_.debugOutput) manifoldManager_->getOutputManager()->writeRaysToOFF("output/moved_points/moved_points",
-			std::vector<int> { }, movedPointsSegments_);
+	if (conf_.debugOutput) manifoldManager_->getOutputManager()->writeRaysToOFF("output/moved_points/moved_points", std::vector<int> { }, movedPointsSegments_);
 
 	/*
 	 *  Camera moving
 	 */
+
+	int movedCamerasStat = 0, totalMovedCamerasStat = movedCamerasId_.size();
 
 	if (movedCamerasId_.size()) {
 		chronoEverything.reset();
 		chronoEverything.start();
 
 		for (int cameraIndex : movedCamerasId_) {
-			moveCameraConstraints(cameraIndex);
+			bool moved;
+			moved = moveCameraConstraints(cameraIndex);
+
+			if (moved) movedCamerasStat++;
+
 		}
 		movedCamerasId_.clear();
 
@@ -421,10 +455,33 @@ void TriangulationManager::updateTriangulation() {
 	timeStatsFile_ << (float) addedPointsStat / 100 / updatedCamerasStat << ", ";
 	timeStatsFile_ << (float) movedPointsStat / 100 / updatedCamerasStat << ", ";
 
+	countStatsFile_ << iterationCounter_ << ", ";
+	countStatsFile_ << updatedCamerasStat << ", ";
+	countStatsFile_ << addedPointsStat << ", ";
+	countStatsFile_ << movedPointsStat << ", ";
+	countStatsFile_ << countInsertedSteinerPoints_ << ", ";
+	countStatsFile_ << (double) rt2_SuccessfulCachedIndices / (double) rt2_TriedCachedIndices << ", ";
+	countStatsFile_ << countTracedRays_ << ", ";
+	countStatsFile_ << countRetracedRays_ << ", ";
+	countStatsFile_ << countUntracedRays_ << ", ";
+
+	countStatsFile_ << manifoldManager_->countInsertInBoundary_ << ", ";
+	countStatsFile_ << manifoldManager_->countRemoveFromBoundary_ << ", ";
+	countStatsFile_ << manifoldManager_->countSingleTestOverall_ << ", ";
+	countStatsFile_ << manifoldManager_->countIsRegularTest_ << ", ";
+	countStatsFile_ << manifoldManager_->countEnclosingCells_ << ", ";
+	countStatsFile_ << (double) manifoldManager_->countEnclosingVolumeCacheHit_ / (double) manifoldManager_->countEnclosingVolumeCacheTotal_ << ", ";
+	countStatsFile_ << manifoldManager_->countShrinkedSingular_ << ", ";
+	countStatsFile_ << manifoldManager_->countShrinkedSeveral_ << ", ";
+	countStatsFile_ << manifoldManager_->countGrownSingular_ << ", ";
+	countStatsFile_ << manifoldManager_->countGrownSeveral_ << ", ";
+	countStatsFile_ << endl;
+
 	if (conf_.timeStatsOutput) {
 		cout << "TriangulationManager::updateTriangulation:\t\t\t mm \t updated cameras:\t\t" << updatedCamerasStat << endl;
 		cout << "TriangulationManager::updateTriangulation:\t\t\t mm \t added points:\t\t\t" << addedPointsStat << endl;
-		cout << "TriangulationManager::updateTriangulation:\t\t\t mm \t moved points:\t\t\t" << movedPointsStat << endl;
+		cout << "TriangulationManager::updateTriangulation:\t\t\t mm \t moved points:\t\t\t" << movedPointsStat << "\t/\t" << totalMovedPointsStat << endl;
+		cout << "TriangulationManager::updateTriangulation:\t\t\t mm \t moved cameras:\t\t\t" << movedCamerasStat << "\t/\t" << totalMovedCamerasStat << endl;
 
 		cout << "TriangulationManager::updateTriangulation:\t\t\t mm \t insertInBoundary:\t\t" << manifoldManager_->chronoInsertInBoundary_.getSeconds() << " s" << endl;
 		cout << "TriangulationManager::updateTriangulation:\t\t\t mm \t removeFromBoundary:\t\t" << manifoldManager_->chronoRemoveFromBoundary_.getSeconds() << " s" << endl;
@@ -500,6 +557,10 @@ void TriangulationManager::addCamera(float x, float y, float z) {
 void TriangulationManager::moveCamera(int id, float x, float y, float z) {
 	cameras_[id].newPosition = PointD3(x, y, z);
 	cameras_[id].toBeMoved = true;
+
+	if (conf_.timeStatsOutput) {
+		std::cout << "TriangulationManager::moveCamera camera " << id << "\t D: " << utilities::distanceEucl(cameras_[id].newPosition, cameras_[id].position) << std::endl;
+	}
 
 	movedCamerasId_.push_back(id);
 	updatedCamerasId_.insert(id);
@@ -666,7 +727,7 @@ void TriangulationManager::rayTracingFromAllCam() {
 		raysToBeTraced_.clear();
 
 		chronoEverything.stop();
-		if (conf_.timeStatsOutput) cout << "rayTracing\t\t" << chronoEverything.getSeconds() << "\t/\t"<< tracedRays << endl << endl;
+		if (conf_.timeStatsOutput) cout << "rayTracing\t\t" << chronoEverything.getSeconds() << "\t/\t" << tracedRays << endl << endl;
 		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
 		if (conf_.timeStatsOutput) cout << "rayTracing\t\tSkipped" << endl << endl;
@@ -706,7 +767,7 @@ void TriangulationManager::rayTracingFromAllCam() {
 		newCells_.clear();
 
 		chronoEverything.stop();
-		if (conf_.timeStatsOutput) cout << "rayRetracing\t\t" << chronoEverything.getSeconds() << "\t/\t"<< retracedRays  << endl << endl;
+		if (conf_.timeStatsOutput) cout << "rayRetracing\t\t" << chronoEverything.getSeconds() << "\t/\t" << retracedRays << endl << endl;
 		timeStatsFile_ << chronoEverything.getSeconds() << ", ";
 	} else {
 		if (conf_.timeStatsOutput) cout << "rayRetracing\t\tSkipped" << endl << endl;
@@ -725,6 +786,9 @@ void TriangulationManager::rayTracing(int cameraIndex, int pointIndex, bool retr
 
 #	pragma omp critical
 	{
+		if (retrace) countRetracedRays_++;
+		else countTracedRays_++;
+
 		vertexHandle = points_[pointIndex].vertexHandle;
 		source = points_[pointIndex].position;
 		target = cameras_[cameraIndex].position;
@@ -740,7 +804,12 @@ void TriangulationManager::rayTracing(int cameraIndex, int pointIndex, bool retr
 	rayPath->path.clear();
 
 	if (vertexHandle == NULL) {
-		cerr << "TriangulationManager::rayTracing: ignoring ray because vertex not in triangulation; ray " << cameraIndex << ", " << pointIndex << endl;
+		cerr << "TriangulationManager::rayTracing: ignoring ray because vertex not in triangulation (vertexHandle == NULL); ray " << cameraIndex << ", " << pointIndex << endl;
+		return;
+	}
+
+	if (points_[pointIndex].notTriangulated) {
+		cerr << "TriangulationManager::rayTracing: ignoring ray because vertex not in triangulation (notTriangulated == true); ray " << cameraIndex << ", " << pointIndex << endl;
 		return;
 	}
 
@@ -757,8 +826,7 @@ void TriangulationManager::rayTracing(int cameraIndex, int pointIndex, bool retr
 
 	if (lt != Delaunay3::Locate_type::CELL) {
 		// (WORKAROUND) moving camera position because overlapping a vertex for ray " << cameraIndex << ", " << pointIndex << endl;
-		target = PointD3(target.x() + 0.0001 * conf_.steinerGridStepLength,
-				target.y() + 0.0001 * conf_.steinerGridStepLength, target.z() + 0.0001 * conf_.steinerGridStepLength);
+		target = PointD3(target.x() + 0.0001 * conf_.steinerGridStepLength, target.y() + 0.0001 * conf_.steinerGridStepLength, target.z() + 0.0001 * conf_.steinerGridStepLength);
 		constraint = Segment(source, target);
 
 		targetCell = dt_.locate(target, lt, li, lj);
@@ -829,6 +897,8 @@ void TriangulationManager::rayUntracing(RayPath* rayPath) {
 	int cameraIndex = rayPath->cameraId;
 	int pointIndex = rayPath->pointId;
 
+	countUntracedRays_++;
+
 	// Remove all the dead cells from the path
 	rayPath->path.erase(std::remove_if(rayPath->path.begin(), rayPath->path.end(), [&](Delaunay3::Cell_handle cell) {
 		return !dt_.is_cell(cell);
@@ -844,8 +914,8 @@ void TriangulationManager::rayUntracing(RayPath* rayPath) {
 
 }
 
-bool TriangulationManager::nextCellOnRay(Delaunay3::Cell_handle& currentCell, Delaunay3::Cell_handle& previousCell,
-		const Delaunay3::Cell_handle& targetCell, const Segment& constraint) {
+bool TriangulationManager::nextCellOnRay(
+		Delaunay3::Cell_handle& currentCell, Delaunay3::Cell_handle& previousCell, const Delaunay3::Cell_handle& targetCell, const Segment& constraint) {
 
 	if (currentCell == targetCell) return false;
 
@@ -857,8 +927,7 @@ bool TriangulationManager::nextCellOnRay(Delaunay3::Cell_handle& currentCell, De
 		rt2_TriedCachedIndices++;
 
 		// Note: dt_.triangle(currentCell, facetIndex) is the facet common to currentCell and candidateNextCell
-		if (candidateNextCell != previousCell && CGAL::do_intersect(dt_.triangle(currentCell, cachedFacetIndex),
-				constraint)) {
+		if (candidateNextCell != previousCell && CGAL::do_intersect(dt_.triangle(currentCell, cachedFacetIndex), constraint)) {
 
 			previousCell = currentCell;
 			currentCell = candidateNextCell;
@@ -878,8 +947,7 @@ bool TriangulationManager::nextCellOnRay(Delaunay3::Cell_handle& currentCell, De
 		Delaunay3::Cell_handle candidateNextCell = currentCell->neighbor(facetIndex);
 
 		// Note: dt_.triangle(currentCell, facetIndex) is the facet common to currentCell and candidateNextCell
-		if (candidateNextCell != previousCell && CGAL::do_intersect(dt_.triangle(currentCell, facetIndex),
-				constraint)) {
+		if (candidateNextCell != previousCell && CGAL::do_intersect(dt_.triangle(currentCell, facetIndex), constraint)) {
 
 #pragma omp critical (cellUpdating)
 			{
@@ -897,8 +965,7 @@ bool TriangulationManager::nextCellOnRay(Delaunay3::Cell_handle& currentCell, De
 	return false;
 }
 
-void TriangulationManager::markCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex,
-		std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells) {
+void TriangulationManager::markCell(Delaunay3::Cell_handle& c, const int cameraIndex, const int pointIndex, std::vector<Delaunay3::Cell_handle>& path, bool onlyMarkNewCells) {
 
 #pragma omp critical (cellUpdating)
 	{
@@ -976,8 +1043,7 @@ void TriangulationManager::unmarkCell(Delaunay3::Cell_handle& c, const int camer
 	}
 }
 
-void TriangulationManager::markRemovalCandidateRays(Vertex3D_handle& v, Delaunay3::Cell_handle& c,
-		std::vector<Delaunay3::Cell_handle>& incidentCells) {
+void TriangulationManager::markRemovalCandidateRays(Vertex3D_handle& v, Delaunay3::Cell_handle& c, std::vector<Delaunay3::Cell_handle>& incidentCells) {
 	std::vector<Delaunay3::Cell_handle> neighbours;
 	for (int neighbourIndex = 0; neighbourIndex < 4; neighbourIndex++)
 		neighbours.push_back(c->neighbor(neighbourIndex));
@@ -1081,9 +1147,7 @@ void TriangulationManager::growManifold(const std::set<index3>& enclosingVolumeM
 		// If the boundary is still empty, start growing from the cell with highest vote
 		//TODO from every cell containing cameras; otherwise disconnected spaces wouldn't all be grown
 
-
-		for (Delaunay3::Finite_cells_iterator itCell = dt_.finite_cells_begin(); itCell != dt_.finite_cells_end();
-				itCell++) {
+		for (Delaunay3::Finite_cells_iterator itCell = dt_.finite_cells_begin(); itCell != dt_.finite_cells_end(); itCell++) {
 
 			if (itCell->info().getFreeVote() >= max) {
 				max = itCell->info().getFreeVote();
@@ -1092,7 +1156,7 @@ void TriangulationManager::growManifold(const std::set<index3>& enclosingVolumeM
 			}
 		}
 
-		if(!maxFound) {
+		if (!maxFound) {
 			cout << "TriangulationManager::growManifold: \t\t triangulation is still empty. Can't grow" << endl;
 			return;
 		}
@@ -1150,15 +1214,13 @@ void TriangulationManager::saveManifold(const std::string filename) {
 //		manifoldManager_->getOutputManager()->writeRaysToOFF("output/all_rays/rays",
 //				std::vector<int> { iterationCounter_ }, rays);
 		cout << "saving " << rays.size() << "rays" << endl;
-		manifoldManager_->getOutputManager()->writeRaysToOFF(conf_.outputFolder,
-				std::vector<int> {iterationCounter_}, rays);
+		manifoldManager_->getOutputManager()->writeRaysToOFF(conf_.outputFolder, std::vector<int> { iterationCounter_ }, rays);
 	}
 }
 
 void TriangulationManager::saveBoundary(int i, int j) {
 	std::set<Delaunay3::Cell_handle> b = manifoldManager_->getBoundaryCells();
-	if (b.size()) manifoldManager_->getOutputManager()->writeTetrahedraToOFF("output/boundary/boundary",
-			std::vector<int> { iterationCounter_, i, j }, b);
+	if (b.size()) manifoldManager_->getOutputManager()->writeTetrahedraToOFF("output/boundary/boundary", std::vector<int> { iterationCounter_, i, j }, b);
 }
 
 bool TriangulationManager::integrityCheck() {
@@ -1171,15 +1233,16 @@ void TriangulationManager::initSteinerPointGridAndBound() {
 	for (float x = sgCurrentMinX_; x <= sgCurrentMaxX_; x += stepX_)
 		for (float y = sgCurrentMinY_; y <= sgCurrentMaxY_; y += stepY_)
 			for (float z = sgCurrentMinZ_; z <= sgCurrentMaxZ_; z += stepZ_)
-				newPoints.push_back(
-						pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z),
-								Delaunay3DVertexInfo(nextSteinerPointId_--)));
+				newPoints.push_back(pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z), Delaunay3DVertexInfo(nextSteinerPointId_--)));
 
 	dt_.insert(newPoints.begin(), newPoints.end());
 
+	countInsertedSteinerPoints_ += newPoints.size();
+
 	if (conf_.timeStatsOutput) cout << "TriangulationManager::initSteinerPointGridAndBound:   \t\t added Steiner points: \t\t\t" << newPoints.size() << endl;
 	if (conf_.timeStatsOutput) cout << "TriangulationManager::initSteinerPointGridAndBound:   \t\t total Steiner points: \t\t\t" << -nextSteinerPointId_ - 2 << endl;
-	if (conf_.timeStatsOutput) cout << "TriangulationManager::initSteinerPointGridAndBound:   \t\t Steiner grid side lengths: \t\t" << "x: " << (int) (sgCurrentMaxX_ - sgCurrentMinX_ + 1.5) << "\ty: " << (int) (sgCurrentMaxY_ - sgCurrentMinY_ + 1.5) << "\tz: " << (int) (sgCurrentMaxZ_ - sgCurrentMinZ_ + 1.5) << endl;
+	if (conf_.timeStatsOutput)
+		cout << "TriangulationManager::initSteinerPointGridAndBound:   \t\t Steiner grid side lengths: \t\t" << "x: " << (int) (sgCurrentMaxX_ - sgCurrentMinX_ + 1.5) << "\ty: " << (int) (sgCurrentMaxY_ - sgCurrentMinY_ + 1.5) << "\tz: " << (int) (sgCurrentMaxZ_ - sgCurrentMinZ_ + 1.5) << endl;
 }
 
 void TriangulationManager::updateSteinerPointGridAndBound() {
@@ -1190,9 +1253,7 @@ void TriangulationManager::updateSteinerPointGridAndBound() {
 		float x = sgCurrentMaxX_ + stepX_;
 		for (float y = sgCurrentMinY_; y <= sgCurrentMaxY_; y += stepY_)
 			for (float z = sgCurrentMinZ_; z <= sgCurrentMaxZ_; z += stepZ_)
-				newPoints.push_back(
-						pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z),
-								Delaunay3DVertexInfo(nextSteinerPointId_--)));
+				newPoints.push_back(pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z), Delaunay3DVertexInfo(nextSteinerPointId_--)));
 		sgCurrentMaxX_ += stepX_;
 	}
 
@@ -1201,9 +1262,7 @@ void TriangulationManager::updateSteinerPointGridAndBound() {
 		float x = sgCurrentMinX_ - stepX_;
 		for (float y = sgCurrentMinY_; y <= sgCurrentMaxY_; y += stepY_)
 			for (float z = sgCurrentMinZ_; z <= sgCurrentMaxZ_; z += stepZ_)
-				newPoints.push_back(
-						pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z),
-								Delaunay3DVertexInfo(nextSteinerPointId_--)));
+				newPoints.push_back(pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z), Delaunay3DVertexInfo(nextSteinerPointId_--)));
 		sgCurrentMinX_ -= stepX_;
 	}
 
@@ -1212,9 +1271,7 @@ void TriangulationManager::updateSteinerPointGridAndBound() {
 		float y = sgCurrentMaxY_ + stepY_;
 		for (float x = sgCurrentMinX_; x <= sgCurrentMaxX_; x += stepX_)
 			for (float z = sgCurrentMinZ_; z <= sgCurrentMaxZ_; z += stepZ_)
-				newPoints.push_back(
-						pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z),
-								Delaunay3DVertexInfo(nextSteinerPointId_--)));
+				newPoints.push_back(pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z), Delaunay3DVertexInfo(nextSteinerPointId_--)));
 		sgCurrentMaxY_ += stepY_;
 	}
 
@@ -1223,9 +1280,7 @@ void TriangulationManager::updateSteinerPointGridAndBound() {
 		float y = sgCurrentMinY_ - stepY_;
 		for (float x = sgCurrentMinX_; x <= sgCurrentMaxX_; x += stepX_)
 			for (float z = sgCurrentMinZ_; z <= sgCurrentMaxZ_; z += stepZ_)
-				newPoints.push_back(
-						pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z),
-								Delaunay3DVertexInfo(nextSteinerPointId_--)));
+				newPoints.push_back(pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z), Delaunay3DVertexInfo(nextSteinerPointId_--)));
 		sgCurrentMinY_ -= stepY_;
 	}
 
@@ -1234,9 +1289,7 @@ void TriangulationManager::updateSteinerPointGridAndBound() {
 		float z = sgCurrentMaxZ_ + stepZ_;
 		for (float x = sgCurrentMinX_; x <= sgCurrentMaxX_; x += stepX_)
 			for (float y = sgCurrentMinY_; y <= sgCurrentMaxY_; y += stepY_)
-				newPoints.push_back(
-						pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z),
-								Delaunay3DVertexInfo(nextSteinerPointId_--)));
+				newPoints.push_back(pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z), Delaunay3DVertexInfo(nextSteinerPointId_--)));
 		sgCurrentMaxZ_ += stepZ_;
 	}
 
@@ -1245,9 +1298,7 @@ void TriangulationManager::updateSteinerPointGridAndBound() {
 		float z = sgCurrentMinZ_ - stepZ_;
 		for (float x = sgCurrentMinX_; x <= sgCurrentMaxX_; x += stepX_)
 			for (float y = sgCurrentMinY_; y <= sgCurrentMaxY_; y += stepY_)
-				newPoints.push_back(
-						pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z),
-								Delaunay3DVertexInfo(nextSteinerPointId_--)));
+				newPoints.push_back(pair<PointD3, Delaunay3DVertexInfo>(PointD3(x, y, z), Delaunay3DVertexInfo(nextSteinerPointId_--)));
 		sgCurrentMinZ_ -= stepZ_;
 	}
 
@@ -1258,9 +1309,12 @@ void TriangulationManager::updateSteinerPointGridAndBound() {
 //		v->info().setPointId(nextSteinerPointId_--); // Steiner point indices are negative and the next one is decremented
 //	}
 
+	countInsertedSteinerPoints_ += newPoints.size();
+
 	if (conf_.timeStatsOutput) cout << "TriangulationManager::updateSteinerPointGridAndBound: \t\t added Steiner points: \t\t\t" << newPoints.size() << endl;
 	if (conf_.timeStatsOutput) cout << "TriangulationManager::initSteinerPointGridAndBound:   \t\t total Steiner points: \t\t\t" << -nextSteinerPointId_ - 2 << endl;
-	if (conf_.timeStatsOutput) cout << "TriangulationManager::updateSteinerPointGridAndBound: \t\t Steiner grid side lengths: \t\t" << "x: " << (int) (sgCurrentMaxX_ - sgCurrentMinX_ + 1.5) << "\ty: " << (int) (sgCurrentMaxY_ - sgCurrentMinY_ + 1.5) << "\tz: " << (int) (sgCurrentMaxZ_ - sgCurrentMinZ_ + 1.5) << endl;
+	if (conf_.timeStatsOutput)
+		cout << "TriangulationManager::updateSteinerPointGridAndBound: \t\t Steiner grid side lengths: \t\t" << "x: " << (int) (sgCurrentMaxX_ - sgCurrentMinX_ + 1.5) << "\ty: " << (int) (sgCurrentMaxY_ - sgCurrentMinY_ + 1.5) << "\tz: " << (int) (sgCurrentMaxZ_ - sgCurrentMinZ_ + 1.5) << endl;
 
 }
 
@@ -1306,7 +1360,10 @@ bool TriangulationManager::insertVertex(PointReconstruction& point) {
 	dt_.find_conflicts(point.position, c, CGAL::Oneset_iterator<Delaunay3::Facet>(f), std::back_inserter(removedCells));
 
 	for (auto cell : removedCells)
-		if (cell->info().getBoundaryFlag()) cerr << "TriangulationManager::insertVertex: destroying boundary cells" << std::endl;
+		if (cell->info().getBoundaryFlag()) {
+			cerr << "TriangulationManager::insertVertex: destroying boundary cells" << std::endl;
+			return false;
+		}
 
 	for (auto removedCell : removedCells) {
 		for (auto intersection : removedCell->info().getIntersections())
@@ -1318,8 +1375,7 @@ bool TriangulationManager::insertVertex(PointReconstruction& point) {
 		raysToBeRetraced_.insert(pair<int, int>(ray.first, ray.second));
 
 	// Creates a new vertex by starring a hole. Delete all the cells describing the hole vecConflictCells, creates a new vertex hndlQ, and for each facet on the boundary of the hole f, creates a new cell with hndlQ as vertex.
-	Vertex3D_handle vertexHandle = dt_.insert_in_hole(point.position, removedCells.begin(), removedCells.end(), f.first,
-			f.second);
+	Vertex3D_handle vertexHandle = dt_.insert_in_hole(point.position, removedCells.begin(), removedCells.end(), f.first, f.second);
 
 	// Set of the cells that were created to fill the hole, used by rayRetracing to restore the rays
 	std::vector<Delaunay3::Cell_handle> newCellsFromHole;
@@ -1348,7 +1404,7 @@ bool TriangulationManager::moveVertex(int pointIndex) {
 	Delaunay3::Vertex_handle vertexHandle = point.vertexHandle;
 
 	if ((point.notTriangulated && vertexHandle != NULL) || (!point.notTriangulated && vertexHandle == NULL)) {
-		std::cerr << "TriangulationManager::moveVertex: point " << pointIndex << " new xnor (hndlQ == NULL)" << std::endl;
+		std::cerr << "TriangulationManager::moveVertex: point " << pointIndex << " new xnor (vertexHandle == NULL)" << std::endl;
 	}
 
 	// If the point isn't in the triangulation, do nothing
@@ -1363,14 +1419,18 @@ bool TriangulationManager::moveVertex(int pointIndex) {
 	PointD3 initialPosition = vertexHandle->point();
 	PointD3 newPosition = point.newPosition;
 
-	bool canMove = true;
-	for (int cIndex : point.viewingCams) {
-		CamReconstruction c = cameras_[cIndex];
-		if (utilities::distanceEucl(c.position, newPosition) > conf_.maxDistanceCameraPoints) {
-			canMove = false;
-			break;
-		}
+	if (utilities::distanceEucl(initialPosition, newPosition) <= conf_.minDistancePointPositionUpdate) {
+		return false;
 	}
+
+//	bool canMove = true;
+//	for (int cIndex : point.viewingCams) {
+//		CamReconstruction c = cameras_[cIndex];
+//		if (utilities::distanceEucl(c.position, newPosition) > conf_.maxDistanceCameraPoints) {
+//			canMove = false;
+//			break;
+//		}
+//	}
 
 	/* 	Let Br be the ball centered on the camera and r the parameter maxDistanceCamFeature.
 	 * 	All the points must be in B if they are added to the triangulation to ensure that manifoldness is preserved.
@@ -1381,94 +1441,99 @@ bool TriangulationManager::moveVertex(int pointIndex) {
 	 * 		· from outside B to inside B (insert)
 	 * 		· from outside B to outside B (do nothing)
 	 */
-	if (canMove) {
+//	if (canMove) {
+	point.position = point.newPosition;
+	point.toBeMoved = false;
 
-		point.position = point.newPosition;
-		point.toBeMoved = false;
+	// Set of rays <cameraIndex, pointIndex> intersecting the hole that needs to be retraced
+	std::set<pair<int, int>> raysToBeRetraced;
 
-		// Set of rays <cameraIndex, pointIndex> intersecting the hole that needs to be retraced
-		std::set<pair<int, int>> raysToBeRetraced;
+	// Step 0
+	// Undo rayTracing for all cells on the rayPaths concerning the point and schedule the rayTracing on those rays
+	for (auto rayPath : getRayPathsFromPoint(pointIndex)) {
+		//rayUntracing(rayPath);
+		raysToBeUntraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
 
-		// Step 0
-		// Undo rayTracing for all cells on the rayPaths concerning the point and schedule the rayTracing on those rays
-		for (auto rayPath : getRayPathsFromPoint(pointIndex)) {
-			//rayUntracing(rayPath);
-			raysToBeUntraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
+		// rayTracing will be computed again when possible
+		raysToBeTraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
 
-			// rayTracing will be computed again when possible
-			raysToBeTraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
+	}
 
-		}
+	std::set<Delaunay3::Cell_handle> deadCells;
 
-		std::set<Delaunay3::Cell_handle> deadCells;
+	// Step 1
+	// The incident cells will be removed when the vertex is removed from the triangulation
+	std::set<Delaunay3::Cell_handle> setIncidentCells;
+	dt_.incident_cells(vertexHandle, std::inserter(setIncidentCells, setIncidentCells.begin()));
+	deadCells.insert(setIncidentCells.begin(), setIncidentCells.end());
 
-		// Step 1
-		// The incident cells will be removed when the vertex is removed from the triangulation
-		std::set<Delaunay3::Cell_handle> setIncidentCells;
-		dt_.incident_cells(vertexHandle, std::inserter(setIncidentCells, setIncidentCells.begin()));
-		deadCells.insert(setIncidentCells.begin(), setIncidentCells.end());
+	// Schedule retracing for all rays that intersect the cells that will be removed
+	for (auto itCell : setIncidentCells) {
+		for (auto intersection : itCell->info().getIntersections())
+			raysToBeRetraced.insert(pair<int, int>(intersection.first, intersection.second));
+	}
 
-		// Schedule retracing for all rays that intersect the cells that will be removed
-		for (auto itCell : setIncidentCells) {
-			for (auto intersection : itCell->info().getIntersections())
-				raysToBeRetraced.insert(pair<int, int>(intersection.first, intersection.second));
-		}
-
-		for (auto cell : deadCells)
-			if (cell->info().getBoundaryFlag()) cerr << "TriangulationManager::moveVertex: destroying boundary cells" << std::endl;
-
-		// Step 2
-		// Remove the vertex from the triangulation
-		dt_.remove(vertexHandle);
-
-		// Step 3
-		// Locate the point
-		Delaunay3::Locate_type lt;
-		int li, lj;
-		Delaunay3::Cell_handle c = dt_.locate(newPosition, lt, li, lj);
-		if (lt == Delaunay3::VERTEX) {
-			cerr << "Error in FreespaceDelaunayAlgorithm::moveVertex(): Attempted to move a vertex to an already existing vertex location" << endl;
+	for (auto cell : deadCells)
+		if (cell->info().getBoundaryFlag()) {
+			cerr << "TriangulationManager::moveVertex: destroying boundary cells;  point " << pointIndex << std::endl;
 			return false;
 		}
 
-		// Get the cells in conflict with the new vertex, and a facet on the boundary of this hole in f.
-		// These cells will also be removed from the triangulation when the new vertex is inserted
-		std::vector<Delaunay3::Cell_handle> vecConflictCells;
-		Delaunay3::Facet f;
-		dt_.find_conflicts(newPosition, c, CGAL::Oneset_iterator<Delaunay3::Facet>(f),
-				std::back_inserter(vecConflictCells));
-		deadCells.insert(vecConflictCells.begin(), vecConflictCells.end());
+	// Step 2
+	// Remove the vertex from the triangulation
+	dt_.remove(vertexHandle);
+	point.notTriangulated = true;
 
-		// Schedule retracing for all rays that intersect the cells that will be removed (again)
-		for (auto it : vecConflictCells) {
-			for (auto intersection : it->info().getIntersections())
-				raysToBeRetraced.insert(pair<int, int>(intersection.first, intersection.second));
-		}
-
-		for (auto cell : vecConflictCells)
-			if (cell->info().getBoundaryFlag()) cerr << "TriangulationManager::moveVertex: destroying boundary cells" << std::endl;
-
-		// Step 4
-		// Fill the hole by inserting the new vertex
-		vertexHandle = dt_.insert_in_hole(newPosition, vecConflictCells.begin(), vecConflictCells.end(), f.first,
-				f.second);
-		point.vertexHandle = vertexHandle;
-		vertexHandle->info().setPointId(point.idReconstruction);
-
-		// Vector of the cells that were created to fill the hole
-		std::vector<Delaunay3::Cell_handle> newCellsFromHole;
-		dt_.incident_cells(vertexHandle, std::inserter(newCellsFromHole, newCellsFromHole.begin()));
-		newCells_.insert(newCellsFromHole.begin(), newCellsFromHole.end());
-
-		// Step 8
-		// Schedule retracing all rays that intersected removed cells
-		for (auto ray : raysToBeRetraced)
-			raysToBeRetraced_.insert(pair<int, int>(ray.first, ray.second));
-
-		return true;
-	} else {
+	// Step 3
+	// Locate the point
+	Delaunay3::Locate_type lt;
+	int li, lj;
+	Delaunay3::Cell_handle c = dt_.locate(newPosition, lt, li, lj);
+	if (lt == Delaunay3::VERTEX) {
+		cerr << "Error in FreespaceDelaunayAlgorithm::moveVertex(): Attempted to move a vertex to an already existing vertex location" << endl;
 		return false;
 	}
+
+	// Get the cells in conflict with the new vertex, and a facet on the boundary of this hole in f.
+	// These cells will also be removed from the triangulation when the new vertex is inserted
+	std::vector<Delaunay3::Cell_handle> vecConflictCells;
+	Delaunay3::Facet f;
+	dt_.find_conflicts(newPosition, c, CGAL::Oneset_iterator<Delaunay3::Facet>(f), std::back_inserter(vecConflictCells));
+	deadCells.insert(vecConflictCells.begin(), vecConflictCells.end());
+
+	// Schedule retracing for all rays that intersect the cells that will be removed (again)
+	for (auto it : vecConflictCells) {
+		for (auto intersection : it->info().getIntersections())
+			raysToBeRetraced.insert(pair<int, int>(intersection.first, intersection.second));
+	}
+
+	for (auto cell : vecConflictCells)
+		if (cell->info().getBoundaryFlag()) {
+			cerr << "TriangulationManager::moveVertex: destroying boundary cells;  point " << pointIndex << std::endl;
+			return false;
+		}
+
+	// Step 4
+	// Fill the hole by inserting the new vertex
+	vertexHandle = dt_.insert_in_hole(newPosition, vecConflictCells.begin(), vecConflictCells.end(), f.first, f.second);
+	point.notTriangulated = false;
+	point.vertexHandle = vertexHandle;
+	vertexHandle->info().setPointId(point.idReconstruction);
+
+	// Vector of the cells that were created to fill the hole
+	std::vector<Delaunay3::Cell_handle> newCellsFromHole;
+	dt_.incident_cells(vertexHandle, std::inserter(newCellsFromHole, newCellsFromHole.begin()));
+	newCells_.insert(newCellsFromHole.begin(), newCellsFromHole.end());
+
+	// Step 8
+	// Schedule retracing all rays that intersected removed cells
+	for (auto ray : raysToBeRetraced)
+		raysToBeRetraced_.insert(pair<int, int>(ray.first, ray.second));
+
+	return true;
+//	} else {
+//		return false;
+//	}
 	return true;
 
 }
@@ -1484,7 +1549,6 @@ void TriangulationManager::removeVertex(int pointIndex) {
 	// If the point isn't in the triangulation, do nothing
 	if (vertexHandle == NULL || point.notTriangulated) {
 		std::cerr << "TriangulationManager::removeVertex: trying to remove a vertex not in triangulation; point " << pointIndex << std::endl;
-
 		return;
 	}
 
@@ -1508,7 +1572,10 @@ void TriangulationManager::removeVertex(int pointIndex) {
 			raysToBeRetraced.insert(pair<int, int>(intersection.first, intersection.second));
 
 	for (auto cell : deadCells)
-		if (cell->info().getBoundaryFlag()) cerr << "TriangulationManager::removeVertex: destroying boundary cells; vertex " << pointIndex << std::endl;
+		if (cell->info().getBoundaryFlag()) {
+			cerr << "TriangulationManager::removeVertex: destroying boundary cells; vertex " << pointIndex << std::endl;
+			return;
+		}
 
 	// Step 2
 	// Remove the vertex from the triangulation
@@ -1518,12 +1585,12 @@ void TriangulationManager::removeVertex(int pointIndex) {
 	point.vertexHandle = NULL;
 }
 
-void TriangulationManager::moveCameraConstraints(int cameraIndex) {
+bool TriangulationManager::moveCameraConstraints(int cameraIndex) {
 	CamReconstruction& camera = cameras_[cameraIndex];
 	PointD3 camPosition = camera.position;
 	PointD3 newCamPosition = camera.newPosition;
 
-	if (!camera.toBeMoved) return;
+	if (!camera.toBeMoved) return false;
 
 	/* 	Let Br be the ball centered on the camera and r the parameter maxDistanceCamFeature.
 	 * 	All the points must be in B if they are added to the triangulation to ensure that manifoldness is preserved.
@@ -1535,34 +1602,36 @@ void TriangulationManager::moveCameraConstraints(int cameraIndex) {
 	 * 		· from outside B to outside B (do nothing)
 	 */
 
-	bool canMove = true;
-	for (int pIndex : camera.visiblePoints) {
-		PointReconstruction p = points_[pIndex];
-		if (utilities::distanceEucl(p.position, camPosition) > conf_.maxDistanceCameraPoints) {
-			canMove = false;
-			break;
-		}
+//	bool canMove = true;
+//	for (int pIndex : camera.visiblePoints) {
+//		PointReconstruction p = points_[pIndex];
+//		if (utilities::distanceEucl(p.position, camPosition) > conf_.maxDistanceCameraPoints) {
+//			canMove = false;
+//			break;
+//		}
+//	}
+//	if (canMove) {
+	if (utilities::distanceEucl(camPosition, newCamPosition) <= conf_.minDistancePointPositionUpdate) { //TODO remove?
+		return false;
 	}
+	camera.position = camera.newPosition;
+	camera.toBeMoved = false;
 
-	if (canMove) {
-		camera.position = camera.newPosition;
-		camera.toBeMoved = false;
+	for (auto rayPath : getRayPathsFromCamera(cameraIndex)) {
 
-		for (auto rayPath : getRayPathsFromCamera(cameraIndex)) {
+		//rayUntracing(rayPath);
+		raysToBeUntraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
 
-			//rayUntracing(rayPath);
-			raysToBeUntraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
+		// Step 7: rayTracing will be computed again when possible
+		raysToBeTraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
 
-			// Step 7: rayTracing will be computed again when possible
-			raysToBeTraced_.insert(pair<int, int>(rayPath->cameraId, rayPath->pointId));
-
-			// remove all cells from the path (rayTracing will add them back anyway)
-			rayPath->path.clear();
-		}
-
-	} else {
-		cout << "moveCameraConstraints refused" << endl;
+		// remove all cells from the path (rayTracing will add them back anyway)
+		rayPath->path.clear();
 	}
+	return true;
+//	} else {
+//		cout << "moveCameraConstraints refused" << endl;
+//	}
 
 }
 
