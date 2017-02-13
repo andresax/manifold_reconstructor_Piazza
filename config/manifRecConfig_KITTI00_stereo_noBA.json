@@ -3,7 +3,7 @@
 	"enableSuboptimalPolicy": false,
 	"suboptimalMethod": 0,
 	"enableRayMistrust": false,
-	"maxSteinerVerticesPerTriangle": 4,
+	"maxSteinerVerticesPerTriangle": 3,
 	
 	"w_1": 10.0,
 	"w_2": 2.0,
@@ -21,9 +21,9 @@
 	"steinerGridStepLength": 20.0,
 	"steinerGridSideLength": 280.0,
 	
-	"manifold_update_every": 4,
+	"manifold_update_every": 100,
 	"initial_manifold_update_skip": 2,
-	"save_manifold_every": 10,
+	"save_manifold_every": 100,
 	
 	"time_stats_output": true,
 	"all_sort_of_output": false,

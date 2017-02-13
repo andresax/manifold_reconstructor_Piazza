@@ -9,16 +9,16 @@
 #include <ReconstructFromSLAMData.h>
 #include <utilities.hpp>
 
-#define VERBOSE_UPDATE_MANIFOLD_FUNCTION true
+#define VERBOSE_UPDATE_MANIFOLD_FUNCTION false
 #define VERBOSE_ADD_CAMERA_FUNCTION false
 #define VERBOSE_SAVE_MANIFOLD_FUNCTION false
-#define VERBOSE_CAMERA_ADD true
+#define VERBOSE_CAMERA_ADD false
 #define VERBOSE_CAMERA_UPDATE true
 #define VERBOSE_POINT_ADD false
 #define VERBOSE_POINT_UPDATE false
 #define VERBOSE_POINT_IGNORE false
 #define VERBOSE_ADD_VISIBILITY_PAIR false
-#define VERBOSE_POINTS_COUNT true
+#define VERBOSE_POINTS_COUNT false
 
 ReconstructFromSLAMData::ReconstructFromSLAMData(ManifoldReconstructionConfig& config) :
 		config_(config) {

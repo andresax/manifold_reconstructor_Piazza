@@ -407,25 +407,31 @@ int main(int argc, char **argv) {
 
 		if(!confManif.enablePointsPositionUpdate) if(updatingCamera) continue;
 
-		std::cout << "MAIN\t\t\t " << camera->idReconstruction << std::endl << std::endl;
+		// std::cout << "MAIN\t\t\t " << camera->idReconstruction << std::endl << std::endl;
 
 		// If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
 		if (maxIterations_ && m.iterationCount >= maxIterations_) break;
 
-		log.startEvent();
+//		log.startEvent();
 
 		m.addCamera(camera);
 
 		// Skip the manifold update for the first confManif.initial_manifold_update_skip cameras
-		if (!updatingCamera && m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)) m.update();
+		if (!updatingCamera && m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)){
+			m.update();
+		}
 
-		if (!updatingCamera && m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)) m.saveMesh("output/", "current");
+		if (!updatingCamera && m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)){
+			m.integrityCheck();
+			m.saveMesh("output/", "current");
+		}
+
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
 //		if (m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)) m.getOutputManager()->writeMeshToOff("output/current_from_OutputManager.off");
 
-		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
-		std::cout << std::endl;
+//		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
+//		std::cout << std::endl;
 
 		if (!updatingCamera && m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)) m.insertStatValue(log.getLastDelta());
 

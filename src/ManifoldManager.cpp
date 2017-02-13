@@ -1367,10 +1367,10 @@ bool ManifoldManager::checkBoundaryIntegrity() {
 
 				cerr << "\t\t\t info on cell:" << endl;
 
-				cout << "\t\t\t\t\t points:";
+				cerr << "\t\t\t\t\t points:";
 				for (int i = 0; i < 4; i++)
-					cout << "\t" << boundaryCell->vertex(i)->info().getPointId();
-				cout << endl;
+					cerr << "\t" << boundaryCell->vertex(i)->info().getPointId();
+				cerr << endl;
 			}
 
 		}
