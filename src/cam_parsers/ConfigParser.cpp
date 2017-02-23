@@ -136,7 +136,17 @@ ManifoldReconstructionConfig ConfigParser::parse(std::string path) {
 		if (!document["update_points_position"].IsBool()) throw JsonAccessException("update_points_position");
 		c.enablePointsPositionUpdate = document["update_points_position"].GetBool();
 
-		if (document.HasMember("statsId") && document["statsId"].IsString()) c.statsId = document["statsId"].GetString();
+		if (document.HasMember("output_folder"))
+			if(document["output_folder"].IsString()) c.outputFolder = document["output_folder"].GetString();
+			else throw JsonAccessException("output_folder not String");
+
+		if (document.HasMember("time_stats_folder"))
+			if(document["time_stats_folder"].IsString()) c.timeStatsFolder = document["time_stats_folder"].GetString();
+			else throw JsonAccessException("time_stats_folder not String");
+
+		if (document.HasMember("statsId"))
+			if(document["statsId"].IsString()) c.statsId = document["statsId"].GetString();
+			else throw JsonAccessException("statsId not String");
 
 	} catch (JsonAccessException& e) {
 		std::cerr << e.what() << std::endl;

@@ -63,9 +63,9 @@ typedef struct {
 	std::string receivedPointcloudTopic;
 	std::string usedPointcloudTopic;
 
-	std::string outputFolder;
-	std::string timeStatsFolder;
-	std::string countStatsFolder;
+	std::string outputFolder = "output/";
+	std::string timeStatsFolder = "stats/";
+	std::string countStatsFolder = "stats/";
 
 	std::string statsId;
 

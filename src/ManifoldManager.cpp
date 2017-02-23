@@ -21,7 +21,7 @@ using std::endl;
 ManifoldManager::ManifoldManager(Delaunay3& dt, ManifoldReconstructionConfig& conf) :
 		dt_(dt), conf_(conf) {
 
-	out_ = new OutputManager(dt_, boundaryCellsSpatialMap_, conf_);
+	out_ = new OutputManager(dt_, boundaryCellsSpatialMap_, conf);
 }
 
 ManifoldManager::~ManifoldManager() {

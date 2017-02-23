@@ -1,0 +1,8 @@
+Iteration, Updated Cameras, Added Points, Moved Points, Inserted Steiner Points, Tracing Index Cache Hit Ratio, Traced Rays, Retraced Rays, Untraced Rays, Insert In Boundary, Remove From Boundary, Single Cell Test, Is Regular Test, Enclosing Cells, Enclosing Volume Cache Hit, Shrinked Singular, Shrinked Several, Grown Singular, Grown Several
+0, 10, 1491, 0, 125, 0.865772, 4917, 0, 0, 3775, 2194, 0, 2724, 0, -nan, 0, 0, 3767, 7, 
+1, 10, 1244, 0, 0, 0.866437, 4371, 3929, 0, 10194, 8805, 7750, 6050, 3775, 0.512903, 3723, 52, 7973, 28, 
+2, 10, 1077, 0, 0, 0.856182, 4395, 9236, 0, 16685, 15492, 18455, 9598, 7983, 0.567434, 7803, 199, 11597, 56, 
+3, 10, 936, 0, 0, 0.848583, 3991, 10026, 0, 23728, 22929, 24744, 13930, 11654, 0.529017, 11434, 220, 16148, 94, 
+4, 10, 674, 0, 0, 0.849296, 3775, 17674, 0, 30560, 29857, 45293, 18613, 16044, 0.645773, 15380, 863, 19173, 118, 
+5, 10, 653, 0, 0, 0.846137, 3817, 20332, 0, 35841, 35190, 51923, 21537, 19132, 0.631531, 18438, 854, 22105, 120, 
+6, 6, 587, 0, 0, 0.858835, 2553, 6818, 0, 39977, 39416, 61686, 25915, 21918, 0.644684, 20801, 1425, 23965, 125, 

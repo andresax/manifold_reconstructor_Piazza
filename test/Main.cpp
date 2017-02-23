@@ -235,9 +235,9 @@ int main(int argc, char **argv) {
 	ConfigParser configParser = ConfigParser();
 	confManif = configParser.parse(config_file);
 
-	confManif.outputFolder = "~/enrico_ws/gamesh_output/mr/";
-	confManif.timeStatsFolder = "~/enrico_ws/gamesh_stats/";//from_gen_config/timeStats/";
-	confManif.countStatsFolder = "~/enrico_ws/gamesh_stats/";//from_gen_config/countStats/";
+//	confManif.outputFolder = "~/enrico_ws/gamesh_output/mr/";
+//	confManif.timeStatsFolder = "~/enrico_ws/gamesh_stats/";//from_gen_config/timeStats/";
+//	confManif.countStatsFolder = "~/enrico_ws/gamesh_stats/";//from_gen_config/countStats/";
 
 	std::cout << "input set to: " << input_file << std::endl;
 	std::cout << "config set to: " << config_file << std::endl;
@@ -412,7 +412,7 @@ int main(int argc, char **argv) {
 		// If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
 		if (maxIterations_ && m.iterationCount >= maxIterations_) break;
 
-//		log.startEvent();
+		log.startEvent();
 
 		m.addCamera(camera);
 
@@ -422,16 +422,16 @@ int main(int argc, char **argv) {
 		}
 
 		if (!updatingCamera && m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)){
-			m.integrityCheck();
-			m.saveMesh("output/", "current");
+			if(!confManif.checkIntegrityWhenFinished || m.integrityCheck()) m.saveMesh("output/", "current");
+			else m.saveMesh("output/", "current_not_manifold");
 		}
 
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));
 
 //		if (m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)) m.getOutputManager()->writeMeshToOff("output/current_from_OutputManager.off");
 
-//		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
-//		std::cout << std::endl;
+		log.endEventAndPrint("main loop\t\t\t\t\t\t", true);
+		std::cout << std::endl;
 
 		if (!updatingCamera && m.iterationCount > confManif.initialTriangulationUpdateSkip && !(m.iterationCount % confManif.triangulationUpdateEvery)) m.insertStatValue(log.getLastDelta());
 
@@ -451,7 +451,8 @@ int main(int argc, char **argv) {
 	// Do a last manifold update in case op.numCameras() isn't a multiple of confManif.manifold_update_every
 	if (m.iterationCount > confManif.initialTriangulationUpdateSkip) m.update();
 
-	m.saveMesh("output/", "final");
+//	m.saveMesh("output/", "final");
+	m.saveMesh(confManif.outputFolder, confManif.statsId);
 
 	log.endEventAndPrint("main\t\t\t\t\t\t", true);
 

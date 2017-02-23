@@ -15,6 +15,9 @@
 OutputManager::OutputManager(Delaunay3& dt, std::map<index3, std::set<Delaunay3::Cell_handle>>& boundaryCellsSpatialMap,
 		ManifoldReconstructionConfig conf) :
 		dt_(dt), boundaryCellsSpatialMap_(boundaryCellsSpatialMap), conf_(conf) {
+
+//	std::cout << "OutputManager::writeMeshToOff\t conf_:" << &conf_ << std::endl;
+//	std::cout << conf_.toString() << std::endl;
 }
 
 OutputManager::~OutputManager() {
@@ -162,8 +165,14 @@ OutputManager::~OutputManager() {
 //}
 
 void OutputManager::writeMeshToOff(const std::string filename) {
+
+	std::cout << "OutputManager::writeMeshToOff\t conf_:" << &conf_ << std::endl;
+	std::cout << conf_.toString() << std::endl;
+
 	Chronometer chrono1, chrono2;
 	chrono1.start();
+
+	int avoidedSteinerVertices = 0;
 
 	std::ofstream outfile;
 	std::vector<PointD3> points;
@@ -218,10 +227,13 @@ void OutputManager::writeMeshToOff(const std::string filename) {
 				int steinerVertices = 0;
 				for (auto v : triangleVertices) if(v->info().getPointId() < 0) steinerVertices++;
 				
+//				std::cout << "steiner vertices:\t\t" << steinerVertices << "\tconf_.maxSteinerVerticesPerTriangle: " << conf_.maxSteinerVerticesPerTriangle << std::endl;
+
 				if(conf_.maxSteinerVerticesPerTriangle >= 0){
 					if(steinerVertices >= conf_.maxSteinerVerticesPerTriangle) {
-						std::cout << "steiner vertices: " << steinerVertices << "\tconf_.maxSteinerVerticesPerTriangle: " << conf_.maxSteinerVerticesPerTriangle << std::endl;
-						std::cout << "avoided steiner vertices: " << triangleVertices[0]->info().getPointId() << ", " << triangleVertices[1]->info().getPointId() << ", " << triangleVertices[2]->info().getPointId() << ", " << std::endl;
+//						std::cout << "steiner vertices:\t\t" << steinerVertices << "\tconf_.maxSteinerVerticesPerTriangle: " << conf_.maxSteinerVerticesPerTriangle << std::endl;
+//						std::cout << "avoided steiner vertices:\t" << triangleVertices[0]->info().getPointId() << ", " << triangleVertices[1]->info().getPointId() << ", " << triangleVertices[2]->info().getPointId() << ", " << std::endl;
+						avoidedSteinerVertices++;
 						continue;
 					}
 				}else{
@@ -265,6 +277,7 @@ void OutputManager::writeMeshToOff(const std::string filename) {
 	std::cout << "writeMeshToOff write    :\t\t" << chrono2.getSeconds() << " s" << std::endl;
 	std::cout << "writeMeshToOff vertices :\t" << points.size() << std::endl;
 	std::cout << "writeMeshToOff triangles:\t" << triangles.size() << std::endl;
+	std::cout << "writeMeshToOff avoidedSteinerVertices:\t" << avoidedSteinerVertices << std::endl;
 
 }
 

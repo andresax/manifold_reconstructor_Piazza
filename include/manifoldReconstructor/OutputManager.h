@@ -63,7 +63,7 @@ private:
 	std::map<index3, std::set<Delaunay3::Cell_handle>>& boundaryCellsSpatialMap_;
 	std::vector<PointReconstruction>* points_ = NULL;
 
-	ManifoldReconstructionConfig& conf_;
+	ManifoldReconstructionConfig conf_;
 };
 
 #endif /* OUTPUTMANAGER_H_ */
