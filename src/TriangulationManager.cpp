@@ -325,6 +325,10 @@ void TriangulationManager::updateTriangulation() {
 		chronoEverything.reset();
 		chronoEverything.start();
 
+		/*
+		 *  Fake Steiner Vertex inserting
+		 */
+
 		for (auto updatedCameraIndex : updatedCamerasId_) {
 
 			for (auto pIndex : cameras_[updatedCameraIndex].newVisiblePoints) {
@@ -354,9 +358,26 @@ void TriangulationManager::updateTriangulation() {
 				}
 			}
 
-			cameras_[updatedCameraIndex].newVisiblePoints.clear(); // TODO test
+			cameras_[updatedCameraIndex].newVisiblePoints.clear();
+
+			/*
+			 *  Camera Steiner Point inserting
+			 *  (Inserts a Steiner point near every camera to avoid visual artifacts on the path followed by the camera)
+			 */
+
+			PointReconstruction cameraSteinerPoint;
+
+			cameraSteinerPoint.idReconstruction = nextSteinerPointId_--;
+			PointD3 position = PointD3(cameras_[updatedCameraIndex].position.x() + 0.01, cameras_[updatedCameraIndex].position.y() + 0.01, cameras_[updatedCameraIndex].position.z() + 0.01);
+
+			cameraSteinerPoint.position = position;
+			cameraSteinerPoint.notTriangulated = true;
+			cameraSteinerPoint.toBeMoved = false;
+
+			insertVertex(cameraSteinerPoint);
 
 		}
+
 		updatedCamerasId_.clear();
 
 		chronoEverything.stop();
@@ -366,6 +387,10 @@ void TriangulationManager::updateTriangulation() {
 		if (conf_.timeStatsOutput) cout << "Add new vertices\tSkipped" << endl << endl;
 		timeStatsFile_ << 0.0 << ", ";
 	}
+
+
+
+
 
 	/*
 	 *  Vertex moving
