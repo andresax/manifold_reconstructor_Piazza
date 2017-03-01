@@ -405,8 +405,8 @@ int main(int argc, char **argv) {
 
 		bool updatingCamera = camera->idReconstruction >= 0;
 
-		if(!confManif.enablePointsPositionUpdate) if(updatingCamera) continue;
-
+//		if(!confManif.enablePointsPositionUpdate) if(updatingCamera) continue;
+		if(updatingCamera) continue;
 		// std::cout << "MAIN\t\t\t " << camera->idReconstruction << std::endl << std::endl;
 
 		// If maxIterations_ is set, only execute ReconstructFromSLAMData::addCamera maxIterations_ times
@@ -422,8 +422,12 @@ int main(int argc, char **argv) {
 		}
 
 		if (!updatingCamera && m.iterationCount && !(m.iterationCount % confManif.saveMeshEvery)){
-			if(!confManif.checkIntegrityWhenFinished || m.integrityCheck()) m.saveMesh("output/", "current");
-			else m.saveMesh("output/", "current_not_manifold");
+			std::stringstream ssm, ssnm;
+			ssm << "current_" << m.iterationCount << "_" << confManif.statsId;
+			ssnm << ssm <<  "_NOT_MANIFOLD";
+
+			if(!confManif.checkIntegrityWhenFinished || m.integrityCheck()) m.saveMesh(confManif.outputFolder, ssm.str());
+			else m.saveMesh(confManif.outputFolder, ssnm.str());
 		}
 
 		//if (m.iterationCount && !(m.iterationCount % confManif.save_manifold_every)) m.saveManifold("output/partial/", std::to_string(m.iterationCount));

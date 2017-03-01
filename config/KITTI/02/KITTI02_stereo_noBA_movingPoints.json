@@ -3,7 +3,7 @@
 	"enableSuboptimalPolicy": false,
 	"suboptimalMethod": 0,
 	"enableRayMistrust": false,
-	"maxSteinerVerticesPerTriangle": 1,
+	"maxSteinerVerticesPerTriangle": 4,
 	
 	"w_1": 10.0,
 	"w_2": 2.0,
@@ -28,10 +28,10 @@
 	"time_stats_output": true,
 	"all_sort_of_output": false,
 	"fake_points_multiplier": 0,
-	"update_points_position": false,
+	"update_points_position": true,
 	
-	"output_folder": "output/KITTI_TEST/",
-	"time_stats_folder": "stats/KITTI_TEST/",
-	"count_stats_folder": "stats/KITTI_TEST/",
-	"statsId": "KITTI_TEST"
+	"output_folder": "output/KITTI/02/",
+	"time_stats_folder": "stats/KITTI/02/",
+	"count_stats_folder": "stats/KITTI/02/",
+	"statsId": "KITTI02_stereo_noBA_movingPoints"
 }

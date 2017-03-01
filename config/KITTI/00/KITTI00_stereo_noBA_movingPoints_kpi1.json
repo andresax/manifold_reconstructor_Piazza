@@ -3,7 +3,7 @@
 	"enableSuboptimalPolicy": false,
 	"suboptimalMethod": 0,
 	"enableRayMistrust": false,
-	"maxSteinerVerticesPerTriangle": 1,
+	"maxSteinerVerticesPerTriangle": 4,
 	
 	"w_1": 10.0,
 	"w_2": 2.0,
@@ -21,17 +21,17 @@
 	"steinerGridStepLength": 20.0,
 	"steinerGridSideLength": 280.0,
 	
-	"manifold_update_every": 10,
+	"manifold_update_every": 1,
 	"initial_manifold_update_skip": 2,
-	"save_manifold_every": 10,
+	"save_manifold_every": 1,
 	
 	"time_stats_output": true,
 	"all_sort_of_output": false,
 	"fake_points_multiplier": 0,
-	"update_points_position": false,
+	"update_points_position": true,
 	
-	"output_folder": "output/KITTI_TEST/",
-	"time_stats_folder": "stats/KITTI_TEST/",
-	"count_stats_folder": "stats/KITTI_TEST/",
-	"statsId": "KITTI_TEST"
+	"output_folder": "output/KITTI/00/",
+	"time_stats_folder": "stats/KITTI/00/",
+	"count_stats_folder": "stats/KITTI/00/",
+	"statsId": "KITTI00_stereo_noBA_movingPoints_kpi1"
 }
