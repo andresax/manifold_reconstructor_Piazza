@@ -16,105 +16,175 @@
 #ifndef TYPES_TEST_HPP_
 #define TYPES_TEST_HPP_
 
+#include <Eigen/Core>
 #include <sstream>
 #include <string>
+#include <vector>
+
+
 
 typedef struct {
-	bool enableIdentifiedPoints = true;
-	bool enableInverseConic = true;
-	bool enableRayMistrust = false;
-	bool enablePointsPositionUpdate;
-	bool enableUnusedVertexRemoving = false;
-	bool enableMeshSaving = true;
-	bool enableMeshPublishing = false;
-	bool generateColoredMesh = false;
+  std::string folderImage;
+  std::string baseNameImage;
+  std::string imageExtension;
+  int idxFirstFrame;
+  int digitIdxLength; //if 0 no padding
+  int idxLastFrame;
+  int downsampleRate;
+  int imageH;
+  int imageW;
+} VideoConfig;
 
-	float freeVoteThreshold = 1.0;
-	int nonConicFreeVoteThreshold = 1;
-	float rayRemovalThreshold = 100.0;
-	float unusedVertexRemovalThreshold = 100.0;
-	int primaryPointsVisibilityThreshold = 1;
-	float outlierFilteringThreshold = 0.25;
-	float minDistancePointPositionUpdate = 0.0;
+typedef struct {
+  int keyFramePeriod;
+  int keyFramePeriodIteration;
+  double cannyHighThreshold;
+  int downsamplePeriod;
+  int maxGaussNewtonIteration;
+  int minDistBetweenTrackedPoints;
+  double maxEpipolarDist;
+  int minTrackLength;
+  int manifoldPeriod;
+  bool inverseConicEnabled;
+  double probOrVoteThreshold;
+  int edgePointEnabled;
+  int firstGrowingFrame;
+  double maxDistanceCamFeature;
+  bool enableSuboptimalPolicy;
+  int suboptimalMethod;
+  float w_1;
+  float w_2;
+  float w_3;
+} SpaceCarvingConfig;
 
-	int maxPointsPerCamera = 1000;
-	float maxDistanceCameraPoints = 40.0;
-	float steinerGridStepLength = 10.0;
-	int maxSteinerVerticesPerTriangle = 4;
-	float w_1 = 1.0;
-	float w_2 = 0.8;
-	float w_3 = 0.4;
-	float w_m = 1.0;
-
-	int triangulationUpdateEvery = 10;
-	int initialTriangulationUpdateSkip = 2;
-	int saveMeshEvery = 10;
-
-	int fakePointsMultiplier = 0;
-	bool timeStatsOutput = true;
-	bool debugOutput = false;
-	bool publishReceivedPointcloud = false;
-	bool publishUsedPointcloud = false;
-	bool checkIntegrityWhenFinished = false;
-
-	std::string inputTopic;
-	std::string outputTopic;
-
-	std::string receivedPointcloudTopic;
-	std::string usedPointcloudTopic;
-
-	std::string outputFolder = "output/";
-	std::string timeStatsFolder = "stats/";
-	std::string countStatsFolder = "stats/";
-
-	std::string statsId;
-
-	std::string toString() {
-		std::stringstream out;
-		out << "enableIdentifiedPoints: " << enableIdentifiedPoints << std::endl;
-		out << "enableInverseConic: " << enableInverseConic << std::endl;
-		out << "enableRayMistrust: " << enableRayMistrust << std::endl;
-		out << "enablePointsPositionUpdate: " << enablePointsPositionUpdate << std::endl;
-		out << "enableUnusedVertexRemoving: " << enableUnusedVertexRemoving << std::endl;
-		out << "generateColoredMesh: " << generateColoredMesh << std::endl;
-
-		out << "freeVoteThreshold: " << freeVoteThreshold << std::endl;
-		out << "nonConicFreeVoteThreshold: " << nonConicFreeVoteThreshold << std::endl;
-		out << "rayRemovalThreshold: " << rayRemovalThreshold << std::endl;
-		out << "unusedVertexRemovalThreshold: " << unusedVertexRemovalThreshold << std::endl;
-		out << "primaryPointsVisibilityThreshold: " << primaryPointsVisibilityThreshold << std::endl;
-		out << "minDistancePointPositionUpdate: " << minDistancePointPositionUpdate << std::endl;
-
-		out << "maxPointsPerCamera: " << maxPointsPerCamera << std::endl;
-		out << "maxDistanceCameraPoints: " << maxDistanceCameraPoints << std::endl;
-		out << "steinerGridStepLength: " << steinerGridStepLength << std::endl;
-		out << "maxSteinerVerticesPerTriangle: " << maxSteinerVerticesPerTriangle << std::endl;
-		out << "w_1: " << w_1 << std::endl;
-		out << "w_2: " << w_2 << std::endl;
-		out << "w_3: " << w_3 << std::endl;
-		out << "w_m: " << w_m << std::endl;
-
-		out << "triangulationUpdateEvery: " << triangulationUpdateEvery << std::endl;
-		out << "initialTriangulationUpdateSkip: " << initialTriangulationUpdateSkip << std::endl;
-		out << "saveMeshEvery: " << saveMeshEvery << std::endl;
-
-		out << "fakePointsMultiplier: " << fakePointsMultiplier << std::endl;
-		out << "timeStatsOutput: " << timeStatsOutput << std::endl;
-		out << "debugOutput: " << debugOutput << std::endl;
-		out << "publishReceivedPointcloud: " << publishReceivedPointcloud << std::endl;
-		out << "publishUsedPointcloud: " << publishUsedPointcloud << std::endl;
-		out << "checkIntegrityWhenFinished: " << checkIntegrityWhenFinished << std::endl;
-
-		out << "outputFolder: " << outputFolder << std::endl;
-		out << "timeStatsFolder: " << timeStatsFolder << std::endl;
-		out << "countStatsFolder: " << countStatsFolder << std::endl;
-
-		out << "statsId: " << statsId << std::endl;
+typedef struct {
+  std::string pathToSave;
+  std::string pathLog;
+  std::string pathLogPoints;
+  std::string pathStats;
+  std::string pathStatsManifold;
+  bool enableSaveReconstr;
+  bool enableSaveShrink;
+} OutputSpaceCarving;
+typedef struct {
+  std::string pathInitPoints;
+  std::string pathCamsPose;
+} ManifoldRecConfig;
 
 
-		return out.str();
-	}
+typedef struct {
+} OutputManifoldConfig;
 
+typedef struct {
+  VideoConfig videoConfig;
+  ManifoldRecConfig manifConfig;
+  OutputManifoldConfig outputConfig;
+
+  std::string toString() {
+    std::stringstream totContent;
+
+    totContent << "Video Config " << std::endl;
+    totContent << "folderImage " << videoConfig.folderImage << std::endl;
+    totContent << "baseNameImage " << videoConfig.baseNameImage << std::endl;
+    totContent << "imageExtension " << videoConfig.imageExtension << std::endl;
+    totContent << "idxFirstFrame " << videoConfig.idxFirstFrame << std::endl;
+    totContent << "digitIdxLength " << videoConfig.digitIdxLength << std::endl;
+    totContent << "idxLastFrame " << videoConfig.idxLastFrame << std::endl;
+    totContent << "downsampleRate " << videoConfig.downsampleRate << std::endl;
+    totContent << "imageH " << videoConfig.imageH << std::endl;
+    totContent << "imageW " << videoConfig.imageW << std::endl;
+
+    totContent << "manifConfig Config " << std::endl;
+    totContent << "pathCamsPose " << manifConfig.pathCamsPose << std::endl;
+    totContent << "pathInitPoints " << manifConfig.pathInitPoints << std::endl;
+
+    totContent << "Output Config " << std::endl;
+    return totContent.str();
+  }
+} ManifoldConfig;
+
+typedef struct {
+  VideoConfig videoConfig;
+  SpaceCarvingConfig spaceCarvingConfig;
+  OutputSpaceCarving outputSpaceCarving;
+
+  std::string toString() {
+    std::stringstream totContent;
+
+    totContent << "Video Config " << std::endl;
+    totContent << "folderImage " << videoConfig.folderImage << std::endl;
+    totContent << "baseNameImage " << videoConfig.baseNameImage << std::endl;
+    totContent << "imageExtension " << videoConfig.imageExtension << std::endl;
+    totContent << "idxFirstFrame " << videoConfig.idxFirstFrame << std::endl;
+    totContent << "digitIdxLength " << videoConfig.digitIdxLength << std::endl;
+    totContent << "idxLastFrame " << videoConfig.idxLastFrame << std::endl;
+    totContent << "downsampleRate " << videoConfig.downsampleRate << std::endl;
+    totContent << "imageH " << videoConfig.imageH << std::endl;
+    totContent << "imageW " << videoConfig.imageW << std::endl;
+
+    totContent << "SpaceCarving Config " << std::endl;
+    totContent << "keyFramePeriod " << spaceCarvingConfig.keyFramePeriod << std::endl;
+    totContent << "keyFramePeriodIteration " << spaceCarvingConfig.keyFramePeriodIteration << std::endl;
+    totContent << "cannyHighThreshold " << spaceCarvingConfig.cannyHighThreshold << std::endl;
+    totContent << "downsamplePeriod " << spaceCarvingConfig.downsamplePeriod << std::endl;
+    totContent << "maxGaussNewtonIteration " << spaceCarvingConfig.maxGaussNewtonIteration << std::endl;
+    totContent << "minDistBetweenTrackedPoints " << spaceCarvingConfig.minDistBetweenTrackedPoints << std::endl;
+    totContent << "maxEpipolarDist " << spaceCarvingConfig.maxEpipolarDist << std::endl;
+    totContent << "minTrackLength " << spaceCarvingConfig.minTrackLength << std::endl;
+    totContent << "manifoldPeriod " << spaceCarvingConfig.manifoldPeriod << std::endl;
+    totContent << "inverseConicEnabled " << spaceCarvingConfig.inverseConicEnabled << std::endl;
+    totContent << "probOrVoteThreshold " << spaceCarvingConfig.probOrVoteThreshold << std::endl;
+    totContent << "edgePointEnabled " << spaceCarvingConfig.edgePointEnabled << std::endl;
+    totContent << "firstGrowingFrame " << spaceCarvingConfig.firstGrowingFrame << std::endl;
+    totContent << "maxDistanceCamFeature " << spaceCarvingConfig.maxDistanceCamFeature << std::endl;
+    totContent << "enableSuboptimalPolicy " << spaceCarvingConfig.enableSuboptimalPolicy << std::endl;
+    totContent << "suboptimalMethod " << spaceCarvingConfig.suboptimalMethod << std::endl;
+
+    totContent << "Output Config " << std::endl;
+    totContent << "enableSaveReconstr " << outputSpaceCarving.enableSaveReconstr << std::endl;
+    totContent << "enableSaveShrink " << outputSpaceCarving.enableSaveShrink << std::endl;
+    totContent << "pathToSave " << outputSpaceCarving.pathToSave << std::endl;
+    totContent << "pathLog " << outputSpaceCarving.pathLog << std::endl;
+    totContent << "pathLogPoints " << outputSpaceCarving.pathLogPoints << std::endl;
+    totContent << "pathStats " << outputSpaceCarving.pathStats << std::endl;
+    totContent << "pathStatsManifold " << outputSpaceCarving.pathStatsManifold << std::endl;
+    return totContent.str();
+  }
+} Configuration;
+
+
+typedef struct {
+  bool inverseConicEnabled;
+  float probOrVoteThreshold;
+  float maxDistanceCamFeature;
+  bool enableSuboptimalPolicy;
+  int suboptimalMethod;
+  float w_1;
+  float w_2;
+  float w_3;
 } ManifoldReconstructionConfig;
+
+
+
+struct CameraRect {
+    Eigen::Matrix4f P;
+    //camera center
+    Eigen::Vector3f center;
+  std::vector<std::string> names_;
+    std::vector<int> viewingPointsIndices;
+};
+
+
+struct SensorParser {
+    Eigen::Matrix3f R;
+    Eigen::Vector3f t;
+    float f;
+    float k1;
+    float k2;
+    //camera center
+    Eigen::Vector3f center;
+
+    std::vector<int> viewingPointsIndices;
+};
 
 #endif /* TYPES_TEST_HPP_ */

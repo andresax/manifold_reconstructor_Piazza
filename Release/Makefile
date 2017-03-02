@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/airlab/enrico_ws/manifold_reconstructor
+CMAKE_SOURCE_DIR = /home/airlab/enrico_ws/manifold_reconstructor_original
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/airlab/enrico_ws/manifold_reconstructor/Release
+CMAKE_BINARY_DIR = /home/airlab/enrico_ws/manifold_reconstructor_original/Release
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -183,77 +183,77 @@ src/ManifoldManager.cpp.s:
 	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.s
 .PHONY : src/ManifoldManager.cpp.s
 
-src/OutputManager.o: src/OutputManager.cpp.o
-.PHONY : src/OutputManager.o
+src/ManifoldMeshReconstructor.o: src/ManifoldMeshReconstructor.cpp.o
+.PHONY : src/ManifoldMeshReconstructor.o
 
 # target to build an object file
-src/OutputManager.cpp.o:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o
-.PHONY : src/OutputManager.cpp.o
+src/ManifoldMeshReconstructor.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o
+.PHONY : src/ManifoldMeshReconstructor.cpp.o
 
-src/OutputManager.i: src/OutputManager.cpp.i
-.PHONY : src/OutputManager.i
+src/ManifoldMeshReconstructor.i: src/ManifoldMeshReconstructor.cpp.i
+.PHONY : src/ManifoldMeshReconstructor.i
 
 # target to preprocess a source file
-src/OutputManager.cpp.i:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.i
-.PHONY : src/OutputManager.cpp.i
+src/ManifoldMeshReconstructor.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.i
+.PHONY : src/ManifoldMeshReconstructor.cpp.i
 
-src/OutputManager.s: src/OutputManager.cpp.s
-.PHONY : src/OutputManager.s
+src/ManifoldMeshReconstructor.s: src/ManifoldMeshReconstructor.cpp.s
+.PHONY : src/ManifoldMeshReconstructor.s
 
 # target to generate assembly for a file
-src/OutputManager.cpp.s:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.s
-.PHONY : src/OutputManager.cpp.s
+src/ManifoldMeshReconstructor.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.s
+.PHONY : src/ManifoldMeshReconstructor.cpp.s
 
-src/TriangulationManager.o: src/TriangulationManager.cpp.o
-.PHONY : src/TriangulationManager.o
+src/OutputCreator.o: src/OutputCreator.cpp.o
+.PHONY : src/OutputCreator.o
 
 # target to build an object file
-src/TriangulationManager.cpp.o:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o
-.PHONY : src/TriangulationManager.cpp.o
+src/OutputCreator.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o
+.PHONY : src/OutputCreator.cpp.o
 
-src/TriangulationManager.i: src/TriangulationManager.cpp.i
-.PHONY : src/TriangulationManager.i
+src/OutputCreator.i: src/OutputCreator.cpp.i
+.PHONY : src/OutputCreator.i
 
 # target to preprocess a source file
-src/TriangulationManager.cpp.i:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.i
-.PHONY : src/TriangulationManager.cpp.i
+src/OutputCreator.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.i
+.PHONY : src/OutputCreator.cpp.i
 
-src/TriangulationManager.s: src/TriangulationManager.cpp.s
-.PHONY : src/TriangulationManager.s
+src/OutputCreator.s: src/OutputCreator.cpp.s
+.PHONY : src/OutputCreator.s
 
 # target to generate assembly for a file
-src/TriangulationManager.cpp.s:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.s
-.PHONY : src/TriangulationManager.cpp.s
+src/OutputCreator.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.s
+.PHONY : src/OutputCreator.cpp.s
 
-src/cam_parsers/ConfigParser.o: src/cam_parsers/ConfigParser.cpp.o
-.PHONY : src/cam_parsers/ConfigParser.o
+src/cam_parsers/CamParser.o: src/cam_parsers/CamParser.cpp.o
+.PHONY : src/cam_parsers/CamParser.o
 
 # target to build an object file
-src/cam_parsers/ConfigParser.cpp.o:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o
-.PHONY : src/cam_parsers/ConfigParser.cpp.o
+src/cam_parsers/CamParser.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o
+.PHONY : src/cam_parsers/CamParser.cpp.o
 
-src/cam_parsers/ConfigParser.i: src/cam_parsers/ConfigParser.cpp.i
-.PHONY : src/cam_parsers/ConfigParser.i
+src/cam_parsers/CamParser.i: src/cam_parsers/CamParser.cpp.i
+.PHONY : src/cam_parsers/CamParser.i
 
 # target to preprocess a source file
-src/cam_parsers/ConfigParser.cpp.i:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.i
-.PHONY : src/cam_parsers/ConfigParser.cpp.i
+src/cam_parsers/CamParser.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.i
+.PHONY : src/cam_parsers/CamParser.cpp.i
 
-src/cam_parsers/ConfigParser.s: src/cam_parsers/ConfigParser.cpp.s
-.PHONY : src/cam_parsers/ConfigParser.s
+src/cam_parsers/CamParser.s: src/cam_parsers/CamParser.cpp.s
+.PHONY : src/cam_parsers/CamParser.s
 
 # target to generate assembly for a file
-src/cam_parsers/ConfigParser.cpp.s:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.s
-.PHONY : src/cam_parsers/ConfigParser.cpp.s
+src/cam_parsers/CamParser.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.s
+.PHONY : src/cam_parsers/CamParser.cpp.s
 
 src/cam_parsers/ORBIncrementalParser.o: src/cam_parsers/ORBIncrementalParser.cpp.o
 .PHONY : src/cam_parsers/ORBIncrementalParser.o
@@ -279,53 +279,53 @@ src/cam_parsers/ORBIncrementalParser.cpp.s:
 	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.s
 .PHONY : src/cam_parsers/ORBIncrementalParser.cpp.s
 
-src/cam_parsers/ORBParser.o: src/cam_parsers/ORBParser.cpp.o
-.PHONY : src/cam_parsers/ORBParser.o
+src/cam_parsers/OpenMvgParser.o: src/cam_parsers/OpenMvgParser.cpp.o
+.PHONY : src/cam_parsers/OpenMvgParser.o
 
 # target to build an object file
-src/cam_parsers/ORBParser.cpp.o:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o
-.PHONY : src/cam_parsers/ORBParser.cpp.o
+src/cam_parsers/OpenMvgParser.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o
+.PHONY : src/cam_parsers/OpenMvgParser.cpp.o
 
-src/cam_parsers/ORBParser.i: src/cam_parsers/ORBParser.cpp.i
-.PHONY : src/cam_parsers/ORBParser.i
+src/cam_parsers/OpenMvgParser.i: src/cam_parsers/OpenMvgParser.cpp.i
+.PHONY : src/cam_parsers/OpenMvgParser.i
 
 # target to preprocess a source file
-src/cam_parsers/ORBParser.cpp.i:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.i
-.PHONY : src/cam_parsers/ORBParser.cpp.i
+src/cam_parsers/OpenMvgParser.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.i
+.PHONY : src/cam_parsers/OpenMvgParser.cpp.i
 
-src/cam_parsers/ORBParser.s: src/cam_parsers/ORBParser.cpp.s
-.PHONY : src/cam_parsers/ORBParser.s
+src/cam_parsers/OpenMvgParser.s: src/cam_parsers/OpenMvgParser.cpp.s
+.PHONY : src/cam_parsers/OpenMvgParser.s
 
 # target to generate assembly for a file
-src/cam_parsers/ORBParser.cpp.s:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.s
-.PHONY : src/cam_parsers/ORBParser.cpp.s
+src/cam_parsers/OpenMvgParser.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.s
+.PHONY : src/cam_parsers/OpenMvgParser.cpp.s
 
-src/utilities/Chronometer.o: src/utilities/Chronometer.cpp.o
-.PHONY : src/utilities/Chronometer.o
+src/cam_parsers/PointsParserFromOut.o: src/cam_parsers/PointsParserFromOut.cpp.o
+.PHONY : src/cam_parsers/PointsParserFromOut.o
 
 # target to build an object file
-src/utilities/Chronometer.cpp.o:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o
-.PHONY : src/utilities/Chronometer.cpp.o
+src/cam_parsers/PointsParserFromOut.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o
+.PHONY : src/cam_parsers/PointsParserFromOut.cpp.o
 
-src/utilities/Chronometer.i: src/utilities/Chronometer.cpp.i
-.PHONY : src/utilities/Chronometer.i
+src/cam_parsers/PointsParserFromOut.i: src/cam_parsers/PointsParserFromOut.cpp.i
+.PHONY : src/cam_parsers/PointsParserFromOut.i
 
 # target to preprocess a source file
-src/utilities/Chronometer.cpp.i:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.i
-.PHONY : src/utilities/Chronometer.cpp.i
+src/cam_parsers/PointsParserFromOut.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.i
+.PHONY : src/cam_parsers/PointsParserFromOut.cpp.i
 
-src/utilities/Chronometer.s: src/utilities/Chronometer.cpp.s
-.PHONY : src/utilities/Chronometer.s
+src/cam_parsers/PointsParserFromOut.s: src/cam_parsers/PointsParserFromOut.cpp.s
+.PHONY : src/cam_parsers/PointsParserFromOut.s
 
 # target to generate assembly for a file
-src/utilities/Chronometer.cpp.s:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.s
-.PHONY : src/utilities/Chronometer.cpp.s
+src/cam_parsers/PointsParserFromOut.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.s
+.PHONY : src/cam_parsers/PointsParserFromOut.cpp.s
 
 src/utilities/Logger.o: src/utilities/Logger.cpp.o
 .PHONY : src/utilities/Logger.o
@@ -350,6 +350,30 @@ src/utilities/Logger.s: src/utilities/Logger.cpp.s
 src/utilities/Logger.cpp.s:
 	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.s
 .PHONY : src/utilities/Logger.cpp.s
+
+src/utilities/conversionUtilities.o: src/utilities/conversionUtilities.cpp.o
+.PHONY : src/utilities/conversionUtilities.o
+
+# target to build an object file
+src/utilities/conversionUtilities.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o
+.PHONY : src/utilities/conversionUtilities.cpp.o
+
+src/utilities/conversionUtilities.i: src/utilities/conversionUtilities.cpp.i
+.PHONY : src/utilities/conversionUtilities.i
+
+# target to preprocess a source file
+src/utilities/conversionUtilities.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.i
+.PHONY : src/utilities/conversionUtilities.cpp.i
+
+src/utilities/conversionUtilities.s: src/utilities/conversionUtilities.cpp.s
+.PHONY : src/utilities/conversionUtilities.s
+
+# target to generate assembly for a file
+src/utilities/conversionUtilities.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.s
+.PHONY : src/utilities/conversionUtilities.cpp.s
 
 src/utilities/utilities.o: src/utilities/utilities.cpp.o
 .PHONY : src/utilities/utilities.o
@@ -399,6 +423,102 @@ test/CameraPointsCollection.cpp.s:
 	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.s
 .PHONY : test/CameraPointsCollection.cpp.s
 
+test/EdgePointConfigurator.o: test/EdgePointConfigurator.cpp.o
+.PHONY : test/EdgePointConfigurator.o
+
+# target to build an object file
+test/EdgePointConfigurator.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o
+.PHONY : test/EdgePointConfigurator.cpp.o
+
+test/EdgePointConfigurator.i: test/EdgePointConfigurator.cpp.i
+.PHONY : test/EdgePointConfigurator.i
+
+# target to preprocess a source file
+test/EdgePointConfigurator.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.i
+.PHONY : test/EdgePointConfigurator.cpp.i
+
+test/EdgePointConfigurator.s: test/EdgePointConfigurator.cpp.s
+.PHONY : test/EdgePointConfigurator.s
+
+# target to generate assembly for a file
+test/EdgePointConfigurator.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.s
+.PHONY : test/EdgePointConfigurator.cpp.s
+
+test/EdgePointSpaceCarver.o: test/EdgePointSpaceCarver.cpp.o
+.PHONY : test/EdgePointSpaceCarver.o
+
+# target to build an object file
+test/EdgePointSpaceCarver.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o
+.PHONY : test/EdgePointSpaceCarver.cpp.o
+
+test/EdgePointSpaceCarver.i: test/EdgePointSpaceCarver.cpp.i
+.PHONY : test/EdgePointSpaceCarver.i
+
+# target to preprocess a source file
+test/EdgePointSpaceCarver.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.i
+.PHONY : test/EdgePointSpaceCarver.cpp.i
+
+test/EdgePointSpaceCarver.s: test/EdgePointSpaceCarver.cpp.s
+.PHONY : test/EdgePointSpaceCarver.s
+
+# target to generate assembly for a file
+test/EdgePointSpaceCarver.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.s
+.PHONY : test/EdgePointSpaceCarver.cpp.s
+
+test/KittiCamParser.o: test/KittiCamParser.cpp.o
+.PHONY : test/KittiCamParser.o
+
+# target to build an object file
+test/KittiCamParser.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o
+.PHONY : test/KittiCamParser.cpp.o
+
+test/KittiCamParser.i: test/KittiCamParser.cpp.i
+.PHONY : test/KittiCamParser.i
+
+# target to preprocess a source file
+test/KittiCamParser.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.i
+.PHONY : test/KittiCamParser.cpp.i
+
+test/KittiCamParser.s: test/KittiCamParser.cpp.s
+.PHONY : test/KittiCamParser.s
+
+# target to generate assembly for a file
+test/KittiCamParser.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.s
+.PHONY : test/KittiCamParser.cpp.s
+
+test/KittiRectifiedCamParser.o: test/KittiRectifiedCamParser.cpp.o
+.PHONY : test/KittiRectifiedCamParser.o
+
+# target to build an object file
+test/KittiRectifiedCamParser.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o
+.PHONY : test/KittiRectifiedCamParser.cpp.o
+
+test/KittiRectifiedCamParser.i: test/KittiRectifiedCamParser.cpp.i
+.PHONY : test/KittiRectifiedCamParser.i
+
+# target to preprocess a source file
+test/KittiRectifiedCamParser.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.i
+.PHONY : test/KittiRectifiedCamParser.cpp.i
+
+test/KittiRectifiedCamParser.s: test/KittiRectifiedCamParser.cpp.s
+.PHONY : test/KittiRectifiedCamParser.s
+
+# target to generate assembly for a file
+test/KittiRectifiedCamParser.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.s
+.PHONY : test/KittiRectifiedCamParser.cpp.s
+
 test/Main.o: test/Main.cpp.o
 .PHONY : test/Main.o
 
@@ -423,53 +543,29 @@ test/Main.cpp.s:
 	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.s
 .PHONY : test/Main.cpp.s
 
-test/OpenMvgParser.o: test/OpenMvgParser.cpp.o
-.PHONY : test/OpenMvgParser.o
+test/PathCreator.o: test/PathCreator.cpp.o
+.PHONY : test/PathCreator.o
 
 # target to build an object file
-test/OpenMvgParser.cpp.o:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o
-.PHONY : test/OpenMvgParser.cpp.o
+test/PathCreator.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o
+.PHONY : test/PathCreator.cpp.o
 
-test/OpenMvgParser.i: test/OpenMvgParser.cpp.i
-.PHONY : test/OpenMvgParser.i
-
-# target to preprocess a source file
-test/OpenMvgParser.cpp.i:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.i
-.PHONY : test/OpenMvgParser.cpp.i
-
-test/OpenMvgParser.s: test/OpenMvgParser.cpp.s
-.PHONY : test/OpenMvgParser.s
-
-# target to generate assembly for a file
-test/OpenMvgParser.cpp.s:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.s
-.PHONY : test/OpenMvgParser.cpp.s
-
-test/ReconstructFromSLAMData.o: test/ReconstructFromSLAMData.cpp.o
-.PHONY : test/ReconstructFromSLAMData.o
-
-# target to build an object file
-test/ReconstructFromSLAMData.cpp.o:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o
-.PHONY : test/ReconstructFromSLAMData.cpp.o
-
-test/ReconstructFromSLAMData.i: test/ReconstructFromSLAMData.cpp.i
-.PHONY : test/ReconstructFromSLAMData.i
+test/PathCreator.i: test/PathCreator.cpp.i
+.PHONY : test/PathCreator.i
 
 # target to preprocess a source file
-test/ReconstructFromSLAMData.cpp.i:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.i
-.PHONY : test/ReconstructFromSLAMData.cpp.i
+test/PathCreator.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.i
+.PHONY : test/PathCreator.cpp.i
 
-test/ReconstructFromSLAMData.s: test/ReconstructFromSLAMData.cpp.s
-.PHONY : test/ReconstructFromSLAMData.s
+test/PathCreator.s: test/PathCreator.cpp.s
+.PHONY : test/PathCreator.s
 
 # target to generate assembly for a file
-test/ReconstructFromSLAMData.cpp.s:
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.s
-.PHONY : test/ReconstructFromSLAMData.cpp.s
+test/PathCreator.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.s
+.PHONY : test/PathCreator.cpp.s
 
 test/ReconstructFromSfMData.o: test/ReconstructFromSfMData.cpp.o
 .PHONY : test/ReconstructFromSfMData.o
@@ -495,6 +591,78 @@ test/ReconstructFromSfMData.cpp.s:
 	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.s
 .PHONY : test/ReconstructFromSfMData.cpp.s
 
+test/ReconstructorFromOut.o: test/ReconstructorFromOut.cpp.o
+.PHONY : test/ReconstructorFromOut.o
+
+# target to build an object file
+test/ReconstructorFromOut.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o
+.PHONY : test/ReconstructorFromOut.cpp.o
+
+test/ReconstructorFromOut.i: test/ReconstructorFromOut.cpp.i
+.PHONY : test/ReconstructorFromOut.i
+
+# target to preprocess a source file
+test/ReconstructorFromOut.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.i
+.PHONY : test/ReconstructorFromOut.cpp.i
+
+test/ReconstructorFromOut.s: test/ReconstructorFromOut.cpp.s
+.PHONY : test/ReconstructorFromOut.s
+
+# target to generate assembly for a file
+test/ReconstructorFromOut.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.s
+.PHONY : test/ReconstructorFromOut.cpp.s
+
+test/Track.o: test/Track.cpp.o
+.PHONY : test/Track.o
+
+# target to build an object file
+test/Track.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o
+.PHONY : test/Track.cpp.o
+
+test/Track.i: test/Track.cpp.i
+.PHONY : test/Track.i
+
+# target to preprocess a source file
+test/Track.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.i
+.PHONY : test/Track.cpp.i
+
+test/Track.s: test/Track.cpp.s
+.PHONY : test/Track.s
+
+# target to generate assembly for a file
+test/Track.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.s
+.PHONY : test/Track.cpp.s
+
+test/VideoSimulator.o: test/VideoSimulator.cpp.o
+.PHONY : test/VideoSimulator.o
+
+# target to build an object file
+test/VideoSimulator.cpp.o:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o
+.PHONY : test/VideoSimulator.cpp.o
+
+test/VideoSimulator.i: test/VideoSimulator.cpp.i
+.PHONY : test/VideoSimulator.i
+
+# target to preprocess a source file
+test/VideoSimulator.cpp.i:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.i
+.PHONY : test/VideoSimulator.cpp.i
+
+test/VideoSimulator.s: test/VideoSimulator.cpp.s
+.PHONY : test/VideoSimulator.s
+
+# target to generate assembly for a file
+test/VideoSimulator.cpp.s:
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.s
+.PHONY : test/VideoSimulator.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -513,45 +681,66 @@ help:
 	@echo "... src/ManifoldManager.o"
 	@echo "... src/ManifoldManager.i"
 	@echo "... src/ManifoldManager.s"
-	@echo "... src/OutputManager.o"
-	@echo "... src/OutputManager.i"
-	@echo "... src/OutputManager.s"
-	@echo "... src/TriangulationManager.o"
-	@echo "... src/TriangulationManager.i"
-	@echo "... src/TriangulationManager.s"
-	@echo "... src/cam_parsers/ConfigParser.o"
-	@echo "... src/cam_parsers/ConfigParser.i"
-	@echo "... src/cam_parsers/ConfigParser.s"
+	@echo "... src/ManifoldMeshReconstructor.o"
+	@echo "... src/ManifoldMeshReconstructor.i"
+	@echo "... src/ManifoldMeshReconstructor.s"
+	@echo "... src/OutputCreator.o"
+	@echo "... src/OutputCreator.i"
+	@echo "... src/OutputCreator.s"
+	@echo "... src/cam_parsers/CamParser.o"
+	@echo "... src/cam_parsers/CamParser.i"
+	@echo "... src/cam_parsers/CamParser.s"
 	@echo "... src/cam_parsers/ORBIncrementalParser.o"
 	@echo "... src/cam_parsers/ORBIncrementalParser.i"
 	@echo "... src/cam_parsers/ORBIncrementalParser.s"
-	@echo "... src/cam_parsers/ORBParser.o"
-	@echo "... src/cam_parsers/ORBParser.i"
-	@echo "... src/cam_parsers/ORBParser.s"
-	@echo "... src/utilities/Chronometer.o"
-	@echo "... src/utilities/Chronometer.i"
-	@echo "... src/utilities/Chronometer.s"
+	@echo "... src/cam_parsers/OpenMvgParser.o"
+	@echo "... src/cam_parsers/OpenMvgParser.i"
+	@echo "... src/cam_parsers/OpenMvgParser.s"
+	@echo "... src/cam_parsers/PointsParserFromOut.o"
+	@echo "... src/cam_parsers/PointsParserFromOut.i"
+	@echo "... src/cam_parsers/PointsParserFromOut.s"
 	@echo "... src/utilities/Logger.o"
 	@echo "... src/utilities/Logger.i"
 	@echo "... src/utilities/Logger.s"
+	@echo "... src/utilities/conversionUtilities.o"
+	@echo "... src/utilities/conversionUtilities.i"
+	@echo "... src/utilities/conversionUtilities.s"
 	@echo "... src/utilities/utilities.o"
 	@echo "... src/utilities/utilities.i"
 	@echo "... src/utilities/utilities.s"
 	@echo "... test/CameraPointsCollection.o"
 	@echo "... test/CameraPointsCollection.i"
 	@echo "... test/CameraPointsCollection.s"
+	@echo "... test/EdgePointConfigurator.o"
+	@echo "... test/EdgePointConfigurator.i"
+	@echo "... test/EdgePointConfigurator.s"
+	@echo "... test/EdgePointSpaceCarver.o"
+	@echo "... test/EdgePointSpaceCarver.i"
+	@echo "... test/EdgePointSpaceCarver.s"
+	@echo "... test/KittiCamParser.o"
+	@echo "... test/KittiCamParser.i"
+	@echo "... test/KittiCamParser.s"
+	@echo "... test/KittiRectifiedCamParser.o"
+	@echo "... test/KittiRectifiedCamParser.i"
+	@echo "... test/KittiRectifiedCamParser.s"
 	@echo "... test/Main.o"
 	@echo "... test/Main.i"
 	@echo "... test/Main.s"
-	@echo "... test/OpenMvgParser.o"
-	@echo "... test/OpenMvgParser.i"
-	@echo "... test/OpenMvgParser.s"
-	@echo "... test/ReconstructFromSLAMData.o"
-	@echo "... test/ReconstructFromSLAMData.i"
-	@echo "... test/ReconstructFromSLAMData.s"
+	@echo "... test/PathCreator.o"
+	@echo "... test/PathCreator.i"
+	@echo "... test/PathCreator.s"
 	@echo "... test/ReconstructFromSfMData.o"
 	@echo "... test/ReconstructFromSfMData.i"
 	@echo "... test/ReconstructFromSfMData.s"
+	@echo "... test/ReconstructorFromOut.o"
+	@echo "... test/ReconstructorFromOut.i"
+	@echo "... test/ReconstructorFromOut.s"
+	@echo "... test/Track.o"
+	@echo "... test/Track.i"
+	@echo "... test/Track.s"
+	@echo "... test/VideoSimulator.o"
+	@echo "... test/VideoSimulator.i"
+	@echo "... test/VideoSimulator.s"
 .PHONY : help
 
 

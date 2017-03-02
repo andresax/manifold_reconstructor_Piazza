@@ -8,19 +8,12 @@
 #include <Delaunay3DVertexInfo.h>
 
 Delaunay3DVertexInfo::Delaunay3DVertexInfo() {
-}
+  used_ = 0;
+  notUsed_ = true;
+  lastCam_ = -1;
 
-Delaunay3DVertexInfo::Delaunay3DVertexInfo(long int pointId) :
-		pointId_(pointId) {
 }
 
 Delaunay3DVertexInfo::~Delaunay3DVertexInfo() {
 }
 
-long int Delaunay3DVertexInfo::getPointId() const {
-	return pointId_;
-}
-
-void Delaunay3DVertexInfo::setPointId(long int pointId) {
-	if (pointId_ == -1) pointId_ = pointId;
-}

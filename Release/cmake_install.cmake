@@ -1,4 +1,4 @@
-# Install script for directory: /home/airlab/enrico_ws/manifold_reconstructor
+# Install script for directory: /home/airlab/enrico_ws/manifold_reconstructor_original
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,7 +38,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/airlab/enrico_ws/manifold_reconstructor/Release/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/airlab/enrico_ws/manifold_reconstructor_original/Release/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/airlab/enrico_ws/manifold_reconstructor/Release/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/airlab/enrico_ws/manifold_reconstructor_original/Release/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

@@ -3,7 +3,7 @@
 	"enableSuboptimalPolicy": false,
 	"suboptimalMethod": 0,
 	"enableRayMistrust": false,
-	"maxSteinerVerticesPerTriangle": 4,
+	"maxSteinerVerticesPerTriangle": 1,
 	
 	"w_1": 10.0,
 	"w_2": 2.0,

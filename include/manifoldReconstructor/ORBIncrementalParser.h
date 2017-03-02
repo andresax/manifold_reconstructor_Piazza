@@ -13,7 +13,8 @@
 
 class ORBIncrementalParser {
 public:
-	ORBIncrementalParser(std::string path, ManifoldReconstructionConfig conf);
+//	ORBIncrementalParser(std::string path, ManifoldReconstructionConfig conf);
+	ORBIncrementalParser(std::string path);
 	virtual ~ORBIncrementalParser();
 
 	int numCameras();

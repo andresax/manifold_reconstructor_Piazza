@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/airlab/enrico_ws/manifold_reconstructor
+CMAKE_SOURCE_DIR = /home/airlab/enrico_ws/manifold_reconstructor_original
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/airlab/enrico_ws/manifold_reconstructor/Release
+CMAKE_BINARY_DIR = /home/airlab/enrico_ws/manifold_reconstructor_original/Release
 
 # Include any dependencies generated for this target.
 include CMakeFiles/manifoldReconstructor.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/manifoldReconstructor.dir/flags.make
 
 CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o: ../src/ManifoldManager.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/ManifoldManager.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/ManifoldManager.cpp
 
 CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/ManifoldManager.cpp > CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/ManifoldManager.cpp > CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/ManifoldManager.cpp -o CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/ManifoldManager.cpp -o CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o.requires
@@ -72,65 +72,42 @@ CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o.provides: CMakeFi
 
 CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o
 
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o: ../src/cam_parsers/ORBParser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ORBParser.cpp
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o: ../src/cam_parsers/PointsParserFromOut.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/PointsParserFromOut.cpp
 
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ORBParser.cpp > CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.i
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/PointsParserFromOut.cpp > CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.i
 
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ORBParser.cpp -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.s
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/PointsParserFromOut.cpp -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.s
 
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.requires:
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.requires
 
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.requires
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.provides.build
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.provides
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.provides
 
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o
-
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o: ../src/cam_parsers/ConfigParser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_3)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ConfigParser.cpp
-
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ConfigParser.cpp > CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.i
-
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ConfigParser.cpp -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.s
-
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.requires:
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.requires
-
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.requires
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.provides.build
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.provides
-
-CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o
 
 CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o: ../src/cam_parsers/ORBIncrementalParser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ORBIncrementalParser.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/ORBIncrementalParser.cpp
 
 CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ORBIncrementalParser.cpp > CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/ORBIncrementalParser.cpp > CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/cam_parsers/ORBIncrementalParser.cpp -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/ORBIncrementalParser.cpp -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o.requires
@@ -141,42 +118,88 @@ CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o.
 
 CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o
 
-CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
-CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o: ../src/TriangulationManager.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_5)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/TriangulationManager.cpp
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o: ../src/cam_parsers/OpenMvgParser.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_4)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/OpenMvgParser.cpp
 
-CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/TriangulationManager.cpp > CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.i
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/OpenMvgParser.cpp > CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.i
 
-CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/TriangulationManager.cpp -o CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.s
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/OpenMvgParser.cpp -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.s
 
-CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.requires:
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.requires
 
-CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.requires
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.provides.build
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.provides
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.provides
 
-CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o
+
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o: ../src/cam_parsers/CamParser.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_5)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/CamParser.cpp
+
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/CamParser.cpp > CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/cam_parsers/CamParser.cpp -o CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o
+
+CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o: ../src/OutputCreator.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_6)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/OutputCreator.cpp
+
+CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/OutputCreator.cpp > CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/OutputCreator.cpp -o CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o: ../src/Delaunay3DVertexInfo.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/Delaunay3DVertexInfo.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/Delaunay3DVertexInfo.cpp
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/Delaunay3DVertexInfo.cpp > CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/Delaunay3DVertexInfo.cpp > CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/Delaunay3DVertexInfo.cpp -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/Delaunay3DVertexInfo.cpp -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o.requires
@@ -187,19 +210,42 @@ CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o.provides: CM
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o
 
+CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o: ../src/ManifoldMeshReconstructor.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_8)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/ManifoldMeshReconstructor.cpp
+
+CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/ManifoldMeshReconstructor.cpp > CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/ManifoldMeshReconstructor.cpp -o CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o
+
 CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o: ../src/utilities/Logger.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/Logger.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/Logger.cpp
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/Logger.cpp > CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/Logger.cpp > CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/Logger.cpp -o CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/Logger.cpp -o CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o.requires
@@ -210,42 +256,42 @@ CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o.provides: CMakeF
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o
 
-CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
-CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o: ../src/utilities/Chronometer.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_8)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/Chronometer.cpp
+CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o: ../src/utilities/conversionUtilities.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_10)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/conversionUtilities.cpp
 
-CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/Chronometer.cpp > CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.i
+CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/conversionUtilities.cpp > CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.i
 
-CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/Chronometer.cpp -o CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.s
+CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/conversionUtilities.cpp -o CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.s
 
-CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.requires:
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.requires
 
-CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.requires
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.provides.build
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.provides
+CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.provides
 
-CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o
+CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o: ../src/utilities/utilities.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_11)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/utilities.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/utilities.cpp
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/utilities.cpp > CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/utilities.cpp > CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/utilities/utilities.cpp -o CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/utilities/utilities.cpp -o CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o.requires
@@ -258,17 +304,17 @@ CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o.provides.buil
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o: ../src/Delaunay3DCellInfo.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_12)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/Delaunay3DCellInfo.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/src/Delaunay3DCellInfo.cpp
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/Delaunay3DCellInfo.cpp > CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/src/Delaunay3DCellInfo.cpp > CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/Delaunay3DCellInfo.cpp -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/src/Delaunay3DCellInfo.cpp -o CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o.requires
@@ -279,42 +325,19 @@ CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o.provides: CMak
 
 CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o
 
-CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
-CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o: ../src/OutputManager.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_11)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/src/OutputManager.cpp
-
-CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/src/OutputManager.cpp > CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.i
-
-CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/src/OutputManager.cpp -o CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.s
-
-CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.requires:
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.requires
-
-CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.requires
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.provides.build
-.PHONY : CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.provides
-
-CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o
-
 CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o: ../test/CameraPointsCollection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_12)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_13)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/test/CameraPointsCollection.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/CameraPointsCollection.cpp
 
 CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/test/CameraPointsCollection.cpp > CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/CameraPointsCollection.cpp > CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/test/CameraPointsCollection.cpp -o CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/CameraPointsCollection.cpp -o CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o.requires
@@ -325,19 +348,88 @@ CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o.provides:
 
 CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o
 
+CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o: ../test/KittiCamParser.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_14)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/KittiCamParser.cpp
+
+CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/KittiCamParser.cpp > CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/KittiCamParser.cpp -o CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o
+
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o: ../test/EdgePointSpaceCarver.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_15)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/EdgePointSpaceCarver.cpp
+
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/EdgePointSpaceCarver.cpp > CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/EdgePointSpaceCarver.cpp -o CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o
+
+CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o: ../test/Track.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_16)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/Track.cpp
+
+CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/Track.cpp > CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/Track.cpp -o CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o
+
 CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o: ../test/Main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_13)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_17)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/test/Main.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/Main.cpp
 
 CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/test/Main.cpp > CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/Main.cpp > CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/test/Main.cpp -o CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/Main.cpp -o CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o.requires
@@ -348,65 +440,111 @@ CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o.provides: CMakeFiles/manifo
 
 CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o
 
-CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
-CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o: ../test/ReconstructFromSLAMData.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_14)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/test/ReconstructFromSLAMData.cpp
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o: ../test/EdgePointConfigurator.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_18)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/EdgePointConfigurator.cpp
 
-CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/test/ReconstructFromSLAMData.cpp > CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.i
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/EdgePointConfigurator.cpp > CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.i
 
-CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/test/ReconstructFromSLAMData.cpp -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.s
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/EdgePointConfigurator.cpp -o CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.s
 
-CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.requires:
-.PHONY : CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.requires
 
-CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.requires
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.provides.build
-.PHONY : CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.provides
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.provides
 
-CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o
+CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o
 
-CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
-CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o: ../test/OpenMvgParser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_15)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/test/OpenMvgParser.cpp
+CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o: ../test/KittiRectifiedCamParser.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_19)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/KittiRectifiedCamParser.cpp
 
-CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/test/OpenMvgParser.cpp > CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.i
+CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/KittiRectifiedCamParser.cpp > CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.i
 
-CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/test/OpenMvgParser.cpp -o CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.s
+CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/KittiRectifiedCamParser.cpp -o CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.s
 
-CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.requires:
-.PHONY : CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.requires
 
-CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.requires
-	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.provides.build
-.PHONY : CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.provides
+CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.provides
 
-CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o
+CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o
+
+CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o: ../test/VideoSimulator.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_20)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/VideoSimulator.cpp
+
+CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/VideoSimulator.cpp > CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/VideoSimulator.cpp -o CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o
+
+CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o: ../test/ReconstructorFromOut.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_21)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/ReconstructorFromOut.cpp
+
+CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/ReconstructorFromOut.cpp > CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/ReconstructorFromOut.cpp -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o
 
 CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
 CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o: ../test/ReconstructFromSfMData.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles $(CMAKE_PROGRESS_16)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_22)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor/test/ReconstructFromSfMData.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/ReconstructFromSfMData.cpp
 
 CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor/test/ReconstructFromSfMData.cpp > CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/ReconstructFromSfMData.cpp > CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.i
 
 CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor/test/ReconstructFromSfMData.cpp -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/ReconstructFromSfMData.cpp -o CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.s
 
 CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o.requires:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o.requires
@@ -417,44 +555,81 @@ CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o.provides:
 
 CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o
 
+CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o: CMakeFiles/manifoldReconstructor.dir/flags.make
+CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o: ../test/PathCreator.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles $(CMAKE_PROGRESS_23)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o -c /home/airlab/enrico_ws/manifold_reconstructor_original/test/PathCreator.cpp
+
+CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/airlab/enrico_ws/manifold_reconstructor_original/test/PathCreator.cpp > CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.i
+
+CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/airlab/enrico_ws/manifold_reconstructor_original/test/PathCreator.cpp -o CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.s
+
+CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.requires:
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.requires
+
+CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.provides: CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.requires
+	$(MAKE) -f CMakeFiles/manifoldReconstructor.dir/build.make CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.provides.build
+.PHONY : CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.provides
+
+CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.provides.build: CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o
+
 # Object files for target manifoldReconstructor
 manifoldReconstructor_OBJECTS = \
 "CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o" \
 "CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o" \
 "CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o" \
 "CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o" \
 "CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o" \
 "CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o" \
 "CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o" \
 "CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o" \
-"CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o"
+"CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o" \
+"CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o"
 
 # External object files for target manifoldReconstructor
 manifoldReconstructor_EXTERNAL_OBJECTS =
 
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o
-manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o
-manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o
-manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o
-manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o
-manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o
-manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o
-manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o
+manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o
 manifoldReconstructor: CMakeFiles/manifoldReconstructor.dir/build.make
 manifoldReconstructor: /usr/lib/x86_64-linux-gnu/libopencv_videostab.so.2.4.8
 manifoldReconstructor: /usr/lib/x86_64-linux-gnu/libopencv_video.so.2.4.8
@@ -498,21 +673,28 @@ CMakeFiles/manifoldReconstructor.dir/build: manifoldReconstructor
 .PHONY : CMakeFiles/manifoldReconstructor.dir/build
 
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/ManifoldManager.cpp.o.requires
-CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBParser.cpp.o.requires
-CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ConfigParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/PointsParserFromOut.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/ORBIncrementalParser.cpp.o.requires
-CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/TriangulationManager.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/OpenMvgParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/cam_parsers/CamParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/OutputCreator.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DVertexInfo.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/ManifoldMeshReconstructor.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/utilities/Logger.cpp.o.requires
-CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/utilities/Chronometer.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/utilities/conversionUtilities.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/utilities/utilities.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/Delaunay3DCellInfo.cpp.o.requires
-CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/src/OutputManager.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/CameraPointsCollection.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/KittiCamParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/EdgePointSpaceCarver.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/Track.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/Main.cpp.o.requires
-CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSLAMData.cpp.o.requires
-CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/OpenMvgParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/EdgePointConfigurator.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/KittiRectifiedCamParser.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/VideoSimulator.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/ReconstructorFromOut.cpp.o.requires
 CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/ReconstructFromSfMData.cpp.o.requires
+CMakeFiles/manifoldReconstructor.dir/requires: CMakeFiles/manifoldReconstructor.dir/test/PathCreator.cpp.o.requires
 .PHONY : CMakeFiles/manifoldReconstructor.dir/requires
 
 CMakeFiles/manifoldReconstructor.dir/clean:
@@ -520,6 +702,6 @@ CMakeFiles/manifoldReconstructor.dir/clean:
 .PHONY : CMakeFiles/manifoldReconstructor.dir/clean
 
 CMakeFiles/manifoldReconstructor.dir/depend:
-	cd /home/airlab/enrico_ws/manifold_reconstructor/Release && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/airlab/enrico_ws/manifold_reconstructor /home/airlab/enrico_ws/manifold_reconstructor /home/airlab/enrico_ws/manifold_reconstructor/Release /home/airlab/enrico_ws/manifold_reconstructor/Release /home/airlab/enrico_ws/manifold_reconstructor/Release/CMakeFiles/manifoldReconstructor.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/airlab/enrico_ws/manifold_reconstructor_original/Release && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/airlab/enrico_ws/manifold_reconstructor_original /home/airlab/enrico_ws/manifold_reconstructor_original /home/airlab/enrico_ws/manifold_reconstructor_original/Release /home/airlab/enrico_ws/manifold_reconstructor_original/Release /home/airlab/enrico_ws/manifold_reconstructor_original/Release/CMakeFiles/manifoldReconstructor.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/manifoldReconstructor.dir/depend
 

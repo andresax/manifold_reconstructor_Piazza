@@ -25,10 +25,6 @@ double distanceEucl(PointD3 p1, PointD3 p2) {
   return sqrt((p1.x() - p2.x()) * (p1.x() - p2.x()) + (p1.y() - p2.y()) * (p1.y() - p2.y()) + (p1.z() - p2.z()) * (p1.z() - p2.z()));
 }
 
-double distanceEuclSquared(PointD3 p1, PointD3 p2) {
-  return std::pow(p1.x()-p2.x(), 2) + std::pow(p1.y()-p2.y(), 2) + std::pow(p1.z()-p2.z(), 2);
-}
-
 std::string getFrameNumber(int curFrame, int digitIdxLength) {
   std::ostringstream curNumber;
   if (digitIdxLength > 0) {
@@ -239,20 +235,20 @@ void readLineAndStore(std::ifstream &configFile, std::string &value) {
   }
 }
 
-//void saveVisibilityPly(const SfMData& sfm_data,const std::string &name) {
-//
-//  std::vector<glm::vec3> camCenters;
-//  std::vector<glm::vec3> points;
-//  for (auto c : sfm_data.camerasList_) {
-//    camCenters.push_back(c.center);
-//  }
-//
-//  for (auto p : sfm_data.points_) {
-//    points.push_back(p);
-//  }
-//
-//  utilities::saveVisibilityPly(camCenters, points, sfm_data.pointsVisibleFromCamN_, name);
-//}
+void saveVisibilityPly(const SfMData& sfm_data,const std::string &name) {
+
+  std::vector<glm::vec3> camCenters;
+  std::vector<glm::vec3> points;
+  for (auto c : sfm_data.camerasList_) {
+    camCenters.push_back(c.center);
+  }
+
+  for (auto p : sfm_data.points_) {
+    points.push_back(p);
+  }
+
+  utilities::saveVisibilityPly(camCenters, points, sfm_data.pointsVisibleFromCamN_, name);
+}
 
 void saveVisibilityPly(const std::vector<glm::vec3> &camCenters, const std::vector<glm::vec3> & points, const std::vector<std::vector<int> >& visibility,
     const std::string &name, bool pointsVisibleFromCamN) {

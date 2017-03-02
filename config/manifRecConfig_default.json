@@ -30,8 +30,5 @@
 	"fake_points_multiplier": 0,
 	"update_points_position": false,
 	
-	"output_folder": "output/",
-	"time_stats_folder": "stats/",
-	"count_stats_folder": "stats/",
-	"statsId": "noBA"
+	"statsId": "long slam, update position"
 }

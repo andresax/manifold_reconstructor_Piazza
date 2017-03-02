@@ -1,104 +1,100 @@
+
+
 #ifndef MANIFOLDMANAGER_H_
 #define MANIFOLDMANAGER_H_
 
+//#include <Mesh.h>
 #include <types_reconstructor.hpp>
-#include <types_config.hpp>
-#include <OutputManager.h>
-#include <Chronometer.h>
+#include <OutputCreator.h>
+#include <fstream>
 #include <iostream>
-
+/**
+* This class provides the basic tools to manage the actual manifold creation, 
+* such as the region growing procedure, the manifoldness tests and the update of the
+* tetrahedra-based boundary
+* 
+* */
 class ManifoldManager {
 public:
-	ManifoldManager(Delaunay3& dt, ManifoldReconstructionConfig& conf);
-	virtual ~ManifoldManager();
+  ManifoldManager(Delaunay3 &dt,bool inverseConic_, float probabTh_);
+  virtual ~ManifoldManager();
 
-	size_t getBoundarySize() {
-		long long int bSize = 0;
-		for (auto i_lbc : boundaryCellsSpatialMap_) {
-			bSize += i_lbc.second.size();
-		}
+  /*Tell on which delaunay triangulation the class instatiation will apply the grow/shrink algorithms*/
+  void setDt(Delaunay3 & dt) {
+    dt_ = dt;
+  }
 
-		return bSize;
-	}
+  void setInverseConic(bool inverseConic) {
+    inverseConic_ = inverseConic;
+  }
 
-	void shrinkManifold(const std::set<index3>& enclosingVolumeMapIndices, const long currentEnclosingVersion);
+  size_t getBoundarySize(){
+    return boundaryCells_.size();
+  }
 
-	void shrinkSeveralAtOnce(const std::set<index3>& enclosingVolumeMapIndices, long currentEnclosingVersion);
+  /*Grow the manifold from the startingcell */
+  void regionGrowingBatch(Delaunay3::Cell_handle &startingCell);
+  /*Grow the manifold from the cell including the point in position firstCamPosition*/
+  void regionGrowingBatch(PointD3 firstCamPosition);
+  /* Grow the manifold  one tet-at-once incrementally, bootstrapping from the current boundary inside and outside the manifold */
+  void regionGrowing();
 
-	void initAndGrowManifold(Delaunay3::Cell_handle& startingCell, const std::set<index3>& enclosingVolumeMapIndices);
+  /*Grow the manifold several-tet-at-one in order to handle the genus change It bootstraps from the boundary between inside and outside the manifold*/
+  void growSeveralAtOnce();
 
-	void growManifold(const std::set<index3>& enclosingVolumeMapIndices);
+  /*shrink the manifold such that all the space inside the sphere with center in camPosition
+  and ray maxPointToPointDistance+maxPointToCamDistance is matter. In this way, our are 
+  the able to add points seen from the cam in cam position 
+  to the triangulation and retriangulate the space without breaking the delauna property*/
+  void shrinkManifold(const PointD3 &camPosition, const float &maxPointToPointDistance, const float &maxPointToCamDistance);
 
-	void growSeveralAtOnce(const std::set<index3>& enclosingVolumeMapIndices);
+  /*shrink the manifold several-tet-at-once in order to handle the genus change*/
+  void shrinkSeveralAtOnce(const PointD3 &camPosition, const float &maxPointToPointDistance, const float &maxPointToCamDistance);
 
-	bool checkBoundaryIntegrity();
-
-	const std::set<Delaunay3::Cell_handle> getBoundaryCells() const {
-		std::set<Delaunay3::Cell_handle> boundaryCells;
-
-		for (auto i_lbc : boundaryCellsSpatialMap_) {
-			boundaryCells.insert(i_lbc.second.begin(), i_lbc.second.end());
-		}
-
-		return boundaryCells;
-	}
-
-	OutputManager* getOutputManager() {
-		return out_;
-	}
-
-	Chronometer chronoInsertInBoundary_, chronoRemoveFromBoundary_, chronoIsRegularOverall_, chronoIsRegularOverall2_,
-			chronoSingleTestOverall_;
-
-	int countInsertInBoundary_ = 0, countRemoveFromBoundary_ = 0,
-	countSingleTestOverall_ = 0, countIsRegularTest_ = 0, countEnclosingCells_ = 0, countEnclosingVolumeCacheHit_ = 0, countEnclosingVolumeCacheTotal_ = 0,
-	countShrinkedSingular_ = 0, countShrinkedSeveral_ = 0, countGrownSingular_ = 0, countGrownSeveral_ = 0;
-
-	Chronometer chronoIsRegular_;
-	long functionProfileCounter_isRegular_ = 0, functionProfileCounter_isRegularSuccessful_ = 0;
+  const std::vector<Delaunay3::Cell_handle>& getBoundaryCells() const {
+    return boundaryCells_;
+  }
 
 private:
 
-	/******************************************************/
-	/**************Manifold check functions****************/
-	/******************************************************/
-	bool singleCellTest(Delaunay3::Cell_handle& i);
-	bool addSeveralAndCheckManifoldness(Delaunay3::Vertex_handle v);
-	bool subSeveralAndCheckManifoldness(Delaunay3::Vertex_handle v);
-	bool isRegular(Delaunay3::Vertex_handle& v);
-	bool isRegular2(Delaunay3::Vertex_handle& v);
-	bool isRegularProfiled(Delaunay3::Vertex_handle& v);
+ 
+  
+  void regionGrowingProcedure();
 
-	bool isBoundaryCell(Delaunay3::Cell_handle& c);
-	bool isBoundaryCell(Delaunay3::Cell_handle& c, std::vector<int>& neighNotManifold);
-	bool isFreespace(Delaunay3::Cell_handle& c);
 
-	bool isInEnclosingVolume(Delaunay3::Cell_handle& c, const std::set<index3>& enclosingVolumeMapIndices,
-			const long& currentEnclosingVersion, Chronometer& chronoEnclosingCache, Chronometer& chronoEnclosingCheck);
+/******************************************************/
+/**************Manifold check functions****************/
+/******************************************************/
+  bool additionTest(Delaunay3::Cell_handle &i);
+  bool subtractionTest(Delaunay3::Cell_handle &i);
+  bool singleTetTest(Delaunay3::Cell_handle &i);
+  bool checkManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh);
+  bool removeAndCheckManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh);
+  bool addAndCheckManifoldness(Delaunay3::Cell_handle &cellToTest1, int idxNeigh);
+  bool isRegular(Delaunay3::Vertex_handle &v);
 
-	/******************************************************/
-	/************Boundary update functions*****************/
-	/******************************************************/
-	void addCellAndUpdateBoundary(Delaunay3::Cell_handle& cell);
-	void subCellAndUpdateBoundary(Delaunay3::Cell_handle& currentTet,
-			std::vector<Delaunay3::Cell_handle>& newBoundaryTets);
+/******************************************************/
+/************Boundary update functions*****************/
+/******************************************************/
+  
+  bool isInBoundary(Delaunay3::Cell_handle &cellToTest);
+  bool isInBoundary(Delaunay3::Cell_handle &cellToTest, std::vector<int> &neighNotManifold);
+  bool insertInBoundary(Delaunay3::Cell_handle &cellToTest);
+  bool removeFromBoundary(Delaunay3::Cell_handle &cellToTest);
+  void addTetAndUpdateBoundary(Delaunay3::Cell_handle &cell);
+  void subTetAndUpdateBoundary(Delaunay3::Cell_handle &cell);
 
-	bool insertInBoundary(Delaunay3::Cell_handle& cellToTest);
-	bool removeFromBoundary(Delaunay3::Cell_handle& cellToBeRemoved);
 
-//	bool nextLockableVertex(Delaunay3::Vertex_handle& v, const std::set<Delaunay3::Vertex_handle>& boundaryVertices);
-	bool nextLockableVertex(std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>>& vertex_lockedResources,
-			std::vector<std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>>>& verticesResources);
-	bool lockCells(std::set<Delaunay3::Cell_handle>& lockingCells);
-	void unlockCells(std::pair<Delaunay3::Vertex_handle, std::set<Delaunay3::Cell_handle>>& vertex_lockedResources);
+  bool isFreespace(Delaunay3::Cell_handle &cell);
 
-	Delaunay3& dt_;
-	std::map<index3, std::set<Delaunay3::Cell_handle>> boundaryCellsSpatialMap_;
+  std::vector<Delaunay3::Cell_handle> boundaryCells_;
 
-	ManifoldReconstructionConfig& conf_;
-	OutputManager* out_ = NULL;
+  Delaunay3& dt_;
+  OutputCreator *outputM_;
+  bool inverseConic_;
+  float probabTh_;
 
-	int counter_ = 0;
+  std::ofstream fileOut_;
 };
 
 #endif /* MANIFOLDMANAGER_H_ */

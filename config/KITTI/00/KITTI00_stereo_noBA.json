@@ -30,8 +30,5 @@
 	"fake_points_multiplier": 0,
 	"update_points_position": false,
 	
-	"output_folder": "output/KITTI/00/",
-	"time_stats_folder": "stats/KITTI/00/",
-	"count_stats_folder": "stats/KITTI/00/",
 	"statsId": "KITTI00_stereo_noBA"
 }

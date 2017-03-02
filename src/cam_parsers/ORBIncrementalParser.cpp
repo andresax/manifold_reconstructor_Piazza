@@ -7,9 +7,10 @@
 #define COMMA <<", "<<
 #define SPACE <<" "<<
 
-ORBIncrementalParser::ORBIncrementalParser(std::string path, ManifoldReconstructionConfig conf) {
+//ORBIncrementalParser::ORBIncrementalParser(std::string path, ManifoldReconstructionConfig conf) {
+ORBIncrementalParser::ORBIncrementalParser(std::string path) {
 	fileStream_.open(path.c_str());
-	conf_ = conf;
+//	conf_ = conf;
 
 	std::string str((std::istreambuf_iterator<char>(fileStream_)), std::istreambuf_iterator<char>());
 	document_.Parse(str.c_str());
@@ -50,13 +51,16 @@ CameraType* ORBIncrementalParser::nextCamera() {
 		CameraType* camera;
 
 		if (ORB_data_.hasCamera(cameraId)) {
-			camera = ORB_data_.getCamera(cameraId);
-		}else{
-			camera = new CameraType();
-			camera->idCam = cameraId;
-			ORB_data_.addCamera(camera);
+			// DO NOT UPDATE: SFM DATA
+//			camera = ORB_data_.getCamera(cameraId);
+			return NULL;
 		}
 
+//		if (cameraId == 0) return NULL;
+
+		camera = new CameraType();
+		camera->idCam = cameraId;
+		ORB_data_.addCamera(camera);
 
 		std::string local(jsonView["local_path"].GetString());
 		std::string filename(jsonView["filename"].GetString());
@@ -100,12 +104,19 @@ CameraType* ORBIncrementalParser::nextCamera() {
 		camera->intrinsics = intrinsic;
 		// TODO check camera properties are correct
 
+		if(camera->center == glm::vec3(0, 0, 0)){
+			std::cout << "MOVING CAMERA FROM 0, 0, 0" << std::endl;
+			camera->center == glm::vec3(0.001, 0.001, 0.001);
+		}
+
 		camera->erasedPoints.clear();
 		camera->erasedPoints.insert(camera->visiblePointsT.begin(), camera->visiblePointsT.end());
 
-		if(camera->idReconstruction >= 0){
+		if (camera->idReconstruction >= 0) {
+			std::cerr << "camera->idReconstruction >= 0" << std::endl;
+
 			// Erase the old camera pointers in the points
-			for(auto p : camera->visiblePointsT){
+			for (auto p : camera->visiblePointsT) {
 				p->viewingCams.erase(camera);
 			}
 
@@ -121,7 +132,9 @@ CameraType* ORBIncrementalParser::nextCamera() {
 			long unsigned int pointId = jsonObservationObject["pointId"].GetInt();
 			PointType* point;
 
+			// DO NOT UPDATE: SFM DATA
 			if (ORB_data_.hasPoint(pointId)) {
+//				continue;
 				point = ORB_data_.getPoint(pointId);
 
 				//std::cout << "UPDATE idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
@@ -134,6 +147,8 @@ CameraType* ORBIncrementalParser::nextCamera() {
 				point->idPoint = pointId;
 				ORB_data_.addPoint(point);
 				ORB_data_.addVisibility(camera, point);
+
+//				std::cout << "addVisibility(camera, point)" << camera->idCam << ", \t" << point->idPoint << std::endl;
 			}
 
 			const rapidjson::Value& jsonCameraCenter = jsonObservationObject["X"];
@@ -141,7 +156,7 @@ CameraType* ORBIncrementalParser::nextCamera() {
 			point->position = glm::vec3(x, y, z);
 			// std::cout << "       idPoint: "<<point->idPoint << "\tidReconstruction: "<<point->idReconstruction << "\tgetNunmberObservation: "<<point->getNunmberObservation() << std::endl;
 
-			if(conf_.fakePointsMultiplier) std::cerr << "conf_.fakePointsMultiplier option not available" << std::endl;
+//			if(conf_.fakePointsMultiplier) std::cerr << "conf_.fakePointsMultiplier option not available" << std::endl;
 
 //			// FAKE POINTS
 //			for(int fIndex = 0; fIndex < conf_.fakePointsMultiplier; fIndex++) {
@@ -163,7 +178,7 @@ CameraType* ORBIncrementalParser::nextCamera() {
 //				fakePoint->position = glm::vec3(fakeX, fakeY, fakeZ);
 //			}
 
-			//TODO point's 2D coordinates in frame
+//TODO point's 2D coordinates in frame
 //      const rapidjson::Value& jsonCameraFrameCoordinates = jsonObservationObject["x"];
 //      float u = jsonCameraFrameCoordinates[0].GetFloat(), v = jsonCameraFrameCoordinates[1].GetFloat();
 //      ORB_data_.addFrameCoordinates(camera, point, glm::vec3(u, v));

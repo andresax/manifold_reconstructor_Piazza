@@ -6,18 +6,15 @@
  */
 
 #include <ReconstructFromSfMData.h>
-//#include <CameraPointsCollection.h>
 #include <utilities.hpp>
-#include <Logger.h>
-#include <set>
-#include <map>
+#include <fstream>
 
 ReconstructFromSfMData::ReconstructFromSfMData(const SfMData &sfm_data, ManifoldReconstructionConfig& manifConf) {
 	sfm_data_ = sfm_data;
 
 	manifConf_ = manifConf;
 
-	manifRec_ = new TriangulationManager(manifConf_);
+	manifRec_ = new ManifoldMeshReconstructor(manifConf_);
 
 }
 
@@ -25,112 +22,122 @@ ReconstructFromSfMData::~ReconstructFromSfMData() {
 }
 
 void ReconstructFromSfMData::run() {
+	std::ofstream timeStatsFile;
+	timeStatsFile.open("timeStats.csv");
+//	if (!timeStatsFile.is_open()) std::cout << "STATS FILE NOT OPEN" << std::endl;
 
-	// Filter the points
+	timeStatsFile << "Cameras Number, Init Steiner Grid, Shrink, Insert Vertices, Ray Tracing, Grow, Export" << std::endl;
+
 	std::vector<bool> inliers;
-	outlierFiltering(inliers);
+//	outlierFiltering(inliers);
+	inliers.assign(sfm_data_.points_.size(), true);
 
 	std::vector<glm::vec3> camCenters;
 	std::vector<glm::vec3> points;
 	std::vector<std::vector<int> > camViewingPointN;
 
-	std::set<int> addedPoints;
-	std::map<int, int> sfmToRecIndex;
-	int currentRecIndex = 0;
+	for (auto c : sfm_data_.camerasList_) {
+		camCenters.push_back(c.center);
+	}
 
+	int count = 0;
+	for (int curpt = 0; curpt < sfm_data_.points_.size(); curpt++) {
 
-//	CameraPointsCollection data;
+		if (inliers[curpt]) {
+			count++;
+			points.push_back(sfm_data_.points_[curpt]);
+			camViewingPointN.push_back(sfm_data_.camViewingPointN_[curpt]);
+		}
+	}
 
-//	for (auto c : sfm_data_.camerasList_) {
-//		camCenters.push_back(c.center);
-//	}
-//
-//	int count = 0;
-//	for (int curpt = 0; curpt < sfm_data_.points_.size(); curpt++) {
-//
-//		if (inliers[curpt]) {
-//			count++;
-//			points.push_back(sfm_data_.points_[curpt]);
-//			camViewingPointN.push_back(sfm_data_.camViewingPointN_[curpt]);
-//		}
-//	}
-
-//	std::cout << "inlier ratio " << count << " on " << sfm_data_.points_.size() << " = " << static_cast<float>(count) / static_cast<float>(sfm_data_.points_.size()) << std::endl;
+	std::cout << "inlier ratio " << count << " on " << sfm_data_.points_.size() << " = " << static_cast<float>(count) / static_cast<float>(sfm_data_.points_.size()) << std::endl;
 
 	// utilities::saveVisibilityPly(camCenters,points,camViewingPointN,"inliersOK",false);
 	// utilities::saveVisibilityPly(sfm_data_, "sfm_data_");
 
-//	for (auto camC : sfm_data_.camerasList_) {
-//
-////    manifRec_->addCameraCenter(camC.center.x, camC.center.y, camC.center.z);
-//		manifRec_->addCamera(camC.center.x, camC.center.y, camC.center.z);
-//	}
+	for (auto camC : sfm_data_.camerasList_) {
 
-	// The points can be added all at once WRONG
-//	for (auto p : sfm_data_.points_) manifRec_->addPoint(p.x, p.y, p.z);
+		manifRec_->addCameraCenter(camC.center.x, camC.center.y, camC.center.z);
+	}
+	for (auto curPt : sfm_data_.points_) {
 
-//	for (int curCamIdx = 0; curCamIdx < sfm_data_.camerasList_.size(); curCamIdx += 1) {
-//
-//		for (auto curPtIdx : sfm_data_.pointsVisibleFromCamN_[curCamIdx]) {
-//
-//			if (sfm_data_.camViewingPointN_[curPtIdx].size() >= 2 && inliers[curPtIdx]) manifRec_->addVisibilityPair(curCamIdx, curPtIdx);
-//		}
-//	}
+		manifRec_->addPoint(curPt.x, curPt.y, curPt.z);
+	}
 
+	for (int curCamIdx = 0; curCamIdx < sfm_data_.camerasList_.size(); curCamIdx += 1) {
 
+		//std::cout << "spaceCarver_->addVisibilityPair cam:" << curCamIdx << " ";
+		for (auto curPtIdx : sfm_data_.pointsVisibleFromCamN_[curCamIdx]) {
 
-
-
-	for (int cameraIndex = 0; cameraIndex < sfm_data_.camerasList_.size(); cameraIndex++) {
-		auto camera = sfm_data_.camerasList_[cameraIndex];
-
-		// The cameras and their rays must be added just before being used to update the triangulation.
-		// Rays relative to cameras added before the last update are ignored unless the camera is updated.
-
-		manifRec_->addCamera(camera.center.x, camera.center.y, camera.center.z);
-		std::cout << "Add camera " << cameraIndex << std::endl;
-
-		// The points must be added only once
-
-		for (auto pointIndex : sfm_data_.pointsVisibleFromCamN_[cameraIndex]){
-			if (!addedPoints.count(pointIndex)){
-				addedPoints.insert(pointIndex);
-				sfmToRecIndex[pointIndex] = currentRecIndex++;
-
-				auto p = sfm_data_.points_[pointIndex];
-				manifRec_->addPoint(p.x, p.y, p.z);
-			}
+			if (sfm_data_.camViewingPointN_[curPtIdx].size() >= 2 && inliers[curPtIdx]) manifRec_->addVisibilityPair(curCamIdx, curPtIdx);
 		}
+	}
 
-		for(int pointIndex : sfm_data_.pointsVisibleFromCamN_[cameraIndex])
-			if (sfm_data_.camViewingPointN_[pointIndex].size() >= 2 && inliers[pointIndex])
-				manifRec_->addVisibilityPair(cameraIndex, sfmToRecIndex[pointIndex]);
+	float totStatInitSteinerGrid = 0.0, totStatShrink = 0.0, totStatInsertVertices = 0.0, totStatRayTracing1 = 0.0, totStatRayTracing2 = 0.0, totStatGrow = 0.0,
+			totStatExport = 0.0;
 
-		if (cameraIndex % 11 == 10) {
+	for (int curCamIdx = 0; curCamIdx < sfm_data_.camerasList_.size(); curCamIdx += 1) {
+		utilities::Logger logAdd;
+		logAdd.startEvent();
+
+		manifRec_->insertNewPointsFromCam(curCamIdx, true);
+		//manifRec_->saveManifold("prova.off");
+		manifRec_->rayTracingFromCam(curCamIdx);
+		std::cout << "Cam " << curCamIdx << " done" << std::endl;
+
+		logAdd.endEventAndPrint("shrink, add points, rayTracing\t\t", true);
+
+		totStatInitSteinerGrid += manifRec_->statInitSteinerGrid_;
+		totStatShrink += manifRec_->statShrink_;
+		totStatInsertVertices += manifRec_->statInsertVertices_;
+		totStatRayTracing1 += manifRec_->statRayTracing1_;
+		totStatRayTracing2 += manifRec_->statRayTracing2_;
+
+		if (curCamIdx > 0 && (curCamIdx % 10 == 0)) {
+			//spaceCarver_->BatchTetrahedronMethod(0);
 			utilities::Logger log;
+
 			log.startEvent();
-
-			manifRec_->updateTriangulation();
-
-			log.endEventAndPrint("Update ", true);
-			log.startEvent();
-
+			int curIt = 0;
 			std::stringstream s;
-			s << "Manifold" << cameraIndex << ".off";
+			s << "Manifold" << curCamIdx << ".off";
+			manifRec_->growManifold();
+			manifRec_->growManifoldSev();
+			manifRec_->growManifold();
+			log.endEventAndPrint("grow \t\t", true);
+			totStatGrow = log.getLastDelta();
+
+			log.startEvent();
 			manifRec_->saveManifold(s.str());
 
-			log.endEventAndPrint("Export ", true);
+//			// TODO erase
+//			manifRec_->saveManifoldSeparateTriangles("ManifoldSeparateTriangles__CURRENT!!!__.off");
+
+			log.endEventAndPrint("export \t\t", true);
+			totStatExport = log.getLastDelta();
+
+			timeStatsFile << curCamIdx << ", " << totStatInitSteinerGrid << ", " << totStatShrink << ", " << totStatInsertVertices << ", " << totStatRayTracing1 + totStatRayTracing2 << ", " << totStatGrow << ", " << totStatExport << std::endl;
+
+			totStatInitSteinerGrid = 0.0;
+			totStatShrink = 0.0;
+			totStatInsertVertices = 0.0;
+			totStatRayTracing1 = 0.0;
+			totStatRayTracing2 = 0.0;
+			totStatGrow = 0.0;
+			totStatExport = 0.0;
+
 		}
 	}
 
 	utilities::Logger log;
 	log.startEvent();
-//	manifRec_->growManifold();
-//	manifRec_->growManifoldSev();
-//	manifRec_->growManifold();
-//	manifRec_->saveManifold("ManifoldFinal.off");
-	manifRec_->updateTriangulation();
+	manifRec_->growManifold();
+	manifRec_->growManifoldSev();
+	manifRec_->growManifold();
+
 	manifRec_->saveManifold("ManifoldFinal.off");
+
+	manifRec_->saveManifoldSeparateTriangles("ManifoldSeparateTrianglesFinal.off");
 
 	std::vector<int> age;
 
@@ -138,9 +145,9 @@ void ReconstructFromSfMData::run() {
 		age.push_back(cur);
 	}
 
-//	manifRec_->saveFreespace("FreeFinal.off");
-//
-//	manifRec_->saveOldManifold("ManifoldWithoutSteinerPointsFinal.off", age);
+	manifRec_->saveFreespace("FreeFinal.off");
+
+	manifRec_->saveOldManifold("ManifoldWithoutSteinerPointsFinal.off", age);
 	std::cout << "DONE" << std::endl;
 	log.endEventAndPrint("Grow ", true);
 }
