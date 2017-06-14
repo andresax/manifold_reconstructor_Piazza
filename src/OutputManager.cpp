@@ -8,6 +8,7 @@
 #include <Chronometer.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 //#include <shape_msgs/Mesh.h>
 //#include <gamesh_bridge/GameshMesh.h>
@@ -339,7 +340,7 @@ void OutputManager::writeTetrahedraToOFF(std::string pathPrefix, std::vector<int
 
 	int s = cells.size();
 	if (s == 0) {
-		std::cerr << "OutputManager::writeTetrahedraAndRayToOFF: no tetrahedra to write in output for: " << outputFileName << std::endl;
+		std::cerr << "OutputManager::writeTetrahedraAndRayToOFF: no tetrahedra to write in output for: " << outputFileName.str() << std::endl;
 		return;
 	}
 
@@ -384,7 +385,7 @@ void OutputManager::writeTetrahedraToOFF(std::string pathPrefix, std::vector<int
 
 	int s = cells.size();
 	if (s == 0) {
-		std::cerr << "OutputManager::writeTetrahedraAndRayToOFF: no tetrahedra to write in output for: " << outputFileName << std::endl;
+		std::cerr << "OutputManager::writeTetrahedraAndRayToOFF: no tetrahedra to write in output for: " << outputFileName.str() << std::endl;
 		return;
 	}
 
@@ -476,7 +477,7 @@ void OutputManager::writeTrianglesToOFF(std::string pathPrefix, std::vector<int>
 
 	int s = triangles.size();
 	if (s == 0) {
-		std::cerr << "OutputManager::writeTetrahedraAndRayToOFF: no triangles to write in output for: " << outputFileName << std::endl;
+		std::cerr << "OutputManager::writeTetrahedraAndRayToOFF: no triangles to write in output for: " << outputFileName.str() << std::endl;
 		return;
 	}
 

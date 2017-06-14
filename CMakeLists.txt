@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-project(manifoldReconstructor)  
+project(manifoldReconstructorLib)  
    
 #----------------------- CMAKE MODULES ------------------------ 
 
@@ -48,11 +48,17 @@ file(GLOB_RECURSE meshRec_SOURCE
                  src/*.cpp
                  src/cam_parsers/*.cpp
                  src/utilities/*.cpp
-                 test/*.cpp
+                 #test/*.cpp
 )
 
-add_executable(manifoldReconstructor ${meshRec_SOURCE})
-target_link_libraries(manifoldReconstructor ${OpenCV_LIBS} 
+file(GLOB_RECURSE meshRec_H 
+                  ./include/manifoldReconstructor/*.h
+                  ./include/manifoldReconstructor/*.hpp
+                  )
+
+add_library(manifoldReconstructorLib ${meshRec_SOURCE} ${meshRec_H})
+#add_executable(manifoldReconstructorLib ${meshRec_SOURCE})
+target_link_libraries(manifoldReconstructorLib ${OpenCV_LIBS} 
                                             ${GMPXX_LIBRARIES}
                                             ${GMP_LIBRARIES}
                                             ${LAPACK_LIBRARIES}
